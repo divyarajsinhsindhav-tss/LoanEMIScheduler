@@ -1,7 +1,5 @@
 package com.emiLoan.EMILoan.entity;
 
-
-
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -48,4 +46,3 @@ public class PersonIdentity {
         updatedAt = LocalDateTime.now();
     }
 }
-

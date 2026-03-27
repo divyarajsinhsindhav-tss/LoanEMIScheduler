@@ -1,6 +1,5 @@
 package com.emiLoan.EMILoan.entity;
 
-
 import com.emiLoan.EMILoan.common.enums.NotificationStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,16 +24,18 @@ public class Notification {
     private UUID notificationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "loan_id")
-    private UUID loanId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "loan_id")
+    private Loan loan;
 
-    @Column(name = "emi_id")
-    private UUID emiId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emi_id")
+    private EmiSchedule emiSchedule;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String email;
 
     @Column(length = 255)
@@ -50,6 +51,7 @@ public class Notification {
     @Column(name = "status")
     private NotificationStatus status;
 
+    @Builder.Default
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 

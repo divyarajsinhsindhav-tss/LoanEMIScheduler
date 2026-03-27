@@ -1,8 +1,6 @@
 package com.emiLoan.EMILoan.dto.loan.response;
 
-
 import com.emiLoan.EMILoan.common.enums.LoanStatus;
-import com.emiLoan.EMILoan.common.enums.LoanStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,10 +21,13 @@ public class LoanResponse {
     private UUID applicationId;
     private String applicationCode;
 
+    private UUID borrowerId;
+    private String borrowerName;
+
     private BigDecimal principalAmount;
     private BigDecimal interestRate;
     private Integer tenureMonths;
-    private LoanStrategy strategy;
+    private String strategy;
     private BigDecimal emiAmount;
 
     private LocalDate startDate;

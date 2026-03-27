@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.entity;
 
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
-import com.emiLoan.EMILoan.common.enums.LoanStrategy;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -48,13 +47,11 @@ public class LoanApplication {
     @Column(name = "dti_ratio", precision = 5, scale = 2)
     private BigDecimal dtiRatio;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "suggested_strategy")
-    private LoanStrategy suggestedStrategy;
+    @Column(name = "suggested_strategy", length = 50)
+    private String suggestedStrategy;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "officer_strategy")
-    private LoanStrategy officerStrategy;
+    @Column(name = "officer_strategy", length = 50)
+    private String officerStrategy;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
@@ -70,10 +67,14 @@ public class LoanApplication {
     @Column(name = "reviewed_at")
     private LocalDateTime reviewedAt;
 
+    @Builder.Default
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @Column(name = "deleted_by")
     private UUID deletedBy;
 
     @PrePersist

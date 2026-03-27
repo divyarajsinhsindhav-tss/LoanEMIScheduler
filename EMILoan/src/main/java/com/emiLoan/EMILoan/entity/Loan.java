@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.entity;
 
 import com.emiLoan.EMILoan.common.enums.LoanStatus;
-import com.emiLoan.EMILoan.common.enums.LoanStrategy;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,9 +41,8 @@ public class Loan {
     @Column(name = "tenure_months", nullable = false)
     private Integer tenureMonths;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "strategy")
-    private LoanStrategy strategy;
+    @Column(name = "strategy", length = 50)
+    private String strategy;
 
     @Column(name = "emi_amount", precision = 12, scale = 2)
     private BigDecimal emiAmount;

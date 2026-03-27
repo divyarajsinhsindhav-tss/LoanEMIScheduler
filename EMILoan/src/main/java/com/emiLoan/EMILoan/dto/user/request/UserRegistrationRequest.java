@@ -2,7 +2,6 @@ package com.emiLoan.EMILoan.dto.user.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import java.math.BigDecimal;
 
 @Data
 public class UserRegistrationRequest {
@@ -23,6 +22,7 @@ public class UserRegistrationRequest {
     @Pattern(regexp = "^\\d{10}$", message = "Phone must be 10 digits")
     private String phone;
 
-    @PositiveOrZero(message = "Monthly income cannot be negative")
-    private BigDecimal monthlyIncome;
+    @NotBlank(message = "PAN is required")
+    @Pattern(regexp = "^[A-Z]{5}[0-9]{4}[A-Z]{1}$", message = "Invalid PAN format")
+    private String pan;
 }
