@@ -1,6 +1,5 @@
 package com.emiLoan.EMILoan.mapper;
 
-
 import com.emiLoan.EMILoan.dto.notification.NotificationResponse;
 import com.emiLoan.EMILoan.dto.notification.NotificationSummaryResponse;
 import com.emiLoan.EMILoan.entity.Notification;
@@ -15,7 +14,9 @@ import java.util.List;
 public interface NotificationMapper {
 
     @Mapping(target = "userId", source = "user.userId")
-    @Mapping(target = "recipientEmail", source = "email")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "loanId", source = "loan.loanId")
+    @Mapping(target = "emiId", source = "emiSchedule.emiId")
     NotificationResponse toResponse(Notification notification);
 
     @Mapping(target = "preview", source = "message", qualifiedByName = "createPreview")

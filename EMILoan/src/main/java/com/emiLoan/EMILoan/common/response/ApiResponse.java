@@ -2,6 +2,8 @@ package com.emiLoan.EMILoan.common.response;
 
 import java.time.LocalDateTime;
 
+import org.springframework.http.HttpStatus;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -13,20 +15,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ApiResponse<T> {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime timestamp;
-
     private int status;
     private String message;
     private String path;
     private T data;
 
-    public static <T> ApiResponse<T> success(T data, String message) {
+
+    public static <T> ApiResponse<T> of(
+            HttpStatus status,
+            String message,
+            String path,
+            T data
+    ) {
         return new ApiResponse<>(
                 LocalDateTime.now(),
-                200,
+                status.value(),
                 message,
-                null,
+                path,
                 data
         );
     }

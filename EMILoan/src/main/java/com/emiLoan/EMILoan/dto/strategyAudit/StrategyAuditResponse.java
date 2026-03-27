@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.dto.strategyAudit;
 
 
-import com.emiLoan.EMILoan.common.enums.LoanStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,8 +20,8 @@ public class StrategyAuditResponse {
     private UUID applicationId;
     private String applicationCode;
 
-    private LoanStrategy systemStrategy;
-    private LoanStrategy officerStrategy;
+    private String systemStrategy;
+    private String officerStrategy;
     private boolean overridden;
 
     private String changedByOfficerName;

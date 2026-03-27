@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.dto.loanApplication.response;
 
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
-import com.emiLoan.EMILoan.common.enums.LoanStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,8 +26,8 @@ public class LoanApplicationResponse {
     private Integer tenureMonths;
     private BigDecimal dtiRatio;
 
-    private LoanStrategy suggestedStrategy;
-    private LoanStrategy officerStrategy;
+    private String suggestedStrategy;
+    private String officerStrategy;
     private ApplicationStatus status;
 
     private LocalDateTime appliedAt;
