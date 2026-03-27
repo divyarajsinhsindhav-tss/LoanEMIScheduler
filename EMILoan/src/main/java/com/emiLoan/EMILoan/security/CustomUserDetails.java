@@ -8,8 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Data
@@ -25,9 +25,9 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public static CustomUserDetails build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRoleName().name()))
-                .collect(Collectors.toList());
+        List<GrantedAuthority> authorities = Collections.singletonList(
+                new SimpleGrantedAuthority(user.getRole().getRoleName().name())
+        );
 
         return new CustomUserDetails(user, authorities);
     }
@@ -64,6 +64,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getEnabled();
+        return user.getIsActive();
     }
 }

@@ -1,6 +1,5 @@
 package com.emiLoan.EMILoan.mapper;
 
-
 import com.emiLoan.EMILoan.dto.loan.request.LoanStatusUpdateRequest;
 import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
 import com.emiLoan.EMILoan.dto.loan.response.LoanSummaryResponse;
@@ -15,6 +14,8 @@ public interface LoanMapper {
 
     @Mapping(target = "applicationId", source = "application.applicationId")
     @Mapping(target = "applicationCode", source = "application.applicationCode")
+    @Mapping(target = "borrowerId", source = "borrower.userId")
+    @Mapping(target = "borrowerName", expression = "java(loan.getBorrower().getFirstName() + \" \" + (loan.getBorrower().getLastName() != null ? loan.getBorrower().getLastName() : \"\"))")
     LoanResponse toResponse(Loan loan);
 
     @Mapping(target = "nextDueDate", ignore = true)

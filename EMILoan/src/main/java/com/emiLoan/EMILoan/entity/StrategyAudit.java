@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.entity;
 
 
-import com.emiLoan.EMILoan.common.enums.LoanStrategy;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,13 +23,11 @@ public class StrategyAudit {
     @JoinColumn(name = "application_id", nullable = false)
     private LoanApplication application;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "system_strategy")
-    private LoanStrategy systemStrategy;
+    @Column(name = "system_strategy", length = 50)
+    private String systemStrategy;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "officer_strategy")
-    private LoanStrategy officerStrategy;
+    @Column(name = "officer_strategy", length = 50)
+    private String officerStrategy;
 
     @Builder.Default
     @Column(name = "overridden")

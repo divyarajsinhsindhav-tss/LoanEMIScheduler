@@ -18,7 +18,7 @@ public class NotificationResponse {
     private UUID notificationId;
 
     private UUID userId;
-    private String recipientEmail;
+    private String email;
     private UUID loanId;
     private UUID emiId;
 
