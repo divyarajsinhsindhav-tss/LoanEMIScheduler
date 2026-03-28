@@ -1,6 +1,9 @@
 package com.emiLoan.EMILoan.dto.user.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,7 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoanOfficerResponse {
+public class EmployeeResponse {
     private UserResponse user;
     private UUID employeeId;
     private String employeeCode;

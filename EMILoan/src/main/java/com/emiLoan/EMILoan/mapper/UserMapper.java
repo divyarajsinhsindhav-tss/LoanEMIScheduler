@@ -5,8 +5,10 @@ import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.UserRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.entity.User;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -45,5 +47,15 @@ public interface UserMapper {
 
     @Mapping(target = "personCode", source = "person.personCode")
     @Mapping(target = "role", source = "role")
+    @Mapping(target = "pan", ignore = true)
     UserResponse toResponse(User user);
+
+    @AfterMapping
+    default void setMaskedPan(@MappingTarget UserResponse response, User user) {
+        if (user.getPerson() != null) {
+            String first3 = user.getPerson().getPanFirst3();
+            String last2 = user.getPerson().getPanLast2();
+            response.setPan(first3 + "*****" + last2);
+        }
+    }
 }
