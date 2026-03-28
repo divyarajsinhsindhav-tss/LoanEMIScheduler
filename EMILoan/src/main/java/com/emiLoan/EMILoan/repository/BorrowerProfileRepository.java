@@ -11,5 +11,6 @@ import java.util.UUID;
 public interface BorrowerProfileRepository extends JpaRepository<BorrowerProfile, UUID> {
     Optional<BorrowerProfile> findByUser(User user);
     Optional<BorrowerProfile> findByUser_UserId(UUID userId);
+    Optional<BorrowerProfile> findByUser_Email(String email);
     Optional<BorrowerProfile> findByBorrowerCode(String borrowerCode);
 }

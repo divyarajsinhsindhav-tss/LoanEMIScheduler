@@ -22,6 +22,7 @@ public interface BorrowerProfileMapper {
     BorrowerProfile toEntity(BorrowerRegistrationRequest request);
 
     @Mapping(target = "user", source = "user")
-    @Mapping(target = "existingLoanCount", ignore = true)
+    @Mapping(target = "monthlyIncome", source = "monthlyIncome")
+    @Mapping(target = "existingLoanCount", source = "existingLoanCount")
     BorrowerResponse toResponse(BorrowerProfile profile);
 }

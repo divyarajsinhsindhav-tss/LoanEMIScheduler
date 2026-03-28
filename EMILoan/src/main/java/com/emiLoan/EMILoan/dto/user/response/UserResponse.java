@@ -23,5 +23,6 @@ public class UserResponse {
     private String phone;
     private Boolean isActive;
     private RoleResponse role;
+    private String pan;
     private LocalDateTime createdAt;
 }
