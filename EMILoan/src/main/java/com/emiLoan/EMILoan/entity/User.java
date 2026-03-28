@@ -12,8 +12,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @SQLDelete(sql = "UPDATE users SET is_deleted = true, deleted_at = NOW() WHERE user_id = ?")
 @SQLRestriction("is_deleted = false")
