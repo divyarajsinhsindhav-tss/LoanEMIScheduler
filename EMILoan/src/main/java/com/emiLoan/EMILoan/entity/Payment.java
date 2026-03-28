@@ -1,8 +1,6 @@
 package com.emiLoan.EMILoan.entity;
 
-
 import com.emiLoan.EMILoan.common.enums.PaymentMode;
-
 import com.emiLoan.EMILoan.common.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,11 +36,11 @@ public class Payment {
     private LocalDateTime paymentDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_mode")
+    @Column(name = "payment_mode", length = 20)
     private PaymentMode paymentMode;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", length = 20)
     private PaymentStatus status;
 
     @PrePersist

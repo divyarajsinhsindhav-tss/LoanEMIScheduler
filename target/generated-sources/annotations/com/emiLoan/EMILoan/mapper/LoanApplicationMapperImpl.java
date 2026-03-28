@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-26T17:44:33+0530",
+    date = "2026-03-27T21:23:15+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -41,6 +41,8 @@ public class LoanApplicationMapperImpl implements LoanApplicationMapper {
         LoanApplicationResponse.LoanApplicationResponseBuilder loanApplicationResponse = LoanApplicationResponse.builder();
 
         loanApplicationResponse.borrowerId( applicationBorrowerUserId( application ) );
+        loanApplicationResponse.borrowerName( mapFullName( application.getBorrower() ) );
+        loanApplicationResponse.reviewedByOfficerName( mapFullName( application.getReviewedBy() ) );
         loanApplicationResponse.applicationId( application.getApplicationId() );
         loanApplicationResponse.applicationCode( application.getApplicationCode() );
         loanApplicationResponse.requestedAmount( application.getRequestedAmount() );
@@ -52,9 +54,6 @@ public class LoanApplicationMapperImpl implements LoanApplicationMapper {
         loanApplicationResponse.status( application.getStatus() );
         loanApplicationResponse.appliedAt( application.getAppliedAt() );
         loanApplicationResponse.reviewedAt( application.getReviewedAt() );
-
-        loanApplicationResponse.borrowerName( application.getBorrower().getFirstName() + " " + application.getBorrower().getLastName() );
-        loanApplicationResponse.reviewedByOfficerName( application.getReviewedBy() != null ? application.getReviewedBy().getFirstName() + " " + application.getReviewedBy().getLastName() : null );
 
         return loanApplicationResponse.build();
     }

@@ -2,6 +2,8 @@ package com.emiLoan.EMILoan.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,13 +11,14 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "employee_profile")
-@Data
+@Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class EmployeeProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "employee_id", updatable = false, nullable = false)
     private UUID employeeId;
 
@@ -44,12 +47,12 @@ public class EmployeeProfile {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }

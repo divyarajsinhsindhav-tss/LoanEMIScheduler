@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-26T17:44:33+0530",
+    date = "2026-03-27T21:23:15+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -27,13 +27,12 @@ public class StrategyAuditMapperImpl implements StrategyAuditMapper {
 
         strategyAuditResponse.applicationId( strategyAuditApplicationApplicationId( strategyAudit ) );
         strategyAuditResponse.applicationCode( strategyAuditApplicationApplicationCode( strategyAudit ) );
+        strategyAuditResponse.changedByOfficerName( mapFullName( strategyAudit.getChangedBy() ) );
         strategyAuditResponse.id( strategyAudit.getId() );
         strategyAuditResponse.systemStrategy( strategyAudit.getSystemStrategy() );
         strategyAuditResponse.officerStrategy( strategyAudit.getOfficerStrategy() );
         strategyAuditResponse.overridden( strategyAudit.isOverridden() );
         strategyAuditResponse.changedAt( strategyAudit.getChangedAt() );
-
-        strategyAuditResponse.changedByOfficerName( strategyAudit.getChangedBy().getFirstName() + " " + strategyAudit.getChangedBy().getLastName() );
 
         return strategyAuditResponse.build();
     }

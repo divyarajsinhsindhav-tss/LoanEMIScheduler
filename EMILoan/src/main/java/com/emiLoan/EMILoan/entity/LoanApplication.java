@@ -54,6 +54,7 @@ public class LoanApplication {
     private String officerStrategy;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
     @Builder.Default
     private ApplicationStatus status = ApplicationStatus.PENDING;
 
@@ -79,6 +80,8 @@ public class LoanApplication {
 
     @PrePersist
     protected void onCreate() {
-        appliedAt = LocalDateTime.now();
+        if (this.appliedAt == null) {
+            this.appliedAt = LocalDateTime.now();
+        }
     }
 }

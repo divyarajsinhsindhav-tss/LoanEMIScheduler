@@ -1,16 +1,19 @@
 package com.emiLoan.EMILoan.entity;
 
-
 import com.emiLoan.EMILoan.common.enums.EmiStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "emi_schedule")
+@Table(name = "emi_schedule", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"loan_id", "installment_no"})
+})
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
@@ -18,6 +21,7 @@ public class EmiSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "emi_id", updatable = false, nullable = false)
     private UUID emiId;
 
@@ -44,6 +48,7 @@ public class EmiSchedule {
     private BigDecimal remainingBalance;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
     @Builder.Default
     private EmiStatus status = EmiStatus.PENDING;
 

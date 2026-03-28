@@ -16,11 +16,15 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface UserMapper {
 
+
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "userCode", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "person", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "isDeleted", ignore = true)
     User toEntity(UserRegistrationRequest request);
 
     @Mapping(target = "userId", ignore = true)
@@ -28,6 +32,7 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "person", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     User toEntity(BorrowerRegistrationRequest request);
 
     @Mapping(target = "userId", ignore = true)
@@ -35,8 +40,10 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "person", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     User toEntity(LoanOfficerRegistrationRequest request);
 
     @Mapping(target = "personCode", source = "person.personCode")
+    @Mapping(target = "role", source = "role")
     UserResponse toResponse(User user);
 }

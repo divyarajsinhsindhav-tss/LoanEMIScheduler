@@ -17,7 +17,11 @@ public interface EmployeeProfileMapper {
     @Mapping(target = "employeeId", ignore = true)
     @Mapping(target = "employeeCode", ignore = true)
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "isActive", ignore = true)
     EmployeeProfile toEntity(LoanOfficerRegistrationRequest request);
 
+    @Mapping(target = "user", source = "user")
     LoanOfficerResponse toResponse(EmployeeProfile profile);
 }

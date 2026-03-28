@@ -17,7 +17,11 @@ public interface BorrowerProfileMapper {
     @Mapping(target = "borrowerId", ignore = true)
     @Mapping(target = "borrowerCode", ignore = true)
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     BorrowerProfile toEntity(BorrowerRegistrationRequest request);
 
+    @Mapping(target = "user", source = "user")
+    @Mapping(target = "existingLoanCount", ignore = true)
     BorrowerResponse toResponse(BorrowerProfile profile);
 }

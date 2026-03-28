@@ -3,6 +3,8 @@ package com.emiLoan.EMILoan.entity;
 import com.emiLoan.EMILoan.common.enums.LoanStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ public class Loan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "loan_id", updatable = false, nullable = false)
     private UUID loanId;
 
@@ -54,7 +57,7 @@ public class Loan {
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "loan_status")
+    @Column(name = "loan_status", length = 20)
     @Builder.Default
     private LoanStatus loanStatus = LoanStatus.ACTIVE;
 
@@ -63,6 +66,8 @@ public class Loan {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
 }

@@ -3,8 +3,10 @@ package com.emiLoan.EMILoan.entity;
 import com.emiLoan.EMILoan.common.enums.NotificationStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,6 +22,7 @@ public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "notification_id", updatable = false, nullable = false)
     private UUID notificationId;
 
@@ -48,7 +51,7 @@ public class Notification {
     private LocalDateTime sentAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", length = 20)
     private NotificationStatus status;
 
     @Builder.Default
@@ -63,6 +66,8 @@ public class Notification {
 
     @PrePersist
     protected void onCreate() {
-        this.sentAt = LocalDateTime.now();
+        if (this.sentAt == null) {
+            this.sentAt = LocalDateTime.now();
+        }
     }
 }
