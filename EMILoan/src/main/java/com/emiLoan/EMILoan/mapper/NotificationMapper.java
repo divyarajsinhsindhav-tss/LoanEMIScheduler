@@ -3,6 +3,7 @@ package com.emiLoan.EMILoan.mapper;
 import com.emiLoan.EMILoan.dto.notification.NotificationResponse;
 import com.emiLoan.EMILoan.dto.notification.NotificationSummaryResponse;
 import com.emiLoan.EMILoan.entity.Notification;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -22,11 +23,14 @@ public interface NotificationMapper {
     @Mapping(target = "preview", source = "message", qualifiedByName = "createPreview")
     NotificationSummaryResponse toSummaryResponse(Notification notification);
 
+    List<NotificationResponse> toResponseList(List<Notification> notifications);
+
     List<NotificationSummaryResponse> toSummaryList(List<Notification> notifications);
 
     @Named("createPreview")
     default String createPreview(String message) {
         if (message == null) return "";
+        // Clean 50-character preview logic for the UI
         return message.length() > 50 ? message.substring(0, 47) + "..." : message;
     }
 }

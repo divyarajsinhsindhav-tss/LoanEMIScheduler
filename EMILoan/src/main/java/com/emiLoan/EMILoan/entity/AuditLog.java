@@ -4,6 +4,8 @@ import com.emiLoan.EMILoan.common.enums.AuditAction;
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,22 +19,24 @@ public class AuditLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "audit_id", updatable = false, nullable = false)
     private UUID auditId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "officer_id", nullable = false)
+    @JoinColumn(name = "officer_id")
     private User officer;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "action", nullable = false)
+    @Column(name = "action", length = 50)
     private AuditAction action;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "entity_type", nullable = false)
+    @Column(name = "entity_type", length = 50)
     private AuditEntityType entityType;
 
-    @Column(name = "entity_id", nullable = false)
+    @JdbcTypeCode(SqlTypes.UUID)
+    @Column(name = "entity_id")
     private UUID entityId;
 
     @Column(name = "action_time", updatable = false)
@@ -40,6 +44,8 @@ public class AuditLog {
 
     @PrePersist
     protected void onCreate() {
-        this.actionTime = LocalDateTime.now();
+        if (this.actionTime == null) {
+            this.actionTime = LocalDateTime.now();
+        }
     }
 }

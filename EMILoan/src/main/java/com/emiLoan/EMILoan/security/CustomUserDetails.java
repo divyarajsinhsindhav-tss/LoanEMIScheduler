@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.security;
 
 import com.emiLoan.EMILoan.entity.User;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,11 +11,9 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
-@Data
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
-
     private final Collection<? extends GrantedAuthority> authorities;
 
     private CustomUserDetails(User user, Collection<? extends GrantedAuthority> authorities) {
@@ -64,6 +61,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getIsActive();
+        return user.getIsActive() && !user.isDeleted();
     }
 }

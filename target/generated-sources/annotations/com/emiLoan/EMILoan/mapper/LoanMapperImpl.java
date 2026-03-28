@@ -5,13 +5,14 @@ import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
 import com.emiLoan.EMILoan.dto.loan.response.LoanSummaryResponse;
 import com.emiLoan.EMILoan.entity.Loan;
 import com.emiLoan.EMILoan.entity.LoanApplication;
+import com.emiLoan.EMILoan.entity.User;
 import java.util.UUID;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-27T10:00:31+0530",
+    date = "2026-03-27T21:23:15+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -27,6 +28,8 @@ public class LoanMapperImpl implements LoanMapper {
 
         loanResponse.applicationId( loanApplicationApplicationId( loan ) );
         loanResponse.applicationCode( loanApplicationApplicationCode( loan ) );
+        loanResponse.borrowerId( loanBorrowerUserId( loan ) );
+        loanResponse.borrowerName( mapFullName( loan.getBorrower() ) );
         loanResponse.loanId( loan.getLoanId() );
         loanResponse.loanCode( loan.getLoanCode() );
         loanResponse.principalAmount( loan.getPrincipalAmount() );
@@ -80,5 +83,13 @@ public class LoanMapperImpl implements LoanMapper {
             return null;
         }
         return application.getApplicationCode();
+    }
+
+    private UUID loanBorrowerUserId(Loan loan) {
+        User borrower = loan.getBorrower();
+        if ( borrower == null ) {
+            return null;
+        }
+        return borrower.getUserId();
     }
 }

@@ -32,9 +32,10 @@ public class Role {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
-
     public Role(RoleName roleName) {
         this.roleName = roleName;
     }

@@ -2,19 +2,22 @@ package com.emiLoan.EMILoan.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "borrower_profile")
-@Data
+@Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class BorrowerProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "borrower_id", updatable = false, nullable = false)
     private UUID borrowerId;
 
@@ -40,12 +43,12 @@ public class BorrowerProfile {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }

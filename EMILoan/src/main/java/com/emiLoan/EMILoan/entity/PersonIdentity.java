@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "person_identity")
-@Data
+@Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class PersonIdentity {
@@ -37,7 +37,9 @@ public class PersonIdentity {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
         updatedAt = LocalDateTime.now();
     }
 

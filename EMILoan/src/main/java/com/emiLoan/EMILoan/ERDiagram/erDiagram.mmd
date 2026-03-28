@@ -1,0 +1,144 @@
+erDiagram
+    ROLES ||--o{ USERS : "assigned_to"
+    PERSON_IDENTITY ||--o{ USERS : "identifies"
+    USERS ||--|| BORROWER_PROFILE : "has_profile"
+    USERS ||--|| EMPLOYEE_PROFILE : "has_profile"
+    USERS ||--o{ LOAN_APPLICATIONS : "applies_for"
+    USERS ||--o{ LOAN_APPLICATIONS : "reviews"
+    USERS ||--o{ LOANS : "borrows"
+    USERS ||--o{ AUDIT_LOGS : "performs_action"
+    USERS ||--o{ USERS : "soft_deleted_by"
+
+    LOAN_APPLICATIONS ||--|| LOANS : "converts_to"
+    LOAN_APPLICATIONS ||--o{ STRATEGY_AUDIT : "tracked_in"
+
+    LOANS ||--o{ EMI_SCHEDULE : "has_schedule"
+    LOANS ||--o{ PAYMENTS : "receives"
+
+    EMI_SCHEDULE ||--o{ PAYMENTS : "satisfied_by"
+
+    NOTIFICATIONS }o--|| USERS : "sent_to"
+    NOTIFICATIONS }o--|| LOANS : "regarding_loan"
+    NOTIFICATIONS }o--|| EMI_SCHEDULE : "regarding_emi"
+
+    ROLES {
+        uuid role_id PK
+        varchar role_name
+        varchar description
+        timestamp created_at
+    }
+
+    PERSON_IDENTITY {
+        uuid person_id PK
+        varchar person_code
+        varchar pan_hash
+        varchar pan_first3
+        varchar pan_last2
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    USERS {
+        uuid user_id PK
+        varchar user_code
+        uuid person_id FK
+        uuid role_id FK
+        varchar first_name
+        varchar email
+        varchar phone
+        boolean is_active
+        boolean is_deleted
+        uuid deleted_by FK
+    }
+
+    BORROWER_PROFILE {
+        uuid borrower_id PK
+        varchar borrower_code
+        uuid user_id FK
+        numeric monthly_income
+        int existing_loan_count
+    }
+
+    EMPLOYEE_PROFILE {
+        uuid employee_id PK
+        varchar employee_code
+        uuid user_id FK
+        date joining_date
+        numeric salary
+        boolean is_active
+    }
+
+    LOAN_APPLICATIONS {
+        uuid application_id PK
+        varchar application_code
+        uuid user_id FK
+        numeric requested_amount
+        numeric interest_rate
+        int tenure_months
+        varchar suggested_strategy
+        varchar status
+        uuid reviewed_by FK
+    }
+
+    LOANS {
+        uuid loan_id PK
+        varchar loan_code
+        uuid application_id FK
+        uuid user_id FK
+        numeric principal_amount
+        numeric interest_rate
+        int tenure_months
+        varchar strategy
+        numeric emi_amount
+        date start_date
+        varchar loan_status
+    }
+
+    EMI_SCHEDULE {
+        uuid emi_id PK
+        uuid loan_id FK
+        int installment_no
+        date due_date
+        numeric total_emi
+        numeric remaining_balance
+        varchar status
+    }
+
+    PAYMENTS {
+        uuid payment_id PK
+        uuid emi_id FK
+        uuid loan_id FK
+        numeric amount_paid
+        timestamp payment_date
+        varchar payment_mode
+        varchar status
+    }
+
+    NOTIFICATIONS {
+        uuid notification_id PK
+        uuid user_id FK
+        uuid loan_id FK
+        uuid emi_id FK
+        varchar email
+        varchar subject
+        timestamp sent_at
+        varchar status
+    }
+
+    STRATEGY_AUDIT {
+        uuid id PK
+        uuid application_id FK
+        varchar system_strategy
+        varchar officer_strategy
+        boolean overridden
+        uuid changed_by FK
+    }
+
+    AUDIT_LOGS {
+        uuid audit_id PK
+        uuid officer_id FK
+        varchar action
+        varchar entity_type
+        uuid entity_id
+        timestamp action_time
+    }

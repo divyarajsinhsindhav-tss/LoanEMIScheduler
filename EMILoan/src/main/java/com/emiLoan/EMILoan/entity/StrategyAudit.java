@@ -1,6 +1,5 @@
 package com.emiLoan.EMILoan.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,6 +41,8 @@ public class StrategyAudit {
 
     @PrePersist
     protected void onCreate() {
-        this.changedAt = LocalDateTime.now();
+        if (this.changedAt == null) {
+            this.changedAt = LocalDateTime.now();
+        }
     }
 }

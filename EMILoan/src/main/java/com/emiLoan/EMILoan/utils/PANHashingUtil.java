@@ -11,19 +11,27 @@ import java.util.HexFormat;
 @Component
 public class PANHashingUtil {
 
-    @Value("${app.pepper}")
+    @Value("${app.pepper:emi-loan-default-pepper-2024}")
     private String pepper;
 
-    public String hash(String plainPAN) throws NoSuchAlgorithmException {
-        String input = plainPAN + pepper;
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hashBytes = digest.digest(
-                input.getBytes(StandardCharsets.UTF_8));
-        return HexFormat.of().formatHex(hashBytes);
+    private static final String ALGORITHM = "SHA-256";
+
+    public String hash(String plainPAN) {
+        try {
+            String input = plainPAN.toUpperCase() + pepper;
+            MessageDigest digest = MessageDigest.getInstance(ALGORITHM);
+
+            byte[] hashBytes = digest.digest(
+                    input.getBytes(StandardCharsets.UTF_8));
+
+            return HexFormat.of().formatHex(hashBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Security algorithm not found: " + ALGORITHM, e);
+        }
     }
 
-    public boolean verify(String plainPAN, String storedHash)
-            throws NoSuchAlgorithmException {
+    public boolean verify(String plainPAN, String storedHash) {
+        if (plainPAN == null || storedHash == null) return false;
         return hash(plainPAN).equals(storedHash);
     }
 
@@ -35,6 +43,11 @@ public class PANHashingUtil {
         return pan != null && pan.matches("^[A-Z]{5}[0-9]{4}[A-Z]$");
     }
 
-    public String extractFirst3(String pan) { return pan.substring(0, 3); }
-    public String extractLast2(String pan)  { return pan.substring(8, 10); }
+    public String extractFirst3(String pan) {
+        return (pan != null && pan.length() >= 3) ? pan.substring(0, 3) : "";
+    }
+
+    public String extractLast2(String pan)  {
+        return (pan != null && pan.length() == 10) ? pan.substring(8, 10) : "";
+    }
 }

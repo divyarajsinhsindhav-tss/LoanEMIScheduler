@@ -2,15 +2,17 @@ package com.emiLoan.EMILoan.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 @SQLDelete(sql = "UPDATE users SET is_deleted = true, deleted_at = NOW() WHERE user_id = ?")
@@ -19,6 +21,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "user_id", updatable = false, nullable = false)
     private UUID userId;
 
@@ -45,7 +48,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, length = 15)
+    @Column(length = 15)
     private String phone;
 
     @Builder.Default
@@ -58,20 +61,24 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Builder.Default
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @Column(name = "deleted_by")
     private UUID deletedBy;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }

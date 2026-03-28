@@ -1,6 +1,5 @@
 package com.emiLoan.EMILoan.mapper;
 
-
 import com.emiLoan.EMILoan.dto.payment.PaymentHistoryResponse;
 import com.emiLoan.EMILoan.dto.payment.PaymentRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentResponse;
@@ -15,6 +14,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PaymentMapper {
+
     @Mapping(target = "paymentId", ignore = true)
     @Mapping(target = "emiSchedule", ignore = true)
     @Mapping(target = "loan", ignore = true)
