@@ -2,18 +2,20 @@ package com.emiLoan.EMILoan.service.impl;
 
 import com.emiLoan.EMILoan.common.constants.AppConstants;
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
+import com.emiLoan.EMILoan.common.enums.RoleName;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
 import com.emiLoan.EMILoan.engine.DtiCalculationEngine;
 import com.emiLoan.EMILoan.engine.StrategySelectionEngine;
-import com.emiLoan.EMILoan.entity.BorrowerProfile;
-import com.emiLoan.EMILoan.entity.LoanApplication;
+import com.emiLoan.EMILoan.entity.*;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
+import com.emiLoan.EMILoan.exceptions.ResourceNotFoundException;
 import com.emiLoan.EMILoan.mapper.BorrowerProfileMapper;
 import com.emiLoan.EMILoan.mapper.LoanApplicationMapper;
 import com.emiLoan.EMILoan.repository.BorrowerProfileRepository;
 import com.emiLoan.EMILoan.repository.LoanApplicationRepository;
+import com.emiLoan.EMILoan.repository.UserRepository;
 import com.emiLoan.EMILoan.service.interfaces.LoanApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +23,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -34,16 +38,18 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     private final LoanApplicationRepository applicationRepository;
     private final BorrowerProfileRepository borrowerProfileRepository;
+    private final UserRepository userRepository;
 
     private final DtiCalculationEngine dtiEngine;
     private final StrategySelectionEngine strategyEngine;
 
     private final LoanApplicationMapper applicationMapper;
-    private final BorrowerProfileMapper borrowerProfileMapper;
 
     @Override
     @Transactional
-    public LoanApplicationResponse apply(LoanApplicationRequest request, String email) {
+    public LoanApplicationResponse apply(LoanApplicationRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
         BorrowerProfile profile = borrowerProfileRepository.findByUser_Email(email)
                 .orElseThrow(() -> new BusinessRuleException("Borrower profile not found for email: " + email));
 
@@ -73,36 +79,52 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<LoanApplicationResponse> getMyApplications(String email, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<LoanApplication> applicationsPage = applicationRepository.findByBorrowerEmailPaginated(email, pageable);
+    public LoanApplicationResponse getApplication(String applicationId) {
 
-        return applicationsPage.map(applicationMapper::toResponse);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        BorrowerProfile profile = borrowerProfileRepository.findByUser_Email(email)
+                .orElseThrow(() -> new BusinessRuleException(
+                        "Borrower profile not found for email: " + email));
+
+        LoanApplication loanApplication = applicationRepository
+                .findByBorrowerEmailAndApplicationCode(email, applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Application", applicationId));
+
+        return applicationMapper.toResponse(loanApplication);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<LoanApplicationResponse> getAllPending(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "appliedAt"));
-        Page<LoanApplication> pendingApps = applicationRepository.findByStatus(ApplicationStatus.PENDING, pageable);
+    public Page<LoanApplicationDetailsResponse> getApplications(
+            Integer pageNumber,
+            Integer pageSize,
+            ApplicationStatus status
+    ) {
 
-        return pendingApps.map(applicationMapper::toResponse);
-    }
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-    @Override
-    @Transactional(readOnly = true)
-    public LoanApplicationDetailsResponse getById(UUID applicationId) {
-        LoanApplication application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new BusinessRuleException("Application not found"));
+        User profile = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("User not found"));
 
-        BorrowerProfile profile = borrowerProfileRepository.findByUser_UserId(application.getBorrower().getUserId())
-                .orElseThrow(() -> new BusinessRuleException("Borrower profile missing for this application"));
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        return LoanApplicationDetailsResponse.builder()
-                .application(applicationMapper.toResponse(application))
-                .borrowerProfile(borrowerProfileMapper.toResponse(profile))
-                .panFirst3(profile.getUser().getPerson().getPanFirst3())
-                .panLast2(profile.getUser().getPerson().getPanLast2())
-                .build();
+        Page<LoanApplication> applications;
+
+        boolean isPrivilegedUser =
+                profile.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
+                        profile.getRole().getRoleName() == RoleName.ADMIN;
+
+        if (isPrivilegedUser) {
+            applications = (status != null)
+                    ? applicationRepository.findByStatus(status, pageable)
+                    : applicationRepository.findAll(pageable);
+        } else {
+            applications = (status != null)
+                    ? applicationRepository.findByBorrowerEmailAndStatus(email, status, pageable)
+                    : applicationRepository.findByBorrowerEmailPaginated(email, pageable);
+        }
+
+        return applications.map(applicationMapper::toDetailsResponse);
     }
 }

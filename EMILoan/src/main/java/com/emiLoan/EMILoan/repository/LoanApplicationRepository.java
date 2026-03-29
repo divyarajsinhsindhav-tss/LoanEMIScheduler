@@ -21,6 +21,10 @@ public interface LoanApplicationRepository extends JpaRepository<LoanApplication
     @Query("SELECT COUNT(l) FROM LoanApplication l WHERE l.borrower.userId = :userId AND l.status = :status")
     Long countActiveApplications(@Param("userId") UUID userId, @Param("status") ApplicationStatus status);
 
+    Optional<LoanApplication> findByBorrowerEmailAndApplicationCode(String email, String applicationCode);
+
+    Page<LoanApplication> findByBorrowerEmailAndStatus(String email, ApplicationStatus status, Pageable pageable);
+
     // Converted to Pageable and explicitly mapped via JPQL
     @Query("SELECT l FROM LoanApplication l WHERE l.borrower.email = :email ORDER BY l.appliedAt DESC")
     Page<LoanApplication> findByBorrowerEmailPaginated(@Param("email") String email, Pageable pageable);
