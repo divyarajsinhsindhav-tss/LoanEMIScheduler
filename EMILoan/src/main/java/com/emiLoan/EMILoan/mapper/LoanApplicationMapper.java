@@ -16,7 +16,6 @@ public interface LoanApplicationMapper {
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "interestRate", ignore = true)
     @Mapping(target = "dtiRatio", ignore = true)
-        // REMOVED: createdAt and updatedAt ignores to stop Builder errors
     LoanApplication toEntity(LoanApplicationRequest request);
 
     @Mapping(target = "borrowerId", source = "borrower.userId")

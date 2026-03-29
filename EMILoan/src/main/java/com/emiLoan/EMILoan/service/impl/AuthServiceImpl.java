@@ -1,4 +1,4 @@
-package com.emiLoan.EMILoan.services.auth;
+package com.emiLoan.EMILoan.service.impl;
 
 import com.emiLoan.EMILoan.common.enums.RoleName;
 import com.emiLoan.EMILoan.dto.user.AuthResponse;
@@ -12,6 +12,7 @@ import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
 import com.emiLoan.EMILoan.mapper.UserMapper;
 import com.emiLoan.EMILoan.repository.*;
 import com.emiLoan.EMILoan.security.JwtTokenProvider;
+import com.emiLoan.EMILoan.service.interfaces.AuthService;
 import com.emiLoan.EMILoan.utils.PANHashingUtil;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -39,10 +40,10 @@ public class AuthService {
     private final PANHashingUtil panHashingUtil;
     private final EntityManager entityManager;
 
+    @Override
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AuthanticationException("Email or password incorrect"));
-
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -61,6 +62,7 @@ public class AuthService {
                 .build();
     }
 
+    @Override
     @Transactional
     public UserResponse registerBorrower(BorrowerRegistrationRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -90,6 +92,7 @@ public class AuthService {
         return userMapper.toResponse(savedUser);
     }
 
+    @Override
     @Transactional
     public UserResponse registerLoanOfficer(LoanOfficerRegistrationRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -134,5 +137,4 @@ public class AuthService {
                     return savedPerson;
                 });
     }
-
 }

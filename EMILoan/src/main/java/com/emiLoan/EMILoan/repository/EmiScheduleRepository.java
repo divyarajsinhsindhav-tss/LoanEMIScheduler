@@ -4,6 +4,9 @@ import com.emiLoan.EMILoan.common.enums.EmiStatus;
 import com.emiLoan.EMILoan.entity.EmiSchedule;
 import com.emiLoan.EMILoan.entity.Loan;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -13,10 +16,17 @@ import java.util.UUID;
 
 @Repository
 public interface EmiScheduleRepository extends JpaRepository<EmiSchedule, UUID> {
+
+    Optional<EmiSchedule> findFirstByLoanAndStatusNotOrderByInstallmentNoAsc(Loan loan, EmiStatus status);
+
+    Optional<EmiSchedule> findFirstByLoan_LoanIdAndStatusOrderByDueDateAsc(UUID loanId, EmiStatus status);
+
     List<EmiSchedule> findByLoanOrderByInstallmentNoAsc(Loan loan);
-    Optional<EmiSchedule> findFirstByLoanAndStatusOrderByInstallmentNoAsc(Loan loan, EmiStatus status);
-    List<EmiSchedule> findByDueDateAndStatus(LocalDate date, EmiStatus status);
-    List<EmiSchedule> findByDueDateBeforeAndStatus(LocalDate date, EmiStatus status);
-    Optional<EmiSchedule> findByLoanLoanIdAndInstallmentNo(UUID loanId, Integer installmentNo);
+
+    @Modifying
+    @Query("UPDATE EmiSchedule e SET e.status = 'OVERDUE' " +
+            "WHERE e.dueDate < :currentDate AND e.status = 'PENDING'")
+    int updateStatusToOverdueForPastDue(@Param("currentDate") LocalDate currentDate);
+
     boolean existsByLoanAndStatusNot(Loan loan, EmiStatus status);
 }

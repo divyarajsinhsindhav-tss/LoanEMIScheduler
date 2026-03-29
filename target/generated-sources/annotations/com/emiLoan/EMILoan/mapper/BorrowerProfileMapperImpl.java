@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-27T21:23:15+0530",
+    date = "2026-03-28T18:41:18+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -40,9 +40,10 @@ public class BorrowerProfileMapperImpl implements BorrowerProfileMapper {
         BorrowerResponse.BorrowerResponseBuilder borrowerResponse = BorrowerResponse.builder();
 
         borrowerResponse.user( userMapper.toResponse( profile.getUser() ) );
+        borrowerResponse.monthlyIncome( profile.getMonthlyIncome() );
+        borrowerResponse.existingLoanCount( profile.getExistingLoanCount() );
         borrowerResponse.borrowerId( profile.getBorrowerId() );
         borrowerResponse.borrowerCode( profile.getBorrowerCode() );
-        borrowerResponse.monthlyIncome( profile.getMonthlyIncome() );
 
         return borrowerResponse.build();
     }
