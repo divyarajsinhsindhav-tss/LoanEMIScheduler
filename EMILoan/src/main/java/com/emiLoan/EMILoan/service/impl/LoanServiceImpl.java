@@ -20,6 +20,7 @@ import com.emiLoan.EMILoan.service.interfaces.EmiService;
 import com.emiLoan.EMILoan.service.interfaces.LoanService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,26 +47,28 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
-    public LoanResponse processDecision(UUID appId, OfficerDecisionRequest request, String officerEmail) {
+    public LoanResponse processDecision(String appId, OfficerDecisionRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
         if (request == null) {
             throw new BusinessRuleException("Decision request body is missing.");
         }
 
-        LoanApplication application = applicationRepository.findById(appId)
+        LoanApplication application = applicationRepository.findByApplicationCode(appId)
                 .orElseThrow(() -> new BusinessRuleException("Application not found"));
 
         if (application.getStatus() != ApplicationStatus.PENDING) {
             throw new BusinessRuleException("Only PENDING applications can be processed. Current status: " + application.getStatus());
         }
 
-        User officer = userRepository.findByEmail(officerEmail)
+        User officer = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessRuleException("Officer not found"));
 
         UUID borrowerPersonId = application.getBorrower().getPerson().getPersonId();
         UUID officerPersonId = officer.getPerson().getPersonId();
 
         if (borrowerPersonId.equals(officerPersonId)) {
-            log.error("Security Alert: Officer {} attempted to process their own application {}", officerEmail, appId);
+            log.error("Security Alert: Officer {} attempted to process their own application {}", email, appId);
             throw new BusinessRuleException("Access Denied: You cannot review your own loan application.");
         }
 
@@ -86,7 +89,7 @@ public class LoanServiceImpl implements LoanService {
         applicationRepository.save(application);
 
         if (request.getStatus() == ApplicationStatus.REJECTED) {
-            log.info("Application {} was REJECTED by Officer {}.", appId, officerEmail);
+            log.info("Application {} was REJECTED by Officer {}.", appId, email);
             return null;
         }
 

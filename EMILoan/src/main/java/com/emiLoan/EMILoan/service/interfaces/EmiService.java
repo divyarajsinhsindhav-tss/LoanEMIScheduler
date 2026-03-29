@@ -14,7 +14,7 @@ public interface EmiService {
      * Retrieves the full amortization schedule for a given loan.
      * Enforces data ownership checks for the borrower.
      */
-    List<EmiScheduleResponse> getSchedule(UUID loanId, String email);
+    List<EmiScheduleResponse> getSchedule(String loanId);
 
     /**
      * Internal business method called immediately after a Loan is APPROVED and saved.

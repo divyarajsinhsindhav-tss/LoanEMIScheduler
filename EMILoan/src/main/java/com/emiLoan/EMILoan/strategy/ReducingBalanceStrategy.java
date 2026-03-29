@@ -1,4 +1,4 @@
-package com.emiLoan.EMILoan.strategy.impl;
+package com.emiLoan.EMILoan.strategy;
 
 import com.emiLoan.EMILoan.strategy.EmiCalculationStrategy;
 import com.emiLoan.EMILoan.strategy.EmiRowData;

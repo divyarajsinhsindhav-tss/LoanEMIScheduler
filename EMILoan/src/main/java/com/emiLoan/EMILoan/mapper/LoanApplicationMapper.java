@@ -2,6 +2,7 @@ package com.emiLoan.EMILoan.mapper;
 
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.request.OfficerDecisionRequest;
+import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
 import com.emiLoan.EMILoan.entity.LoanApplication;
 import com.emiLoan.EMILoan.entity.User;
@@ -22,6 +23,8 @@ public interface LoanApplicationMapper {
     @Mapping(target = "borrowerName", source = "borrower", qualifiedByName = "mapFullName")
     @Mapping(target = "reviewedByOfficerName", source = "reviewedBy", qualifiedByName = "mapFullName")
     LoanApplicationResponse toResponse(LoanApplication application);
+
+    LoanApplicationDetailsResponse toDetailsResponse(LoanApplication application);
 
     @Mapping(target = "applicationId", ignore = true)
     @Mapping(target = "borrower", ignore = true)

@@ -14,6 +14,7 @@ import com.emiLoan.EMILoan.repository.UserRepository;
 import com.emiLoan.EMILoan.service.interfaces.EmiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,20 +37,14 @@ public class EmiServiceImpl implements EmiService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmiScheduleResponse> getSchedule(UUID loanId, String email) {
-        Loan loan = loanRepository.findById(loanId)
+    public List<EmiScheduleResponse> getSchedule(String loanId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Loan loan = loanRepository.findByLoanCode(loanId)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
 
-        User requester = userRepository.findByEmail(email)
+        userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessRuleException("User not found"));
-
-        boolean isOwner = loan.getBorrower().getEmail().equals(email);
-        boolean isOfficerOrAdmin = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
-                requester.getRole().getRoleName() == RoleName.ADMIN;
-
-        if (!isOwner && !isOfficerOrAdmin) {
-            throw new BusinessRuleException("Unauthorized access to loan schedule.");
-        }
 
         List<EmiSchedule> scheduleList = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan);
 
