@@ -21,5 +21,5 @@ public interface LoanService {
 
     LoanResponse updateLoanStatus(UUID loanId, LoanStatusUpdateRequest request);
 
-    LoanResponse processDecision(UUID appId, OfficerDecisionRequest request, String officerEmail);
+    LoanResponse processDecision(String appId, OfficerDecisionRequest request);
 }
