@@ -1,10 +1,7 @@
 package com.emiLoan.EMILoan.dto.loan.response;
 
 import com.emiLoan.EMILoan.common.enums.LoanStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,6 +11,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class LoanResponse {
     private UUID loanId;
     private String loanCode;

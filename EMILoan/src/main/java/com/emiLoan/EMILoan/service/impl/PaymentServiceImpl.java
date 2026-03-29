@@ -1,9 +1,6 @@
 package com.emiLoan.EMILoan.service.impl;
 
-import com.emiLoan.EMILoan.common.enums.EmiStatus;
-import com.emiLoan.EMILoan.common.enums.LoanStatus;
-import com.emiLoan.EMILoan.common.enums.PaymentStatus;
-import com.emiLoan.EMILoan.common.enums.RoleName;
+import com.emiLoan.EMILoan.common.enums.*;
 import com.emiLoan.EMILoan.dto.payment.PaymentHistoryResponse;
 import com.emiLoan.EMILoan.dto.payment.PaymentRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentResponse;
@@ -17,6 +14,8 @@ import com.emiLoan.EMILoan.repository.EmiScheduleRepository;
 import com.emiLoan.EMILoan.repository.LoanRepository;
 import com.emiLoan.EMILoan.repository.PaymentRepository;
 import com.emiLoan.EMILoan.repository.UserRepository;
+import com.emiLoan.EMILoan.service.interfaces.AuditService;
+import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import com.emiLoan.EMILoan.service.interfaces.PaymentService;
 import com.emiLoan.EMILoan.strategy.payment.PaymentGatewayStrategy;
 import com.emiLoan.EMILoan.strategy.payment.PaymentStrategyFactory;
@@ -44,14 +43,19 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentStrategyFactory paymentStrategyFactory;
     private final PaymentMapper paymentMapper;
 
+    private final NotificationService notificationService;
+    private final AuditService auditService;
+
     @Override
     @Transactional
     public PaymentResponse makePayment(PaymentRequest request, String email) {
         EmiSchedule emi = emiScheduleRepository.findById(request.getEmiId())
                 .orElseThrow(() -> new BusinessRuleException("EMI installment not found"));
         Loan loan = emi.getLoan();
+        User borrower = loan.getBorrower();
 
-        if (!loan.getBorrower().getEmail().equals(email)) {
+        // 1. Validations (Auth, Status, Sequence)
+        if (!borrower.getEmail().equals(email)) {
             throw new BusinessRuleException("Unauthorized to make payments on this loan.");
         }
         if (loan.getLoanStatus() != LoanStatus.ACTIVE) {
@@ -70,9 +74,11 @@ public class PaymentServiceImpl implements PaymentService {
                     + firstUnpaid.getInstallmentNo() + " first.");
         }
 
+        // 2. Gateway Processing
         PaymentGatewayStrategy gateway = paymentStrategyFactory.getStrategy(request.getPaymentMode());
         PaymentStatus paymentStatus = gateway.processPayment(emi.getTotalEmi());
 
+        // 3. Persist Payment Record
         Payment payment = Payment.builder()
                 .emiSchedule(emi)
                 .loan(loan)
@@ -83,16 +89,22 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment savedPayment = paymentRepository.save(payment);
 
+        auditService.logOfficerAction(null, AuditAction.PAYMENT, AuditEntityType.LOAN, loan.getLoanId());
+
         if (paymentStatus == PaymentStatus.SUCCESS) {
             emi.setStatus(EmiStatus.PAID);
             emi.setPaidDate(LocalDate.now());
             emiScheduleRepository.save(emi);
 
+            log.info("Payment successful for EMI #{}", emi.getInstallmentNo());
+
             boolean hasUnpaidEmis = emiScheduleRepository.existsByLoanAndStatusNot(loan, EmiStatus.PAID);
             if (!hasUnpaidEmis) {
                 loan.setLoanStatus(LoanStatus.CLOSED);
                 loanRepository.save(loan);
+
                 log.info("Final EMI paid. Loan {} successfully CLOSED.", loan.getLoanCode());
+                notificationService.sendLoanClosed(borrower, loan);
             }
         } else {
             log.warn("Payment FAILED for EMI ID {}", emi.getEmiId());
@@ -100,6 +112,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         return paymentMapper.toResponse(savedPayment);
     }
+
 
     @Override
     @Transactional(readOnly = true)

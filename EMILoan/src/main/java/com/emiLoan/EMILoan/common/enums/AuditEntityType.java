@@ -2,5 +2,6 @@ package com.emiLoan.EMILoan.common.enums;
 
 public enum AuditEntityType {
     LOAN,
-    APPLICATION
+    APPLICATION,
+    EMI_SCHEDULE
 }

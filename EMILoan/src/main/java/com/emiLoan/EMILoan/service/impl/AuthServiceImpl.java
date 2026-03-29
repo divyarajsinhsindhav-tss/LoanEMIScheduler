@@ -13,6 +13,7 @@ import com.emiLoan.EMILoan.mapper.UserMapper;
 import com.emiLoan.EMILoan.repository.*;
 import com.emiLoan.EMILoan.security.JwtTokenProvider;
 import com.emiLoan.EMILoan.service.interfaces.AuthService;
+import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import com.emiLoan.EMILoan.utils.PANHashingUtil;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final PANHashingUtil panHashingUtil;
     private final EntityManager entityManager;
+    private final NotificationService notificationService;
 
     @Override
     public AuthResponse login(LoginRequest request) {
@@ -88,6 +90,7 @@ public class AuthServiceImpl implements AuthService {
                 .existingLoanCount(0)
                 .build();
         borrowerProfileRepository.save(profile);
+        notificationService.sendWelcomeEmail(savedUser);
 
         return userMapper.toResponse(savedUser);
     }
@@ -119,6 +122,7 @@ public class AuthServiceImpl implements AuthService {
                 .isActive(true)
                 .build();
         employeeProfileRepository.save(profile);
+        notificationService.sendWelcomeEmail(savedUser);
 
         return userMapper.toResponse(savedUser);
     }

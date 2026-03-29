@@ -12,7 +12,6 @@ public interface LoanApplicationService {
 
     LoanApplicationResponse apply(LoanApplicationRequest request, String email);
 
-    // Updated to return Page instead of List
     Page<LoanApplicationResponse> getMyApplications(String email, int page, int size);
 
     Page<LoanApplicationResponse> getAllPending(int page, int size);

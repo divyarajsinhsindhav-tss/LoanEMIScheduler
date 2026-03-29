@@ -10,20 +10,9 @@ import java.util.UUID;
 
 public interface EmiService {
 
-    /**
-     * Retrieves the full amortization schedule for a given loan.
-     * Enforces data ownership checks for the borrower.
-     */
     List<EmiScheduleResponse> getSchedule(UUID loanId, String email);
 
-    /**
-     * Internal business method called immediately after a Loan is APPROVED and saved.
-     * Generates the mathematical schedule and persists the rows to the database.
-     */
     void generateAndSaveSchedule(Loan loan);
 
-    /**
-     * Background job method to mark missed payments as OVERDUE.
-     */
     void processOverdueEmis(LocalDate currentDate);
 }

@@ -2,6 +2,8 @@ package com.emiLoan.EMILoan.service.impl;
 
 import com.emiLoan.EMILoan.common.constants.AppConstants;
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
+import com.emiLoan.EMILoan.common.enums.AuditAction;
+import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
@@ -14,7 +16,9 @@ import com.emiLoan.EMILoan.mapper.BorrowerProfileMapper;
 import com.emiLoan.EMILoan.mapper.LoanApplicationMapper;
 import com.emiLoan.EMILoan.repository.BorrowerProfileRepository;
 import com.emiLoan.EMILoan.repository.LoanApplicationRepository;
+import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import com.emiLoan.EMILoan.service.interfaces.LoanApplicationService;
+import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,6 +45,9 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     private final LoanApplicationMapper applicationMapper;
     private final BorrowerProfileMapper borrowerProfileMapper;
 
+    private final NotificationService notificationService;
+    private final AuditService auditService;
+
     @Override
     @Transactional
     public LoanApplicationResponse apply(LoanApplicationRequest request, String email) {
@@ -53,7 +60,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         }
 
         BigDecimal dtiRatio = dtiEngine.calculate(request.getExistingEmi(), profile.getMonthlyIncome());
-
         String suggestedStrategy = strategyEngine.suggest(dtiRatio, request.getTenureMonths());
 
         LoanApplication application = applicationMapper.toEntity(request);
@@ -63,10 +69,16 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         application.setExistingEmi(request.getExistingEmi());
         application.setStatus(ApplicationStatus.PENDING);
 
-
         LoanApplication savedApplication = applicationRepository.save(application);
         log.info("New Loan Application {} created for borrower {} with DTI {} and Strategy {}",
                 savedApplication.getApplicationId(), email, dtiRatio, suggestedStrategy);
+
+        try {
+            notificationService.sendApplicationSubmitted(profile.getUser(), savedApplication);
+        } catch (Exception e) {
+            log.error("Failed to send submission email for app {}: {}", savedApplication.getApplicationId(), e.getMessage());
+        }
+        auditService.logOfficerAction(null, AuditAction.CREATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
 
         return applicationMapper.toResponse(savedApplication);
     }

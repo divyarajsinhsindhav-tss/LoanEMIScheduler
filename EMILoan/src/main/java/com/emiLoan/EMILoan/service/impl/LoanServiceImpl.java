@@ -1,8 +1,6 @@
 package com.emiLoan.EMILoan.service.impl;
 
-import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
-import com.emiLoan.EMILoan.common.enums.EmiStatus;
-import com.emiLoan.EMILoan.common.enums.LoanStatus;
+import com.emiLoan.EMILoan.common.enums.*;
 import com.emiLoan.EMILoan.dto.loan.request.LoanStatusUpdateRequest;
 import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
 import com.emiLoan.EMILoan.dto.loan.response.LoanSummaryResponse;
@@ -16,8 +14,10 @@ import com.emiLoan.EMILoan.repository.EmiScheduleRepository;
 import com.emiLoan.EMILoan.repository.LoanApplicationRepository;
 import com.emiLoan.EMILoan.repository.LoanRepository;
 import com.emiLoan.EMILoan.repository.UserRepository;
+import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import com.emiLoan.EMILoan.service.interfaces.EmiService;
 import com.emiLoan.EMILoan.service.interfaces.LoanService;
+import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,6 +43,9 @@ public class LoanServiceImpl implements LoanService {
     private final EmiService emiServicePort;
     private final LoanMapper loanMapper;
 
+    private final NotificationService notificationService;
+    private final AuditService auditService;
+
 
     @Override
     @Transactional
@@ -55,7 +58,7 @@ public class LoanServiceImpl implements LoanService {
                 .orElseThrow(() -> new BusinessRuleException("Application not found"));
 
         if (application.getStatus() != ApplicationStatus.PENDING) {
-            throw new BusinessRuleException("Only PENDING applications can be processed. Current status: " + application.getStatus());
+            throw new BusinessRuleException("Only PENDING applications can be processed.");
         }
 
         User officer = userRepository.findByEmail(officerEmail)
@@ -69,6 +72,8 @@ public class LoanServiceImpl implements LoanService {
             throw new BusinessRuleException("Access Denied: You cannot review your own loan application.");
         }
 
+        String suggested = application.getSuggestedStrategy();
+
         application.setStatus(request.getStatus());
         application.setReviewedBy(officer);
         application.setReviewedAt(LocalDateTime.now());
@@ -80,12 +85,19 @@ public class LoanServiceImpl implements LoanService {
         if (request.getOfficerStrategy() != null && !request.getOfficerStrategy().trim().isEmpty()) {
             application.setOfficerStrategy(request.getOfficerStrategy());
         } else {
-            application.setOfficerStrategy(application.getSuggestedStrategy());
+            application.setOfficerStrategy(suggested);
         }
 
         applicationRepository.save(application);
 
+        AuditAction action = (request.getStatus() == ApplicationStatus.APPROVED) ? AuditAction.APPROVED : AuditAction.REJECTED;
+        auditService.logOfficerAction(officer, action, AuditEntityType.APPLICATION, application.getApplicationId());
+
+        boolean isOverridden = !suggested.equals(application.getOfficerStrategy());
+        auditService.logStrategyDecision(application, suggested, application.getOfficerStrategy(), isOverridden, officer);
+
         if (request.getStatus() == ApplicationStatus.REJECTED) {
+            notificationService.sendLoanRejected(application.getBorrower(), application);
             log.info("Application {} was REJECTED by Officer {}.", appId, officerEmail);
             return null;
         }
@@ -94,7 +106,14 @@ public class LoanServiceImpl implements LoanService {
             if (application.getInterestRate() == null) {
                 throw new BusinessRuleException("Interest rate must be assigned before approval.");
             }
-            return generateAndPersistLoan(application);
+
+            LoanResponse loanResponse = generateAndPersistLoan(application);
+
+            Loan savedLoan = loanRepository.findById(loanResponse.getLoanId())
+                    .orElseThrow(() -> new BusinessRuleException("Internal Error: Loan record not found after generation."));
+            notificationService.sendLoanApproved(application.getBorrower(), savedLoan);
+
+            return loanResponse;
         }
 
         throw new BusinessRuleException("Invalid decision status provided.");
