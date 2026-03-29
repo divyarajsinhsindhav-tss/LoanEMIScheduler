@@ -1,14 +1,21 @@
 package com.emiLoan.EMILoan.common.constants;
 
+import java.math.BigDecimal;
+
 public final class AppConstants {
 
     private AppConstants() {
     }
 
     public static final int MAX_ACTIVE_LOANS = 3;
-    public static final double LOW_RISK_DTI = 20.0;
-    public static final double HIGH_RISK_DTI = 40.0;
-    public static final int STEP_UP_THRESHOLD_MONTHS = 24;
+    public static final BigDecimal LOW_RISK_THRESHOLD = new BigDecimal("20.00");
+    public static final BigDecimal HIGH_RISK_THRESHOLD = new BigDecimal("40.00");
+    public static final int LONG_TERM_TENURE_THRESHOLD = 24;
+    public static final String STRATEGY_FLAT_RATE = "FLAT_RATE";
+    public static final String STRATEGY_REDUCING_BALANCE = "REDUCING_BALANCE";
+    public static final String STRATEGY_STEP_UP = "STEP_UP";
+    public static final String STRATEGY_REJECTED = "REJECTED";
+    public static final BigDecimal MAX_DB_DTI = new BigDecimal("999.99");
     public static final double STEP_UP_ANNUAL_INCREASE = 0.05;
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String AUTH_HEADER = "Authorization";

@@ -4,14 +4,13 @@ import com.emiLoan.EMILoan.common.response.ApiResponse;
 import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.response.LoanOfficerResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
-import com.emiLoan.EMILoan.services.auth.AuthService;
-import com.emiLoan.EMILoan.services.employee.EmployeeService;
+import com.emiLoan.EMILoan.service.interfaces.AuthService;
+import com.emiLoan.EMILoan.service.interfaces.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

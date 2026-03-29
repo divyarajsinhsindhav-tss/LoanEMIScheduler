@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-27T21:23:15+0530",
+    date = "2026-03-29T11:13:51+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -66,6 +66,7 @@ public class LoanApplicationMapperImpl implements LoanApplicationMapper {
 
         application.setOfficerStrategy( request.getOfficerStrategy() );
         application.setStatus( request.getStatus() );
+        application.setInterestRate( request.getInterestRate() );
     }
 
     private UUID applicationBorrowerUserId(LoanApplication loanApplication) {

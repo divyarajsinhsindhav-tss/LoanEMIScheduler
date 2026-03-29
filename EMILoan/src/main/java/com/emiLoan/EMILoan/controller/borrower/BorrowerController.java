@@ -2,7 +2,7 @@ package com.emiLoan.EMILoan.controller.borrower;
 
 import com.emiLoan.EMILoan.common.response.ApiResponse;
 import com.emiLoan.EMILoan.dto.user.response.BorrowerResponse;
-import com.emiLoan.EMILoan.services.borrower.BorrowerService;
+import com.emiLoan.EMILoan.service.interfaces.BorrowerService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

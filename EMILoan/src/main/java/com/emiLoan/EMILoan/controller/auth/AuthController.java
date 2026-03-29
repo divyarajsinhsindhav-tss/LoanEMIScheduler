@@ -5,7 +5,7 @@ import com.emiLoan.EMILoan.dto.user.AuthResponse;
 import com.emiLoan.EMILoan.dto.user.request.BorrowerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoginRequest;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
-import com.emiLoan.EMILoan.services.auth.AuthService;
+import com.emiLoan.EMILoan.service.interfaces.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
