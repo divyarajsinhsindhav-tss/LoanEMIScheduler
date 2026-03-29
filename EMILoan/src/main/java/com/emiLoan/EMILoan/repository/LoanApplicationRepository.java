@@ -1,3 +1,4 @@
+
 package com.emiLoan.EMILoan.repository;
 
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
@@ -19,6 +20,10 @@ public interface LoanApplicationRepository extends JpaRepository<LoanApplication
 
     @Query("SELECT COUNT(l) FROM LoanApplication l WHERE l.borrower.userId = :userId AND l.status = :status")
     Long countActiveApplications(@Param("userId") UUID userId, @Param("status") ApplicationStatus status);
+
+    Optional<LoanApplication> findByBorrowerEmailAndApplicationCode(String email, String applicationCode);
+
+    Page<LoanApplication> findByBorrowerEmailAndStatus(String email, ApplicationStatus status, Pageable pageable);
 
     @Query("SELECT l FROM LoanApplication l WHERE l.borrower.email = :email ORDER BY l.appliedAt DESC")
     Page<LoanApplication> findByBorrowerEmailPaginated(@Param("email") String email, Pageable pageable);

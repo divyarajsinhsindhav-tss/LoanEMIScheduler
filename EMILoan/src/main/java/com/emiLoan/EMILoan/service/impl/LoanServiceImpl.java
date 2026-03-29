@@ -46,7 +46,6 @@ public class LoanServiceImpl implements LoanService {
     private final NotificationService notificationService;
     private final AuditService auditService;
 
-
     @Override
     @Transactional
     public LoanResponse processDecision(UUID appId, OfficerDecisionRequest request, String officerEmail) {
@@ -58,7 +57,7 @@ public class LoanServiceImpl implements LoanService {
                 .orElseThrow(() -> new BusinessRuleException("Application not found"));
 
         if (application.getStatus() != ApplicationStatus.PENDING) {
-            throw new BusinessRuleException("Only PENDING applications can be processed.");
+            throw new BusinessRuleException("Only PENDING applications can be processed. Current status: " + application.getStatus());
         }
 
         User officer = userRepository.findByEmail(officerEmail)
@@ -111,6 +110,7 @@ public class LoanServiceImpl implements LoanService {
 
             Loan savedLoan = loanRepository.findById(loanResponse.getLoanId())
                     .orElseThrow(() -> new BusinessRuleException("Internal Error: Loan record not found after generation."));
+
             notificationService.sendLoanApproved(application.getBorrower(), savedLoan);
 
             return loanResponse;
@@ -148,7 +148,6 @@ public class LoanServiceImpl implements LoanService {
 
         return loanMapper.toResponse(savedLoan);
     }
-
 
     @Override
     @Transactional

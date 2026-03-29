@@ -42,40 +42,42 @@ public class EmiServiceImpl implements EmiService {
     private final NotificationService notificationService;
     private final AuditService auditService;
 
+
     @Override
     @Transactional(readOnly = true)
-    public List<EmiScheduleResponse> getSchedule(UUID loanId, String email) {
+    public List<EmiScheduleResponse> getSchedule(UUID loanId, String requesterEmail) {
         Loan loan = loanRepository.findById(loanId)
-                .orElseThrow(() -> new BusinessRuleException("Loan not found"));
+                .orElseThrow(() -> new BusinessRuleException("Loan record not found for ID: " + loanId));
 
-        User requester = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessRuleException("User not found"));
+        User requester = userRepository.findByEmail(requesterEmail)
+                .orElseThrow(() -> new BusinessRuleException("Authenticated user session invalid."));
 
-        boolean isOwner = loan.getBorrower().getEmail().equals(email);
-        boolean isPrivileged = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
+        boolean isOwner = loan.getBorrower().getEmail().equalsIgnoreCase(requesterEmail);
+        boolean isStaff = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
                 requester.getRole().getRoleName() == RoleName.ADMIN;
 
-        if (!isOwner && !isPrivileged) {
-            log.warn("Unauthorized schedule access attempt by {} for Loan {}", email, loanId);
-            throw new BusinessRuleException("Unauthorized access to loan schedule.");
+        if (!isOwner && !isStaff) {
+            log.warn("Security Alert: Unauthorized access attempt to Loan {} by {}", loanId, requesterEmail);
+            throw new BusinessRuleException("Access Denied: You do not have permission to view this schedule.");
         }
 
         List<EmiSchedule> scheduleList = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan);
         return emiScheduleMapper.toResponseList(scheduleList);
     }
 
+
     @Override
     @Transactional
     public void generateAndSaveSchedule(Loan loan) {
         if (!emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan).isEmpty()) {
-            log.warn("Schedule already exists for Loan {}. Generation aborted.", loan.getLoanCode());
+            log.warn("Schedule skipped: Loan {} already has an active EMI schedule.", loan.getLoanCode());
             return;
         }
 
         List<EmiSchedule> schedules = amortizationEngine.buildSchedule(loan);
 
         if (schedules == null || schedules.isEmpty()) {
-            throw new BusinessRuleException("Amortization Engine failed to generate rows for Loan: " + loan.getLoanCode());
+            throw new BusinessRuleException("Critical Engine Failure: Could not generate schedule for " + loan.getLoanCode());
         }
 
         emiScheduleRepository.saveAll(schedules);
@@ -84,18 +86,19 @@ public class EmiServiceImpl implements EmiService {
         loan.setEmiAmount(baseEmi);
         loanRepository.save(loan);
 
-        log.info("Schedule Generated: {} installments for Loan {}", schedules.size(), loan.getLoanCode());
+        log.info("Financial Event: Generated {} installments for Loan {}", schedules.size(), loan.getLoanCode());
     }
+
 
     @Override
     @Transactional
     public void processOverdueEmis(LocalDate currentDate) {
-        log.info("Cron Execution: Overdue detection for date {}", currentDate);
+        log.info("Batch Job Started: Identifying overdue installments for {}", currentDate);
 
         List<EmiSchedule> overdueList = emiScheduleRepository.findByDueDateBeforeAndStatus(currentDate, EmiStatus.PENDING);
 
         if (overdueList.isEmpty()) {
-            log.info("No pending installments found past their due date.");
+            log.info("Batch Job Finished: No overdue installments found.");
             return;
         }
 
@@ -111,10 +114,10 @@ public class EmiServiceImpl implements EmiService {
                         emi.getEmiId());
 
             } catch (Exception e) {
-                log.error("Notification/Audit error for Overdue EMI {}: {}", emi.getEmiId(), e.getMessage());
+                log.error("Batch Job Warning: Failed to notify/audit for EMI {}: {}", emi.getEmiId(), e.getMessage());
             }
         }
 
-        log.info("Cleanup Complete: {} installments marked as OVERDUE.", updatedCount);
+        log.info("Batch Job Finished: {} records marked as OVERDUE and processed.", updatedCount);
     }
 }

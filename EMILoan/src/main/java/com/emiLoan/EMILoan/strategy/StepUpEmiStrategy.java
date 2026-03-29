@@ -9,10 +9,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.emiLoan.EMILoan.common.constants.AppConstants.ANNUAL_STEP_UP_RATE;
+
 @Component("STEP_UP")
 public class StepUpEmiStrategy implements EmiCalculationStrategy {
 
-    private static final BigDecimal ANNUAL_STEP_UP_RATE = new BigDecimal("1.05");
 
     @Override
     public List<EmiRowData> generateSchedule(BigDecimal principal, BigDecimal annualRate, int months, LocalDate startDate) {

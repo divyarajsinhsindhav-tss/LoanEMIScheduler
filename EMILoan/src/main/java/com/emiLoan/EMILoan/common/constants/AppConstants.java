@@ -16,7 +16,7 @@ public final class AppConstants {
     public static final String STRATEGY_STEP_UP = "STEP_UP";
     public static final String STRATEGY_REJECTED = "REJECTED";
     public static final BigDecimal MAX_DB_DTI = new BigDecimal("999.99");
-    public static final double STEP_UP_ANNUAL_INCREASE = 0.05;
+    public static final BigDecimal ANNUAL_STEP_UP_RATE = new BigDecimal("1.05");
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String AUTH_HEADER = "Authorization";
     public static final int REMINDER_DAYS_BEFORE = 3;

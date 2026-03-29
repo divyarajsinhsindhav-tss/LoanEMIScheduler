@@ -21,6 +21,7 @@ import com.emiLoan.EMILoan.strategy.payment.PaymentGatewayStrategy;
 import com.emiLoan.EMILoan.strategy.payment.PaymentStrategyFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,23 +47,24 @@ public class PaymentServiceImpl implements PaymentService {
     private final NotificationService notificationService;
     private final AuditService auditService;
 
+
     @Override
     @Transactional
     public PaymentResponse makePayment(PaymentRequest request, String email) {
         EmiSchedule emi = emiScheduleRepository.findById(request.getEmiId())
                 .orElseThrow(() -> new BusinessRuleException("EMI installment not found"));
+
         Loan loan = emi.getLoan();
         User borrower = loan.getBorrower();
 
-        // 1. Validations (Auth, Status, Sequence)
-        if (!borrower.getEmail().equals(email)) {
-            throw new BusinessRuleException("Unauthorized to make payments on this loan.");
+        if (!borrower.getEmail().equalsIgnoreCase(email)) {
+            throw new BusinessRuleException("Unauthorized: This loan does not belong to you.");
         }
         if (loan.getLoanStatus() != LoanStatus.ACTIVE) {
-            throw new BusinessRuleException("Cannot process payment. Loan status: " + loan.getLoanStatus());
+            throw new BusinessRuleException("Payment rejected: Loan is currently " + loan.getLoanStatus());
         }
         if (emi.getStatus() == EmiStatus.PAID) {
-            throw new BusinessRuleException("This installment is already marked as PAID.");
+            throw new BusinessRuleException("Payment rejected: Installment #" + emi.getInstallmentNo() + " is already paid.");
         }
 
         EmiSchedule firstUnpaid = emiScheduleRepository
@@ -70,15 +72,12 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElse(null);
 
         if (firstUnpaid != null && emi.getInstallmentNo() > firstUnpaid.getInstallmentNo()) {
-            throw new BusinessRuleException("Sequential payment required. Please pay installment #"
-                    + firstUnpaid.getInstallmentNo() + " first.");
+            throw new BusinessRuleException("Out of sequence: Please pay installment #" + firstUnpaid.getInstallmentNo() + " first.");
         }
 
-        // 2. Gateway Processing
         PaymentGatewayStrategy gateway = paymentStrategyFactory.getStrategy(request.getPaymentMode());
         PaymentStatus paymentStatus = gateway.processPayment(emi.getTotalEmi());
 
-        // 3. Persist Payment Record
         Payment payment = Payment.builder()
                 .emiSchedule(emi)
                 .loan(loan)
@@ -96,52 +95,112 @@ public class PaymentServiceImpl implements PaymentService {
             emi.setPaidDate(LocalDate.now());
             emiScheduleRepository.save(emi);
 
-            log.info("Payment successful for EMI #{}", emi.getInstallmentNo());
+            log.info("EMI #{} for Loan {} successfully paid.", emi.getInstallmentNo(), loan.getLoanCode());
 
             boolean hasUnpaidEmis = emiScheduleRepository.existsByLoanAndStatusNot(loan, EmiStatus.PAID);
             if (!hasUnpaidEmis) {
                 loan.setLoanStatus(LoanStatus.CLOSED);
                 loanRepository.save(loan);
 
-                log.info("Final EMI paid. Loan {} successfully CLOSED.", loan.getLoanCode());
+                log.info("Loan {} has no more pending EMIs. Status updated to CLOSED.", loan.getLoanCode());
                 notificationService.sendLoanClosed(borrower, loan);
             }
         } else {
-            log.warn("Payment FAILED for EMI ID {}", emi.getEmiId());
+            log.warn("Payment Gateway returned FAILURE for EMI ID {}", emi.getEmiId());
         }
 
         return paymentMapper.toResponse(savedPayment);
     }
 
-
     @Override
     @Transactional(readOnly = true)
-    public PaymentHistoryResponse getPaymentHistory(UUID loanId, String email) {
+    public PaymentHistoryResponse getPaymentHistory(UUID loanId, String requesterEmail) {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
 
-        User requester = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessRuleException("User not found"));
+        User requester = userRepository.findByEmail(requesterEmail)
+                .orElseThrow(() -> new BusinessRuleException("User session invalid"));
 
-        boolean isOwner = loan.getBorrower().getEmail().equals(email);
-        boolean isOfficerOrAdmin = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
+        boolean isOwner = loan.getBorrower().getEmail().equalsIgnoreCase(requesterEmail);
+        boolean isStaff = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
                 requester.getRole().getRoleName() == RoleName.ADMIN;
 
-        if (!isOwner && !isOfficerOrAdmin) {
-            throw new BusinessRuleException("Unauthorized to view this transaction history.");
+        if (!isOwner && !isStaff) {
+            throw new BusinessRuleException("Access Denied: You cannot view this payment history.");
         }
 
-        List<Payment> transactions = paymentRepository.findByLoanOrderByPaymentDateDesc(loan);
+        return getHistoryForLoan(loan);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PaymentHistoryResponse> getAllPayments() {
+        return loanRepository.findAll().stream()
+                .map(this::getHistoryForLoan)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PaymentHistoryResponse> getBorrowerPaymentHistory(String borrowerEmail) {
+        List<Loan> loans = loanRepository.findByBorrowerEmail(borrowerEmail);
+
+        return loans.stream()
+                .map(this::getHistoryForLoan)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PaymentHistoryResponse> getLoanPaymentHistory(String loanId) {
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Loan loan = loanRepository.findByLoanCode(loanId)
+                .orElseThrow(() -> new BusinessRuleException("Loan not found"));
+
+        if (!loan.getBorrower().getEmail().equals(email)) {
+            throw new BusinessRuleException("Unauthorized access");
+        }
+
+        List<Payment> payments = paymentRepository.findByLoanOrderByPaymentDateDesc(loan);
 
         BigDecimal totalPaid = paymentRepository.sumSuccessfulPaymentsByLoan(loan);
         if (totalPaid == null) totalPaid = BigDecimal.ZERO;
 
-        List<PaymentResponse> transactionResponses = transactions.stream()
+        return List.of(buildResponse(loan.getLoanCode(), totalPaid, payments));
+    }
+
+    private PaymentHistoryResponse getHistoryForLoan(Loan loan) {
+        List<Payment> payments = paymentRepository.findByLoanOrderByPaymentDateDesc(loan);
+        BigDecimal totalPaid = paymentRepository.sumSuccessfulPaymentsByLoan(loan);
+
+        if (totalPaid == null) totalPaid = BigDecimal.ZERO;
+
+        List<PaymentResponse> transactions = payments.stream()
                 .map(paymentMapper::toResponse)
                 .collect(Collectors.toList());
 
         return PaymentHistoryResponse.builder()
                 .loanCode(loan.getLoanCode())
+                .totalAmountPaid(totalPaid)
+                .transactions(transactions)
+                .build();
+    }
+    private PaymentHistoryResponse buildResponse(
+            String loanCode,
+            BigDecimal totalPaid,
+            List<Payment> payments
+    ) {
+
+        List<PaymentResponse> transactionResponses = payments.stream()
+                .map(paymentMapper::toResponse)
+                .collect(Collectors.toList());
+
+        return PaymentHistoryResponse.builder()
+                .loanCode(loanCode)
                 .totalAmountPaid(totalPaid)
                 .transactions(transactionResponses)
                 .build();

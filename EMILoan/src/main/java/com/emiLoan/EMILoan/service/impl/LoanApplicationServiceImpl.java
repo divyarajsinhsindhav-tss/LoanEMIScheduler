@@ -4,18 +4,20 @@ import com.emiLoan.EMILoan.common.constants.AppConstants;
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
 import com.emiLoan.EMILoan.common.enums.AuditAction;
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
+import com.emiLoan.EMILoan.common.enums.RoleName;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
 import com.emiLoan.EMILoan.engine.DtiCalculationEngine;
 import com.emiLoan.EMILoan.engine.StrategySelectionEngine;
-import com.emiLoan.EMILoan.entity.BorrowerProfile;
-import com.emiLoan.EMILoan.entity.LoanApplication;
+import com.emiLoan.EMILoan.entity.*;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
+import com.emiLoan.EMILoan.exceptions.ResourceNotFoundException;
 import com.emiLoan.EMILoan.mapper.BorrowerProfileMapper;
 import com.emiLoan.EMILoan.mapper.LoanApplicationMapper;
 import com.emiLoan.EMILoan.repository.BorrowerProfileRepository;
 import com.emiLoan.EMILoan.repository.LoanApplicationRepository;
+import com.emiLoan.EMILoan.repository.UserRepository;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import com.emiLoan.EMILoan.service.interfaces.LoanApplicationService;
 import com.emiLoan.EMILoan.service.interfaces.NotificationService;
@@ -38,6 +40,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     private final LoanApplicationRepository applicationRepository;
     private final BorrowerProfileRepository borrowerProfileRepository;
+    private final UserRepository userRepository;
 
     private final DtiCalculationEngine dtiEngine;
     private final StrategySelectionEngine strategyEngine;
@@ -54,14 +57,17 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         BorrowerProfile profile = borrowerProfileRepository.findByUser_Email(email)
                 .orElseThrow(() -> new BusinessRuleException("Borrower profile not found for email: " + email));
 
+        // Validation logic
         Long activeCount = applicationRepository.countActiveApplications(profile.getUser().getUserId(), ApplicationStatus.PENDING);
         if (activeCount >= AppConstants.MAX_ACTIVE_LOANS) {
             throw new BusinessRuleException("Borrower cannot have more than " + AppConstants.MAX_ACTIVE_LOANS + " pending applications.");
         }
 
+        // Engine calculations
         BigDecimal dtiRatio = dtiEngine.calculate(request.getExistingEmi(), profile.getMonthlyIncome());
         String suggestedStrategy = strategyEngine.suggest(dtiRatio, request.getTenureMonths());
 
+        // Mapping and persistence
         LoanApplication application = applicationMapper.toEntity(request);
         application.setBorrower(profile.getUser());
         application.setDtiRatio(dtiRatio);
@@ -70,9 +76,9 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         application.setStatus(ApplicationStatus.PENDING);
 
         LoanApplication savedApplication = applicationRepository.save(application);
-        log.info("New Loan Application {} created for borrower {} with DTI {} and Strategy {}",
-                savedApplication.getApplicationId(), email, dtiRatio, suggestedStrategy);
+        log.info("New Loan Application {} created for borrower {}", savedApplication.getApplicationId(), email);
 
+        // Notification and Auditing
         try {
             notificationService.sendApplicationSubmitted(profile.getUser(), savedApplication);
         } catch (Exception e) {
@@ -85,20 +91,42 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<LoanApplicationResponse> getMyApplications(String email, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<LoanApplication> applicationsPage = applicationRepository.findByBorrowerEmailPaginated(email, pageable);
+    public LoanApplicationResponse getApplication(String applicationCode, String email) {
+        LoanApplication loanApplication = applicationRepository
+                .findByBorrowerEmailAndApplicationCode(email, applicationCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Application", applicationCode));
 
-        return applicationsPage.map(applicationMapper::toResponse);
+        return applicationMapper.toResponse(loanApplication);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<LoanApplicationResponse> getAllPending(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "appliedAt"));
-        Page<LoanApplication> pendingApps = applicationRepository.findByStatus(ApplicationStatus.PENDING, pageable);
+    public Page<LoanApplicationDetailsResponse> getApplications(
+            String email,
+            Integer pageNumber,
+            Integer pageSize,
+            ApplicationStatus status
+    ) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("User not found"));
 
-        return pendingApps.map(applicationMapper::toResponse);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "appliedAt"));
+        Page<LoanApplication> applications;
+
+        boolean isPrivilegedUser = user.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
+                user.getRole().getRoleName() == RoleName.ADMIN;
+
+        if (isPrivilegedUser) {
+            applications = (status != null)
+                    ? applicationRepository.findByStatus(status, pageable)
+                    : applicationRepository.findAll(pageable);
+        } else {
+            applications = (status != null)
+                    ? applicationRepository.findByBorrowerEmailAndStatus(email, status, pageable)
+                    : applicationRepository.findByBorrowerEmailPaginated(email, pageable);
+        }
+
+        return applications.map(applicationMapper::toDetailsResponse);
     }
 
     @Override
