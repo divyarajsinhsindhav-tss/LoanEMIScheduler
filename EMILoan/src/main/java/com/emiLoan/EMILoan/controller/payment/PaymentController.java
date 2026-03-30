@@ -6,66 +6,83 @@ import com.emiLoan.EMILoan.dto.payment.PaymentRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentResponse;
 import com.emiLoan.EMILoan.service.interfaces.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/payment")
+@RequestMapping("/api/v1/payments")
 public class PaymentController {
 
         private final PaymentService paymentService;
 
-        @GetMapping("/loan/{loanId}")
-        public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getAllPayments(
-                        @PathVariable String loanId,
-                        HttpServletRequest httpServletRequest) {
-                List<PaymentHistoryResponse> responses = paymentService.getLoanPaymentHistory(loanId);
 
-                return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.of(
-                                HttpStatus.OK,
-                                "Payment History of all your emi of loan " + loanId,
-                                httpServletRequest.getRequestURI(),
-                                responses));
+        @PostMapping("/pay")
+        public ResponseEntity<ApiResponse<PaymentResponse>> makePayment(
+                @RequestBody @Valid PaymentRequest request,
+                @AuthenticationPrincipal UserDetails userDetails,
+                HttpServletRequest httpServletRequest) {
+
+                // Pass the authenticated email to the service for security validation
+                PaymentResponse response = paymentService.makePayment(request, userDetails.getUsername());
+
+                return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.of(
+                        HttpStatus.CREATED,
+                        "Payment processed successfully. Status: " + response.getStatus(),
+                        httpServletRequest.getRequestURI(),
+                        response));
         }
 
-        @GetMapping("/")
-        public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getAllPayment(
-                        HttpServletRequest httpServletRequest) {
-                List<PaymentHistoryResponse> responses = paymentService.getBorrowerPaymentHistory();
+        @GetMapping("/loan/{loanId}")
+        public ResponseEntity<ApiResponse<PaymentHistoryResponse>> getLoanPaymentHistory(
+                @PathVariable UUID loanId,
+                @AuthenticationPrincipal UserDetails userDetails,
+                HttpServletRequest httpServletRequest) {
 
-                return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.of(
-                                HttpStatus.OK,
-                                "Payment History of all your emi",
-                                httpServletRequest.getRequestURI(),
-                                responses));
+                PaymentHistoryResponse response = paymentService.getPaymentHistory(loanId, userDetails.getUsername());
+
+                return ResponseEntity.ok(ApiResponse.of(
+                        HttpStatus.OK,
+                        "Payment history for loan: " + response.getLoanCode(),
+                        httpServletRequest.getRequestURI(),
+                        response));
+        }
+
+
+        @GetMapping("/my-history")
+        public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getMyPaymentHistory(
+                @AuthenticationPrincipal UserDetails userDetails,
+                HttpServletRequest httpServletRequest) {
+
+                List<PaymentHistoryResponse> responses = paymentService.getBorrowerPaymentHistory(userDetails.getUsername());
+
+                return ResponseEntity.ok(ApiResponse.of(
+                        HttpStatus.OK,
+                        "Complete personal payment history retrieved.",
+                        httpServletRequest.getRequestURI(),
+                        responses));
         }
 
         @GetMapping("/all")
-        public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getAllPayments(
-                        HttpServletRequest httpServletRequest) {
+        @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
+        public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getAllSystemPayments(
+                HttpServletRequest httpServletRequest) {
+
                 List<PaymentHistoryResponse> responses = paymentService.getAllPayments();
-                return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.of(
-                                HttpStatus.OK,
-                                "Complete History of payments",
-                                httpServletRequest.getRequestURI(),
-                                responses));
-        }
 
-        @PostMapping("/pay")
-        public ResponseEntity<ApiResponse<PaymentResponse>> payment(
-                        HttpServletRequest httpServletRequest,
-                        @RequestBody PaymentRequest request) {
-                PaymentResponse paymentResponse = paymentService.makePayment(request);
-
-                return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.of(
-                                HttpStatus.CREATED,
-                                "Payment Successfully created",
-                                httpServletRequest.getRequestURI(),
-                                paymentResponse));
+                return ResponseEntity.ok(ApiResponse.of(
+                        HttpStatus.OK,
+                        "Master payment records retrieved.",
+                        httpServletRequest.getRequestURI(),
+                        responses));
         }
 }

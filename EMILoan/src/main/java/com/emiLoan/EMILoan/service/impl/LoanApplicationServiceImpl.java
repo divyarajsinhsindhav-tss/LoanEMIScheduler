@@ -84,7 +84,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         } catch (Exception e) {
             log.error("Failed to send submission email for app {}: {}", savedApplication.getApplicationId(), e.getMessage());
         }
-        auditService.logOfficerAction(null, AuditAction.CREATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
+//        auditService.logOfficerAction(null, AuditAction.CREATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
 
         return applicationMapper.toResponse(savedApplication);
     }

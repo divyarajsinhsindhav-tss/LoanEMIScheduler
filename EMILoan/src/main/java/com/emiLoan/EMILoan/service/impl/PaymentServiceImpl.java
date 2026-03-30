@@ -88,7 +88,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment savedPayment = paymentRepository.save(payment);
 
-        auditService.logOfficerAction(null, AuditAction.PAYMENT, AuditEntityType.LOAN, loan.getLoanId());
+        //auditService.logOfficerAction(null, AuditAction.PAYMENT, AuditEntityType.LOAN, loan.getLoanId());
 
         if (paymentStatus == PaymentStatus.SUCCESS) {
             emi.setStatus(EmiStatus.PAID);

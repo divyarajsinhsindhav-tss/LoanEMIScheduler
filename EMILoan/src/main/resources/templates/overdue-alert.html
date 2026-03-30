@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px;">
+<table width="100%" max-width="600px" align="center" style="background-color: #ffffff; border-radius: 8px; border-top: 5px solid #d9534f; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; margin: 0 auto; border-collapse: collapse;">
+    <tr>
+        <td style="padding: 30px; color: #333333; line-height: 1.6;">
+            <h2 style="color: #d9534f; margin-top: 0;">⚠️ URGENT: EMI Overdue</h2>
+            <p>Dear <strong th:text="${name}">Borrower</strong>,</p>
+            <p>Our records indicate that we have not received your EMI payment for the loan account <strong th:text="${loanCode}">LN-123</strong>, which was due on <strong style="color: #d9534f;" th:text="${dueDate}">YYYY-MM-DD</strong>.</p>
+
+            <p style="background-color: #fdf5f5; border-left: 4px solid #d9534f; padding: 15px; margin: 20px 0; color: #333;">
+                Failure to clear this due immediately will result in additional penal interest and negatively impact your credit score (CIBIL).
+            </p>
+
+            <p>Please log in to your portal and clear the outstanding dues immediately.</p>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="#" style="background-color: #d9534f; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Pay Overdue Amount</a>
+            </div>
+            <p>If you have already made the payment, please ignore this email.</p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
