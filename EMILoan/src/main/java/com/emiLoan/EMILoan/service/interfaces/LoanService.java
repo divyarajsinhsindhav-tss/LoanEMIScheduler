@@ -15,11 +15,11 @@ public interface LoanService {
 
     List<LoanResponse> getMyLoans(String email);
 
-    LoanResponse getLoanById(UUID loanId);
+    LoanResponse getLoan(String loanCode, String email);
 
-    LoanSummaryResponse getLoanSummary(UUID loanId, String email);
+    LoanSummaryResponse getLoanSummary(String loanCode, String email);
 
     LoanResponse updateLoanStatus(UUID loanId, LoanStatusUpdateRequest request);
 
-    LoanResponse processDecision(UUID appId, OfficerDecisionRequest request,String officerEmail);
+    LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request,String officerEmail);
 }

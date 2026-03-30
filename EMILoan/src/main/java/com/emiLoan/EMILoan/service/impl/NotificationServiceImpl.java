@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
@@ -32,6 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
+    @Async
     public void sendApplicationSubmitted(User user, LoanApplication application) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -44,6 +46,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
+    @Async
     public void sendLoanApproved(User user, Loan loan) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -57,6 +60,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
+    @Async
     public void sendLoanRejected(User user, LoanApplication application) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -68,6 +72,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
+    @Async
     public void sendPaymentReminder(User user, EmiSchedule emi) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -81,6 +86,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
+    @Async
     public void sendOverdueAlert(User user, EmiSchedule emi) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -91,8 +97,9 @@ public class NotificationServiceImpl implements NotificationService {
                 "overdue-alert", props);
     }
 
-
-    private void sendEmail(User user, Loan loan, EmiSchedule emi, String subject, String templateName, Map<String, Object> properties) {
+    @Async
+    private void sendEmail(User user, Loan loan, EmiSchedule emi, String subject, String templateName,
+            Map<String, Object> properties) {
 
         Context context = new Context();
         context.setVariables(properties);
@@ -132,8 +139,10 @@ public class NotificationServiceImpl implements NotificationService {
             notificationRepository.save(notification);
         }
     }
+
     @Override
     @Transactional
+    @Async
     public void sendWelcomeEmail(User user) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -142,8 +151,10 @@ public class NotificationServiceImpl implements NotificationService {
         sendEmail(user, null, null, "Welcome to EMI Loan System!",
                 "welcome-email", props);
     }
+
     @Override
     @Transactional
+    @Async
     public void sendLoanClosed(User user, Loan loan) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());

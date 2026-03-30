@@ -2,9 +2,8 @@ package com.emiLoan.EMILoan.service.impl;
 
 import com.emiLoan.EMILoan.common.constants.AppConstants;
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
-import com.emiLoan.EMILoan.common.enums.AuditAction;
-import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.enums.RoleName;
+import com.emiLoan.EMILoan.common.enums.LoanStatus;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
@@ -17,10 +16,12 @@ import com.emiLoan.EMILoan.mapper.BorrowerProfileMapper;
 import com.emiLoan.EMILoan.mapper.LoanApplicationMapper;
 import com.emiLoan.EMILoan.repository.BorrowerProfileRepository;
 import com.emiLoan.EMILoan.repository.LoanApplicationRepository;
+import com.emiLoan.EMILoan.repository.LoanRepository;
 import com.emiLoan.EMILoan.repository.UserRepository;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import com.emiLoan.EMILoan.service.interfaces.LoanApplicationService;
 import com.emiLoan.EMILoan.service.interfaces.NotificationService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,7 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -39,6 +39,7 @@ import java.util.UUID;
 public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     private final LoanApplicationRepository applicationRepository;
+    private final LoanRepository loanRepository;
     private final BorrowerProfileRepository borrowerProfileRepository;
     private final UserRepository userRepository;
 
@@ -47,20 +48,21 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     private final LoanApplicationMapper applicationMapper;
     private final BorrowerProfileMapper borrowerProfileMapper;
+    private final EntityManager entityManager;
 
     private final NotificationService notificationService;
-    private final AuditService auditService;
 
     @Override
     @Transactional
     public LoanApplicationResponse apply(LoanApplicationRequest request, String email) {
-        BorrowerProfile profile = borrowerProfileRepository.findByUser_Email(email)
+        BorrowerProfile profile = borrowerProfileRepository.findByUser_EmailWithUser(email)
                 .orElseThrow(() -> new BusinessRuleException("Borrower profile not found for email: " + email));
 
-        // Validation logic
-        Long activeCount = applicationRepository.countActiveApplications(profile.getUser().getUserId(), ApplicationStatus.PENDING);
-        if (activeCount >= AppConstants.MAX_ACTIVE_LOANS) {
-            throw new BusinessRuleException("Borrower cannot have more than " + AppConstants.MAX_ACTIVE_LOANS + " pending applications.");
+        // Validation logic - Check for active loans instead of pending applications
+        Long activeLoanCount = loanRepository.countActiveLoans(profile.getUser().getUserId(), LoanStatus.ACTIVE);
+        if (activeLoanCount >= AppConstants.MAX_ACTIVE_LOANS) {
+            throw new BusinessRuleException(
+                    "Borrower cannot have more than " + AppConstants.MAX_ACTIVE_LOANS + " active loans at a time.");
         }
 
         // Engine calculations
@@ -73,18 +75,29 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         application.setDtiRatio(dtiRatio);
         application.setSuggestedStrategy(suggestedStrategy);
         application.setExistingEmi(request.getExistingEmi());
-        application.setStatus(ApplicationStatus.PENDING);
+        
+        if (AppConstants.STRATEGY_REJECTED.equalsIgnoreCase(suggestedStrategy)) {
+            application.setStatus(ApplicationStatus.REJECTED);
+        } else {
+            application.setStatus(ApplicationStatus.PENDING);
+        }
 
         LoanApplication savedApplication = applicationRepository.save(application);
+        entityManager.flush();
+        entityManager.refresh(savedApplication);
         log.info("New Loan Application {} created for borrower {}", savedApplication.getApplicationId(), email);
 
         // Notification and Auditing
         try {
-            notificationService.sendApplicationSubmitted(profile.getUser(), savedApplication);
+            if (savedApplication.getStatus() == ApplicationStatus.REJECTED) {
+                notificationService.sendLoanRejected(profile.getUser(), savedApplication);
+            } else {
+                notificationService.sendApplicationSubmitted(profile.getUser(), savedApplication);
+            }
         } catch (Exception e) {
-            log.error("Failed to send submission email for app {}: {}", savedApplication.getApplicationId(), e.getMessage());
+            log.error("Failed to send notification for app {}: {}", savedApplication.getApplicationId(),
+                    e.getMessage());
         }
-//        auditService.logOfficerAction(null, AuditAction.CREATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
 
         return applicationMapper.toResponse(savedApplication);
     }
@@ -105,8 +118,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
             String email,
             Integer pageNumber,
             Integer pageSize,
-            ApplicationStatus status
-    ) {
+            ApplicationStatus status) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessRuleException("User not found"));
 
@@ -131,8 +143,8 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public LoanApplicationDetailsResponse getById(UUID applicationId) {
-        LoanApplication application = applicationRepository.findById(applicationId)
+    public LoanApplicationDetailsResponse getByApplicationCode(String applicationCode) {
+        LoanApplication application = applicationRepository.findByApplicationCode(applicationCode)
                 .orElseThrow(() -> new BusinessRuleException("Application not found"));
 
         BorrowerProfile profile = borrowerProfileRepository.findByUser_UserId(application.getBorrower().getUserId())

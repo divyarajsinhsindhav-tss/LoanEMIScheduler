@@ -25,5 +25,8 @@ public interface LoanRepository extends JpaRepository<Loan, UUID> {
 
     Optional<Loan> findByLoanCode(String loanCode);
 
+    @Query("SELECT COUNT(l) FROM Loan l WHERE l.borrower.userId = :userId AND l.loanStatus = :status")
+    Long countActiveLoans(@Param("userId") UUID userId, @Param("status") LoanStatus status);
+
     List<Loan> findByLoanStatus(LoanStatus status);
 }

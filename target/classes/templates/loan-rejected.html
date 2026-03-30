@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px;">
+<table width="100%" max-width="600px" align="center" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; margin: 0 auto; border-collapse: collapse;">
+    <tr>
+        <td style="background-color: #6c757d; padding: 30px; text-align: center; color: #ffffff;">
+            <h1 style="margin: 0; font-size: 24px;">Application Update</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 30px; color: #333333; line-height: 1.6;">
+            <p>Dear <strong th:text="${name}">Applicant</strong>,</p>
+            <p>Thank you for taking the time to apply for a loan with EMILoan.</p>
+            <p>After carefully reviewing your application (<strong th:text="${appCode}">APP-123</strong>) alongside our current lending criteria, we regret to inform you that we are unable to approve your request at this time.</p>
+            <p>This decision is often based on factors such as Debt-to-Income ratio, credit history, or incomplete documentation.</p>
+            <p>You are welcome to re-apply after 6 months if your financial circumstances change.</p>
+            <p>Best Regards,<br><strong>The EMILoan Team</strong></p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

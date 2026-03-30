@@ -13,7 +13,7 @@ public interface LoanApplicationService {
 
     LoanApplicationResponse apply(LoanApplicationRequest request, String email);
 
-    LoanApplicationDetailsResponse getById(UUID applicationId);
+    LoanApplicationDetailsResponse getByApplicationCode(String applicationCode);
 
     LoanApplicationResponse getApplication(String applicationCode, String email);
 
