@@ -71,6 +71,11 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessRuleException("Email already exists");
         }
 
+        String panHash = panHashingUtil.hash(request.getPan());
+        if (userRepository.existsByPerson_PanHashAndRole_RoleName(panHash, RoleName.BORROWER)) {
+            throw new BusinessRuleException("Registration failed: A borrower account with this PAN card is already registered.");
+        }
+
         PersonIdentity person = getOrCreatePersonIdentity(request.getPan());
         Role role = roleRepository.findByRoleName(RoleName.BORROWER)
                 .orElseThrow(() -> new BusinessRuleException("Default role not found"));
@@ -100,6 +105,11 @@ public class AuthServiceImpl implements AuthService {
     public UserResponse registerLoanOfficer(LoanOfficerRegistrationRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BusinessRuleException("Email already exists");
+        }
+
+        String panHash = panHashingUtil.hash(request.getPan());
+        if (userRepository.existsByPerson_PanHashAndRole_RoleName(panHash, RoleName.LOAN_OFFICER)) {
+            throw new BusinessRuleException("Registration failed: A loan officer account with this PAN card is already registered.");
         }
 
         PersonIdentity person = getOrCreatePersonIdentity(request.getPan());

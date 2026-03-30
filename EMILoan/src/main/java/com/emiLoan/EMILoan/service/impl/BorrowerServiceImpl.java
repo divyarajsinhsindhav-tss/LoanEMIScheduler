@@ -31,7 +31,7 @@ public class BorrowerServiceImpl implements BorrowerService {
 
         String email = authentication.getName();
 
-        BorrowerProfile profile = borrowerProfileRepository.findByUser_Email(email)
+        BorrowerProfile profile = borrowerProfileRepository.findByUser_EmailWithUser(email)
                 .orElseThrow(() -> new BusinessRuleException("Borrower profile not found for the authenticated user."));
 
         return borrowerProfileMapper.toResponse(profile);

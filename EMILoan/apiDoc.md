@@ -1,193 +1,266 @@
-# EMILoan API Documentation
+# Loan EMI Scheduler - API Documentation
 
-## Overview
-This documentation provides complete details of all API endpoints for the **EMILoan** application.
+Welcome to the **Loan EMI Scheduler API Documentation**. This API provides endpoints for user registration, loan application, approval flows, EMI scheduling, and payments.
 
-**Base URL**: `http://localhost:8080`
-
----
-
-## 1. Authentication Endpoints (Public)
-
-### Login
-Authenticates a user and returns a JWT token.
-- **URL**: `/api/v1/auth/login`
-- **Method**: `POST`
-- **Request Body**:
-  ```json
-  {
-      "email": "user@example.com",
-      "password": "SecurePassword123"
-  }
-  ```
-- **Success Response**: `200 OK`
-
-### Borrower Registration
-Registers a new borrower.
-- **URL**: `/api/v1/auth/register/borrower`
-- **Method**: `POST`
-- **Request Body**:
-  ```json
-  {
-      "firstName": "John",
-      "lastName": "Doe",
-      "email": "john.doe@example.com",
-      "password": "SecurePassword123",
-      "phone": "9876543210",
-      "pan": "ABCDE1234F",
-      "monthlyIncome": 50000.0
-  }
-  ```
-- **Success Response**: `201 CREATED`
+## Base URL
+`http://localhost:8080`
 
 ---
 
-## 2. Profile Management
+## Authentication
+Most endpoints require a **Bearer Token** obtained via the Login endpoint.
+Include the token in the request header:
+`Authorization: Bearer <your_jwt_token>`
 
-### Get Borrower Profile (Requires **BORROWER**)
-Retrieves specific profile and user details for the logged-in borrower.
-- **URL**: `/api/v1/borrower/profile`
-- **Method**: `GET`
-- **Success Response**: `200 OK`
+---
 
-### Get Employee Profile (Requires **LOAN_OFFICER** or **ADMIN**)
-Retrieves profile details for the logged-in employee.
-- **URL**: `/api/v1/employee/profile`
-- **Method**: `GET`
-- **Success Response**: `200 OK`
+## Roles and Access Control (RBAC)
+The system supports three roles:
+1.  **BORROWER**: Can apply for loans, view their own profile, schedule, and pay EMIs.
+2.  **LOAN_OFFICER**: Can review applications, approve/reject loans, and view all system payments.
+3.  **ADMIN**: Full system access, including creating LOAN_OFFICER accounts.
 
-### Register Loan Officer (Requires **ADMIN**)
-Allows an admin to create a new loan officer account.
-- **URL**: `/api/v1/employee/admin/register/officer`
-- **Method**: `POST`
-- **Request Body**:
-  ```json
-  {
-      "firstName": "Officer",
-      "lastName": "Two",
-      "email": "officer2@loan.com",
-      "password": "Password123",
-      "phone": "9000800070",
-      "pan": "OFFIC5678G",
-      "salary": 68000.0,
-      "joiningDate": "2024-03-29"
+---
+
+## 1. Authentication Endpoints
+
+### 1.1 Login
+Authenticate a user and return a JWT token.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/auth/login`
+- **Request Body:**
+```json
+{
+  "email": "borrower@example.com",
+  "password": "password123"
+}
+```
+- **Success Response (200 OK):**
+```json
+{
+  "status": "OK",
+  "message": "Login successful",
+  "timestamp": "2026-03-30T19:47:19.123Z",
+  "path": "/api/v1/auth/login",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiJ9...",
+    "email": "borrower@example.com",
+    "role": "BORROWER",
+    "firstName": "John",
+    "lastName": "Doe"
   }
-  ```
-- **Success Response**: `201 CREATED`
+}
+```
+
+### 1.2 Register Borrower
+Create a new borrower account.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/auth/register/borrower`
+- **Request Body:**
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "password": "securePassword123",
+  "phone": "9876543210",
+  "pan": "ABCDE1234F",
+  "monthlyIncome": 50000.00
+}
+```
+- **Success Response (201 Created):**
+```json
+{
+  "status": "CREATED",
+  "message": "Borrower registered successfully",
+  "data": {
+    "userId": "uuid-v4",
+    "email": "john.doe@example.com",
+    "role": "BORROWER"
+  }
+}
+```
+
+---
+
+## 2. Borrower Endpoints
+
+### 2.1 Get Personal Profile
+Retrieve the logged-in borrower's profile details.
+
+- **Method:** `GET`
+- **URL:** `/api/v1/borrower/profile`
+- **Success Response (200 OK):**
+```json
+{
+  "status": "OK",
+  "message": "Profile retrieved successfully",
+  "data": {
+    "email": "john.doe@example.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "phone": "9876543210",
+    "pan": "ABCDE1234F",
+    "monthlyIncome": 50000.00,
+    "userCode": "BR-1001"
+  }
+}
+```
 
 ---
 
 ## 3. Loan Application Endpoints
 
-### Apply for Loan (Requires **BORROWER**)
-Submits a new loan application.
-- **URL**: `/api/v1/loan/applications/apply`
-- **Method**: `POST`
-- **Request Body**:
-  ```json
-  {
-      "requestedAmount": 500000,
-      "tenureMonths": 24,
-      "existingEmi": 5000
+### 3.1 Apply for a Loan
+Submit a new loan application.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/loan/applications/apply`
+- **Request Body:**
+```json
+{
+  "requestedAmount": 500000.00,
+  "tenureMonths": 24,
+  "existingEmi": 5000.00
+}
+```
+- **Success Response (201 Created):**
+```json
+{
+  "status": "CREATED",
+  "message": "Application APP-1234 submitted successfully.",
+  "data": {
+    "applicationCode": "APP-1234",
+    "requestedAmount": 500000.00,
+    "tenureMonths": 24,
+    "status": "APPLIED"
   }
-  ```
-- **Success Response**: `201 CREATED`
+}
+```
 
-### Get All Applications (Requires **BORROWER** or **LOAN_OFFICER**)
-- **URL**: `/api/v1/loan/applications/`
-- **Method**: `GET`
-- **Query Params**:
-  - `pageNumber` (default 0)
-  - `pageSize` (default 10)
-  - `status` (PENDING, APPROVED, REJECTED)
-- **Note**: Borrowers only see their own apps; Officers see all.
+### 3.2 List Applications
+Get a paginated list of applications (Filtered by status for officers).
 
-### Get Application Details (Requires **BORROWER** or **LOAN_OFFICER**)
-- **URL**: `/api/v1/loan/applications/{applicationCode}`
-- **Method**: `GET`
-- **Success Response**: `200 OK`
+- **Method:** `GET`
+- **URL:** `/api/v1/loan/applications?pageNumber=0&pageSize=10&status=APPLIED`
+- **Success Response (200 OK):**
+```json
+{
+  "status": "OK",
+  "message": "Applications retrieved successfully.",
+  "data": {
+    "content": [...],
+    "totalPages": 1,
+    "totalElements": 5
+  }
+}
+```
+
+### 3.3 Get Application Details
+- **By Code:** `/api/v1/loan/applications/{applicationCode}`
+- **Detailed View:** `/api/v1/loan/applications/details/{applicationCode}`
 
 ---
 
-## 4. Loan Management Endpoints
+## 4. Loan Management (Officer/Admin)
 
-### Process Application (Requires **LOAN_OFFICER**)
-Approve or reject a pending loan application.
-- **URL**: `/api/v1/loan/{applicationCode}`
-- **Method**: `PUT`
-- **Request Body**:
-  ```json
-  {
-      "status": "APPROVED",
-      "interestRate": 10.5,
-      "officerStrategy": "REDUCING_BALANCE",
-      "remarks": "Strong credit history"
+### 4.1 Process Application Decision
+Approve or reject a loan application.
+
+- **Method:** `PUT`
+- **URL:** `/api/v1/loans/applications/{applicationCode}/decision`
+- **Request Body:**
+```json
+{
+  "status": "APPROVED",
+  "interestRate": 10.5,
+  "officerStrategy": "REDUCING_BALANCE",
+  "remarks": "Credit score is good."
+}
+```
+- **Success Response (200 OK):**
+```json
+{
+  "status": "OK",
+  "message": "Application decision processed successfully.",
+  "data": {
+    "loanCode": "L-5567",
+    "loanAmount": 500000.00,
+    "interestRate": 10.5,
+    "status": "ACTIVE"
   }
-  ```
-- **Status Options**: `APPROVED`, `REJECTED`
-- **Strategy Options**: `FLAT_RATE`, `REDUCING_BALANCE`, `STEP_UP`
+}
+```
 
-### Get EMI Schedule (Requires **BORROWER** or **LOAN_OFFICER**)
-Retrieves the full list of installments for a specific loan.
-- **URL**: `/api/v1/loan/{loanCode}/schedule`
-- **Method**: `GET`
-- **Success Response**: `200 OK`
+### 4.2 Get Loan Summary
+Retrieve high-level summary of an active loan.
+
+- **Method:** `GET`
+- **URL:** `/api/v1/loans/{loanCode}/summary`
+
+### 4.3 Get Repayment Schedule
+Retrieve the list of EMIs for a specific loan.
+
+- **Method:** `GET`
+- **URL:** `/api/v1/loans/{loanCode}/schedule`
 
 ---
 
 ## 5. Payment Endpoints
 
-### Make Payment (Requires **BORROWER**)
-Pays an EMI installment.
-- **URL**: `/api/v1/payment/pay`
-- **Method**: `POST`
-- **Request Body**:
-  ```json
-  {
-      "emiId": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
-      "paymentMode": "UPI"
+### 5.1 Make EMI Payment
+Pay an individual EMI installment.
+
+- **Method:** `POST`
+- **URL:** `/api/v1/payments/pay`
+- **Request Body:**
+```json
+{
+  "emiId": "uuid-of-emi-record",
+  "paymentMode": "UPI"
+}
+```
+- **Success Response (201 Created):**
+```json
+{
+  "status": "CREATED",
+  "message": "Payment processed successfully. Status: SUCCESS",
+  "data": {
+    "transactionId": "TXN-7890",
+    "amount": 23450.00,
+    "status": "SUCCESS"
   }
-  ```
-- **Payment Modes**: `UPI`, `CARD`, `NETBANKING`
-
-### Get My Payments for a Loan (Requires **BORROWER**)
-- **URL**: `/api/v1/payment/loan/{loanId}`
-- **Method**: `GET`
-
-### Get My Complete Payment History (Requires **BORROWER**)
-- **URL**: `/api/v1/payment/`
-- **Method**: `GET`
-
-### Get All System Payments (Requires **LOAN_OFFICER**)
-- **URL**: `/api/v1/payment/all`
-- **Method**: `GET`
-
----
-
-## 6. Logical Flow & Lifecycle
-
-```mermaid
-sequenceDiagram
-    participant B as Borrower
-    participant O as Loan Officer
-    participant S as System
-
-    B->>S: Register & Login (JWT acquired)
-    B->>S: Submit Loan Application (APP001)
-    Note over S: System calculates DTI & suggests Strategy
-    O->>S: Review PENDING Applications
-    O->>S: Approve APP001 (Sets Int Rate & Strategy)
-    S->>S: Generate Loan (LAN001)
-    S->>S: Generate EMI Schedule (24 months)
-    B->>S: View EMI Schedule for LAN001
-    B->>S: Pay Installment 1 (via API)
-    S->>S: Update EMI Status to PAID
-    Note over S: Daily Scheduler marks missed EMIs as OVERDUE
+}
 ```
 
+### 5.2 Payment History
+- **By Loan:** `/api/v1/payments/loan/{loanCode}`
+- **Self History:** `/api/v1/payments/history`
+- **Master List (Admin/Officer):** `/api/v1/payments/all`
+
 ---
 
-## Default Credentials
-- **Admin**: `admin@example.com` / `AdminPassword123`
-- **Test Borrower**: `borrower@example.com` / `Password123`
-- **Test Loan Officer**: `officer1@loan.com` / `Password123` (Example)
+## 6. Employee/Admin Endpoints
+
+### 6.1 Register Loan Officer (Admin only)
+- **Method:** `POST`
+- **URL:** `/api/v1/employee/admin/register/officer`
+
+---
+
+## Error Handling
+The API returns a standard error object in case of failures:
+
+```json
+{
+  "status": "BAD_REQUEST",
+  "message": "Validation failed",
+  "errors": [
+    "Requested amount cannot be negative",
+    "Invalid PAN format"
+  ],
+  "path": "/api/v1/loan/applications/apply"
+}
+```

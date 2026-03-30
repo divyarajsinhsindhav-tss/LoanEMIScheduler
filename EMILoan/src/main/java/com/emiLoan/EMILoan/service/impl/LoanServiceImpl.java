@@ -1,5 +1,6 @@
 package com.emiLoan.EMILoan.service.impl;
 
+import com.emiLoan.EMILoan.common.constants.AppConstants;
 import com.emiLoan.EMILoan.common.enums.*;
 import com.emiLoan.EMILoan.dto.loan.request.LoanStatusUpdateRequest;
 import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
@@ -18,6 +19,7 @@ import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import com.emiLoan.EMILoan.service.interfaces.EmiService;
 import com.emiLoan.EMILoan.service.interfaces.LoanService;
 import com.emiLoan.EMILoan.service.interfaces.NotificationService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.AnyDiscriminatorImplicitValues;
@@ -45,10 +47,14 @@ public class LoanServiceImpl implements LoanService {
 
     private final NotificationService notificationService;
     private final AuditService auditService;
+    private final EntityManager entityManager;
 
     @Override
     @Transactional
     public LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request, String officerEmail) {
+        User officer = userRepository.findByEmail(officerEmail)
+                .orElseThrow(() -> new BusinessRuleException("Officer not found"));
+
         if (request == null) {
             throw new BusinessRuleException("Decision request body is missing.");
         }
@@ -56,12 +62,13 @@ public class LoanServiceImpl implements LoanService {
         LoanApplication application = applicationRepository.findByApplicationCode(applicationCode)
                 .orElseThrow(() -> new BusinessRuleException("Application not found"));
 
+        if (AppConstants.STRATEGY_REJECTED.equalsIgnoreCase(application.getSuggestedStrategy())) {
+            throw new BusinessRuleException("Access Denied: This application was automatically REJECTED by the system strategy engine and cannot be processed further.");
+        }
+
         if (application.getStatus() != ApplicationStatus.PENDING) {
             throw new BusinessRuleException("Only PENDING applications can be processed. Current status: " + application.getStatus());
         }
-
-        User officer = userRepository.findByEmail(officerEmail)
-                .orElseThrow(() -> new BusinessRuleException("Officer not found"));
 
         UUID borrowerPersonId = application.getBorrower().getPerson().getPersonId();
         UUID officerPersonId = officer.getPerson().getPersonId();
@@ -140,6 +147,8 @@ public class LoanServiceImpl implements LoanService {
                 .build();
 
         Loan savedLoan = loanRepository.save(loan);
+        entityManager.flush();
+        entityManager.refresh(savedLoan);
 
         emiServicePort.generateAndSaveSchedule(savedLoan);
 
@@ -172,8 +181,11 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional(readOnly = true)
-    public LoanResponse getLoanById(UUID loanId) {
-        Loan loan = loanRepository.findById(loanId)
+    public LoanResponse getLoan(String loanCode, String email) {
+        User profile = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("User not found"));
+
+        Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
         return loanMapper.toResponse(loan);
     }

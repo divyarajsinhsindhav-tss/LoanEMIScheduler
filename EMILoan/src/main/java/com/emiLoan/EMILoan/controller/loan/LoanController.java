@@ -44,7 +44,7 @@ public class LoanController {
     }
 
 
-    @PostMapping("/applications/{applicationCode}/decision")
+    @PutMapping("/applications/{applicationCode}/decision")
     public ResponseEntity<ApiResponse<LoanResponse>> processDecision(
             @PathVariable String applicationCode,
             @RequestBody @Valid OfficerDecisionRequest request,
