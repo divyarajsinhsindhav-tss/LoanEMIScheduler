@@ -1,3 +1,4 @@
+
 package com.emiLoan.EMILoan.repository;
 
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
@@ -17,7 +18,6 @@ import java.util.UUID;
 @Repository
 public interface LoanApplicationRepository extends JpaRepository<LoanApplication, UUID> {
 
-    // Explicit JPQL guarantees no runtime parsing errors for nested properties
     @Query("SELECT COUNT(l) FROM LoanApplication l WHERE l.borrower.userId = :userId AND l.status = :status")
     Long countActiveApplications(@Param("userId") UUID userId, @Param("status") ApplicationStatus status);
 
@@ -25,11 +25,9 @@ public interface LoanApplicationRepository extends JpaRepository<LoanApplication
 
     Page<LoanApplication> findByBorrowerEmailAndStatus(String email, ApplicationStatus status, Pageable pageable);
 
-    // Converted to Pageable and explicitly mapped via JPQL
     @Query("SELECT l FROM LoanApplication l WHERE l.borrower.email = :email ORDER BY l.appliedAt DESC")
     Page<LoanApplication> findByBorrowerEmailPaginated(@Param("email") String email, Pageable pageable);
 
-    // Standard derived queries work fine for direct properties
     Page<LoanApplication> findByStatus(ApplicationStatus status, Pageable pageable);
 
     Optional<LoanApplication> findByApplicationCode(String applicationCode);

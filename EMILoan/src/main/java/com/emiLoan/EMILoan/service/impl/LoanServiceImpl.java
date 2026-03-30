@@ -1,8 +1,7 @@
 package com.emiLoan.EMILoan.service.impl;
 
-import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
-import com.emiLoan.EMILoan.common.enums.EmiStatus;
-import com.emiLoan.EMILoan.common.enums.LoanStatus;
+import com.emiLoan.EMILoan.common.constants.AppConstants;
+import com.emiLoan.EMILoan.common.enums.*;
 import com.emiLoan.EMILoan.dto.loan.request.LoanStatusUpdateRequest;
 import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
 import com.emiLoan.EMILoan.dto.loan.response.LoanSummaryResponse;
@@ -16,15 +15,17 @@ import com.emiLoan.EMILoan.repository.EmiScheduleRepository;
 import com.emiLoan.EMILoan.repository.LoanApplicationRepository;
 import com.emiLoan.EMILoan.repository.LoanRepository;
 import com.emiLoan.EMILoan.repository.UserRepository;
+import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import com.emiLoan.EMILoan.service.interfaces.EmiService;
 import com.emiLoan.EMILoan.service.interfaces.LoanService;
+import com.emiLoan.EMILoan.service.interfaces.NotificationService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.hibernate.annotations.AnyDiscriminatorImplicitValues;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,33 +45,40 @@ public class LoanServiceImpl implements LoanService {
     private final EmiService emiServicePort;
     private final LoanMapper loanMapper;
 
+    private final NotificationService notificationService;
+    private final AuditService auditService;
+    private final EntityManager entityManager;
 
     @Override
     @Transactional
-    public LoanResponse processDecision(String appId, OfficerDecisionRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request, String officerEmail) {
+        User officer = userRepository.findByEmail(officerEmail)
+                .orElseThrow(() -> new BusinessRuleException("Officer not found"));
 
         if (request == null) {
             throw new BusinessRuleException("Decision request body is missing.");
         }
 
-        LoanApplication application = applicationRepository.findByApplicationCode(appId)
+        LoanApplication application = applicationRepository.findByApplicationCode(applicationCode)
                 .orElseThrow(() -> new BusinessRuleException("Application not found"));
+
+        if (AppConstants.STRATEGY_REJECTED.equalsIgnoreCase(application.getSuggestedStrategy())) {
+            throw new BusinessRuleException("Access Denied: This application was automatically REJECTED by the system strategy engine and cannot be processed further.");
+        }
 
         if (application.getStatus() != ApplicationStatus.PENDING) {
             throw new BusinessRuleException("Only PENDING applications can be processed. Current status: " + application.getStatus());
         }
 
-        User officer = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessRuleException("Officer not found"));
-
         UUID borrowerPersonId = application.getBorrower().getPerson().getPersonId();
         UUID officerPersonId = officer.getPerson().getPersonId();
 
         if (borrowerPersonId.equals(officerPersonId)) {
-            log.error("Security Alert: Officer {} attempted to process their own application {}", email, appId);
+            log.error("Security Alert: Officer {} attempted to process their own application {}", officerEmail, applicationCode);
             throw new BusinessRuleException("Access Denied: You cannot review your own loan application.");
         }
+
+        String suggested = application.getSuggestedStrategy();
 
         application.setStatus(request.getStatus());
         application.setReviewedBy(officer);
@@ -83,13 +91,20 @@ public class LoanServiceImpl implements LoanService {
         if (request.getOfficerStrategy() != null && !request.getOfficerStrategy().trim().isEmpty()) {
             application.setOfficerStrategy(request.getOfficerStrategy());
         } else {
-            application.setOfficerStrategy(application.getSuggestedStrategy());
+            application.setOfficerStrategy(suggested);
         }
 
         applicationRepository.save(application);
 
+        AuditAction action = (request.getStatus() == ApplicationStatus.APPROVED) ? AuditAction.APPROVED : AuditAction.REJECTED;
+        auditService.logOfficerAction(officer, action, AuditEntityType.APPLICATION, application.getApplicationId());
+
+        boolean isOverridden = !suggested.equals(application.getOfficerStrategy());
+        auditService.logStrategyDecision(application, suggested, application.getOfficerStrategy(), isOverridden, officer);
+
         if (request.getStatus() == ApplicationStatus.REJECTED) {
-            log.info("Application {} was REJECTED by Officer {}.", appId, email);
+            notificationService.sendLoanRejected(application.getBorrower(), application);
+            log.info("Application {} was REJECTED by Officer {}.", applicationCode, officerEmail);
             return null;
         }
 
@@ -97,7 +112,15 @@ public class LoanServiceImpl implements LoanService {
             if (application.getInterestRate() == null) {
                 throw new BusinessRuleException("Interest rate must be assigned before approval.");
             }
-            return generateAndPersistLoan(application);
+
+            LoanResponse loanResponse = generateAndPersistLoan(application);
+
+            Loan savedLoan = loanRepository.findById(loanResponse.getLoanId())
+                    .orElseThrow(() -> new BusinessRuleException("Internal Error: Loan record not found after generation."));
+
+            notificationService.sendLoanApproved(application.getBorrower(), savedLoan);
+
+            return loanResponse;
         }
 
         throw new BusinessRuleException("Invalid decision status provided.");
@@ -124,6 +147,8 @@ public class LoanServiceImpl implements LoanService {
                 .build();
 
         Loan savedLoan = loanRepository.save(loan);
+        entityManager.flush();
+        entityManager.refresh(savedLoan);
 
         emiServicePort.generateAndSaveSchedule(savedLoan);
 
@@ -132,7 +157,6 @@ public class LoanServiceImpl implements LoanService {
 
         return loanMapper.toResponse(savedLoan);
     }
-
 
     @Override
     @Transactional
@@ -157,16 +181,19 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional(readOnly = true)
-    public LoanResponse getLoanById(UUID loanId) {
-        Loan loan = loanRepository.findById(loanId)
+    public LoanResponse getLoan(String loanCode, String email) {
+        User profile = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("User not found"));
+
+        Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
         return loanMapper.toResponse(loan);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public LoanSummaryResponse getLoanSummary(UUID loanId, String email) {
-        Loan loan = loanRepository.findById(loanId)
+    public LoanSummaryResponse getLoanSummary(String loanCode, String email) {
+        Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
 
         if (!loan.getBorrower().getEmail().equals(email)) {
@@ -175,7 +202,7 @@ public class LoanServiceImpl implements LoanService {
 
         LoanSummaryResponse summary = loanMapper.toSummaryResponse(loan);
 
-        emiScheduleRepository.findFirstByLoan_LoanIdAndStatusOrderByDueDateAsc(loanId, EmiStatus.PENDING)
+        emiScheduleRepository.findFirstByLoan_LoanCodeAndStatusOrderByDueDateAsc(loanCode, EmiStatus.PENDING)
                 .ifPresent(emi -> summary.setNextDueDate(emi.getDueDate()));
 
         return summary;

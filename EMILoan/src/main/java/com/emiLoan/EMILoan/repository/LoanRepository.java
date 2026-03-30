@@ -14,7 +14,6 @@ import java.util.UUID;
 @Repository
 public interface LoanRepository extends JpaRepository<Loan, UUID> {
 
-    // Explicit JPQL to prevent nested property runtime errors
     @Query("SELECT l FROM Loan l WHERE l.borrower.email = :email ORDER BY l.createdAt DESC")
     List<Loan> findByBorrowerEmail(@Param("email") String email);
 
@@ -25,6 +24,9 @@ public interface LoanRepository extends JpaRepository<Loan, UUID> {
     List<Loan> findByBorrowerEmailAndStatus(@Param("email") String email, @Param("status") LoanStatus status);
 
     Optional<Loan> findByLoanCode(String loanCode);
+
+    @Query("SELECT COUNT(l) FROM Loan l WHERE l.borrower.userId = :userId AND l.loanStatus = :status")
+    Long countActiveLoans(@Param("userId") UUID userId, @Param("status") LoanStatus status);
 
     List<Loan> findByLoanStatus(LoanStatus status);
 }

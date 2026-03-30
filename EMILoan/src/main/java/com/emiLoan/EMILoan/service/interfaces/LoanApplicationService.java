@@ -7,16 +7,21 @@ import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsRe
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface LoanApplicationService {
 
-    LoanApplicationResponse apply(LoanApplicationRequest request);
+    LoanApplicationResponse apply(LoanApplicationRequest request, String email);
 
-    LoanApplicationResponse getApplication(String applicationId);
+    LoanApplicationDetailsResponse getByApplicationCode(String applicationCode);
 
-    Page<LoanApplicationDetailsResponse> getApplications(Integer pageNumber, Integer pageSize, ApplicationStatus status);
+    LoanApplicationResponse getApplication(String applicationCode, String email);
+
+    Page<LoanApplicationDetailsResponse> getApplications(
+            String email,
+            Integer pageNumber,
+            Integer pageSize,
+            ApplicationStatus status
+    );
 
 }

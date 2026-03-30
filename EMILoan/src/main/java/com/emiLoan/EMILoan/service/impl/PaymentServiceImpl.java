@@ -1,9 +1,6 @@
 package com.emiLoan.EMILoan.service.impl;
 
-import com.emiLoan.EMILoan.common.enums.EmiStatus;
-import com.emiLoan.EMILoan.common.enums.LoanStatus;
-import com.emiLoan.EMILoan.common.enums.PaymentStatus;
-import com.emiLoan.EMILoan.common.enums.RoleName;
+import com.emiLoan.EMILoan.common.enums.*;
 import com.emiLoan.EMILoan.dto.payment.PaymentHistoryResponse;
 import com.emiLoan.EMILoan.dto.payment.PaymentRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentResponse;
@@ -17,6 +14,8 @@ import com.emiLoan.EMILoan.repository.EmiScheduleRepository;
 import com.emiLoan.EMILoan.repository.LoanRepository;
 import com.emiLoan.EMILoan.repository.PaymentRepository;
 import com.emiLoan.EMILoan.repository.UserRepository;
+import com.emiLoan.EMILoan.service.interfaces.AuditService;
+import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import com.emiLoan.EMILoan.service.interfaces.PaymentService;
 import com.emiLoan.EMILoan.strategy.payment.PaymentGatewayStrategy;
 import com.emiLoan.EMILoan.strategy.payment.PaymentStrategyFactory;
@@ -45,22 +44,27 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentStrategyFactory paymentStrategyFactory;
     private final PaymentMapper paymentMapper;
 
+    private final NotificationService notificationService;
+    private final AuditService auditService;
+
+
     @Override
     @Transactional
-    public PaymentResponse makePayment(PaymentRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public PaymentResponse makePayment(PaymentRequest request, String email) {
         EmiSchedule emi = emiScheduleRepository.findById(request.getEmiId())
                 .orElseThrow(() -> new BusinessRuleException("EMI installment not found"));
-        Loan loan = emi.getLoan();
 
-        if (!loan.getBorrower().getEmail().equals(email)) {
-            throw new BusinessRuleException("Unauthorized to make payments on this loan.");
+        Loan loan = emi.getLoan();
+        User borrower = loan.getBorrower();
+
+        if (!borrower.getEmail().equalsIgnoreCase(email)) {
+            throw new BusinessRuleException("Unauthorized: This loan does not belong to you.");
         }
         if (loan.getLoanStatus() != LoanStatus.ACTIVE) {
-            throw new BusinessRuleException("Cannot process payment. Loan status: " + loan.getLoanStatus());
+            throw new BusinessRuleException("Payment rejected: Loan is currently " + loan.getLoanStatus());
         }
         if (emi.getStatus() == EmiStatus.PAID) {
-            throw new BusinessRuleException("This installment is already marked as PAID.");
+            throw new BusinessRuleException("Payment rejected: Installment #" + emi.getInstallmentNo() + " is already paid.");
         }
 
         EmiSchedule firstUnpaid = emiScheduleRepository
@@ -68,8 +72,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElse(null);
 
         if (firstUnpaid != null && emi.getInstallmentNo() > firstUnpaid.getInstallmentNo()) {
-            throw new BusinessRuleException("Sequential payment required. Please pay installment #"
-                    + firstUnpaid.getInstallmentNo() + " first.");
+            throw new BusinessRuleException("Out of sequence: Please pay installment #" + firstUnpaid.getInstallmentNo() + " first.");
         }
 
         PaymentGatewayStrategy gateway = paymentStrategyFactory.getStrategy(request.getPaymentMode());
@@ -90,18 +93,61 @@ public class PaymentServiceImpl implements PaymentService {
             emi.setPaidDate(LocalDate.now());
             emiScheduleRepository.save(emi);
 
+            log.info("EMI #{} for Loan {} successfully paid.", emi.getInstallmentNo(), loan.getLoanCode());
+
             boolean hasUnpaidEmis = emiScheduleRepository.existsByLoanAndStatusNot(loan, EmiStatus.PAID);
             if (!hasUnpaidEmis) {
                 loan.setLoanStatus(LoanStatus.CLOSED);
                 loanRepository.save(loan);
-                log.info("Final EMI paid. Loan {} successfully CLOSED.", loan.getLoanCode());
+
+                log.info("Loan {} has no more pending EMIs. Status updated to CLOSED.", loan.getLoanCode());
+                notificationService.sendLoanClosed(borrower, loan);
             }
         } else {
-            log.warn("Payment FAILED for EMI ID {}", emi.getEmiId());
+            log.warn("Payment Gateway returned FAILURE for EMI ID {}", emi.getEmiId());
         }
 
         return paymentMapper.toResponse(savedPayment);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PaymentHistoryResponse getPaymentHistory(String loanCode, String requesterEmail) {
+        User requester = userRepository.findByEmail(requesterEmail)
+                .orElseThrow(() -> new BusinessRuleException("User session invalid"));
+
+        Loan loan = loanRepository.findByLoanCode(loanCode)
+                .orElseThrow(() -> new BusinessRuleException("Loan not found"));
+
+        log.info("Payment history of loan {} requested by {}", loan.getLoanCode(), requester.getEmail());
+
+        return getHistoryForLoan(loan);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PaymentHistoryResponse> getAllPayments(String email) {
+        User profile = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("User session invalid"));
+        return loanRepository.findAll().stream()
+                .map(this::getHistoryForLoan)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PaymentHistoryResponse> getBorrowerPaymentHistory(String borrowerEmail) {
+        User profile = userRepository.findByEmail(borrowerEmail)
+                .orElseThrow(() -> new BusinessRuleException("User session invalid"));
+
+        List<Loan> loans = loanRepository.findByBorrowerEmail(borrowerEmail);
+
+        return loans.stream()
+                .map(this::getHistoryForLoan)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -124,53 +170,21 @@ public class PaymentServiceImpl implements PaymentService {
         return List.of(buildResponse(loan.getLoanCode(), totalPaid, payments));
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<PaymentHistoryResponse> getBorrowerPaymentHistory() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    private PaymentHistoryResponse getHistoryForLoan(Loan loan) {
+        List<Payment> payments = paymentRepository.findByLoanOrderByPaymentDateDesc(loan);
+        BigDecimal totalPaid = paymentRepository.sumSuccessfulPaymentsByLoan(loan);
 
-        User borrower = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessRuleException("User not found"));
+        if (totalPaid == null) totalPaid = BigDecimal.ZERO;
 
-        List<Loan> loans = loanRepository.findByBorrowerEmail(email);
+        List<PaymentResponse> transactions = payments.stream()
+                .map(paymentMapper::toResponse)
+                .collect(Collectors.toList());
 
-        return loans.stream().map(loan -> {
-
-            List<Payment> payments = paymentRepository.findByLoanOrderByPaymentDateDesc(loan);
-
-            BigDecimal totalPaid = paymentRepository.sumSuccessfulPaymentsByLoan(loan);
-            if (totalPaid == null) totalPaid = BigDecimal.ZERO;
-
-            return buildResponse(loan.getLoanCode(), totalPaid, payments);
-
-        }).collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<PaymentHistoryResponse> getAllPayments() {
-
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        User admin = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessRuleException("User not found"));
-
-        if (!admin.getRole().getRoleName().equals(RoleName.ADMIN)) {
-            throw new BusinessRuleException("Access denied");
-        }
-
-        List<Loan> loans = loanRepository.findAll();
-
-        return loans.stream().map(loan -> {
-
-            List<Payment> payments = paymentRepository.findByLoanOrderByPaymentDateDesc(loan);
-
-            BigDecimal totalPaid = paymentRepository.sumSuccessfulPaymentsByLoan(loan);
-            if (totalPaid == null) totalPaid = BigDecimal.ZERO;
-
-            return buildResponse(loan.getLoanCode(), totalPaid, payments);
-
-        }).collect(Collectors.toList());
+        return PaymentHistoryResponse.builder()
+                .loanCode(loan.getLoanCode())
+                .totalAmountPaid(totalPaid)
+                .transactions(transactions)
+                .build();
     }
 
     private PaymentHistoryResponse buildResponse(
