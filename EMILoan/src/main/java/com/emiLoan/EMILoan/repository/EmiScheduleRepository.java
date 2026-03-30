@@ -19,6 +19,7 @@ public interface EmiScheduleRepository extends JpaRepository<EmiSchedule, UUID> 
     List<EmiSchedule> findByDueDateBeforeAndStatus(LocalDate date, EmiStatus status);
     Optional<EmiSchedule> findFirstByLoanAndStatusNotOrderByInstallmentNoAsc(Loan loan, EmiStatus status);
     Optional<EmiSchedule> findFirstByLoan_LoanIdAndStatusOrderByDueDateAsc(UUID loanId, EmiStatus status);
+    Optional<EmiSchedule> findFirstByLoan_LoanCodeAndStatusOrderByDueDateAsc(String loanCode, EmiStatus status);
     List<EmiSchedule> findByLoanOrderByInstallmentNoAsc(Loan loan);
     @Modifying
     @Query("UPDATE EmiSchedule e SET e.status = 'OVERDUE' " +

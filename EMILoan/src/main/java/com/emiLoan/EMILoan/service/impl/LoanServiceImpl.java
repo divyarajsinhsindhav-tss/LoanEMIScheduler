@@ -20,10 +20,10 @@ import com.emiLoan.EMILoan.service.interfaces.LoanService;
 import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.AnyDiscriminatorImplicitValues;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,12 +48,12 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
-    public LoanResponse processDecision(UUID appId, OfficerDecisionRequest request, String officerEmail) {
+    public LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request, String officerEmail) {
         if (request == null) {
             throw new BusinessRuleException("Decision request body is missing.");
         }
 
-        LoanApplication application = applicationRepository.findById(appId)
+        LoanApplication application = applicationRepository.findByApplicationCode(applicationCode)
                 .orElseThrow(() -> new BusinessRuleException("Application not found"));
 
         if (application.getStatus() != ApplicationStatus.PENDING) {
@@ -67,7 +67,7 @@ public class LoanServiceImpl implements LoanService {
         UUID officerPersonId = officer.getPerson().getPersonId();
 
         if (borrowerPersonId.equals(officerPersonId)) {
-            log.error("Security Alert: Officer {} attempted to process their own application {}", officerEmail, appId);
+            log.error("Security Alert: Officer {} attempted to process their own application {}", officerEmail, applicationCode);
             throw new BusinessRuleException("Access Denied: You cannot review your own loan application.");
         }
 
@@ -97,7 +97,7 @@ public class LoanServiceImpl implements LoanService {
 
         if (request.getStatus() == ApplicationStatus.REJECTED) {
             notificationService.sendLoanRejected(application.getBorrower(), application);
-            log.info("Application {} was REJECTED by Officer {}.", appId, officerEmail);
+            log.info("Application {} was REJECTED by Officer {}.", applicationCode, officerEmail);
             return null;
         }
 
@@ -180,8 +180,8 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional(readOnly = true)
-    public LoanSummaryResponse getLoanSummary(UUID loanId, String email) {
-        Loan loan = loanRepository.findById(loanId)
+    public LoanSummaryResponse getLoanSummary(String loanCode, String email) {
+        Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
 
         if (!loan.getBorrower().getEmail().equals(email)) {
@@ -190,7 +190,7 @@ public class LoanServiceImpl implements LoanService {
 
         LoanSummaryResponse summary = loanMapper.toSummaryResponse(loan);
 
-        emiScheduleRepository.findFirstByLoan_LoanIdAndStatusOrderByDueDateAsc(loanId, EmiStatus.PENDING)
+        emiScheduleRepository.findFirstByLoan_LoanCodeAndStatusOrderByDueDateAsc(loanCode, EmiStatus.PENDING)
                 .ifPresent(emi -> summary.setNextDueDate(emi.getDueDate()));
 
         return summary;

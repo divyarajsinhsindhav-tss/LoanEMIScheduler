@@ -30,10 +30,10 @@ public class LoanApplicationController {
     @PostMapping("/apply")
     public ResponseEntity<ApiResponse<LoanApplicationResponse>> apply(
             @RequestBody @Valid LoanApplicationRequest request,
+            @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
     ) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        LoanApplicationResponse response = loanApplicationService.apply(request, email);
+        LoanApplicationResponse response = loanApplicationService.apply(request, userDetails.getUsername());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of(
@@ -64,29 +64,29 @@ public class LoanApplicationController {
     }
 
 
-    @GetMapping("/code/{code}")
-    public ResponseEntity<ApiResponse<LoanApplicationResponse>> getApplicationByCode(
-            @PathVariable String code,
+    @GetMapping("/{applicationCode}")
+    public ResponseEntity<ApiResponse<LoanApplicationResponse>> getApplication(
+            @PathVariable String applicationCode,
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
     ) {
-        LoanApplicationResponse response = loanApplicationService.getApplication(code, userDetails.getUsername());
+        LoanApplicationResponse response = loanApplicationService.getApplication(applicationCode, userDetails.getUsername());
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
-                "Application details for code: " + code,
+                "Application details for code: " + applicationCode,
                 httpServletRequest.getRequestURI(),
                 response
         ));
     }
 
 
-    @GetMapping("/details/{id}")
+    @GetMapping("/details/{applicationCode}")
     public ResponseEntity<ApiResponse<LoanApplicationDetailsResponse>> getApplicationDetails(
-            @PathVariable UUID id,
+            @PathVariable String applicationCode,
             HttpServletRequest httpServletRequest
     ) {
-        LoanApplicationDetailsResponse response = loanApplicationService.getById(id);
+        LoanApplicationDetailsResponse response = loanApplicationService.getByApplicationCode(applicationCode);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,

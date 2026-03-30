@@ -14,7 +14,7 @@ public interface PaymentService {
     List<PaymentHistoryResponse> getLoanPaymentHistory(String loanId);
     List<PaymentHistoryResponse> getBorrowerPaymentHistory(String borrowerEmail);
 
-    List<PaymentHistoryResponse> getAllPayments();
+    List<PaymentHistoryResponse> getAllPayments(String email);
 
-    PaymentHistoryResponse getPaymentHistory(UUID loanId, String requesterEmail);
+    PaymentHistoryResponse getPaymentHistory(String loanCode, String requesterEmail);
 }

@@ -42,13 +42,13 @@ public class PaymentController {
                         response));
         }
 
-        @GetMapping("/loan/{loanId}")
+        @GetMapping("/loan/{loanCode}")
         public ResponseEntity<ApiResponse<PaymentHistoryResponse>> getLoanPaymentHistory(
-                @PathVariable UUID loanId,
+                @PathVariable String loanCode,
                 @AuthenticationPrincipal UserDetails userDetails,
                 HttpServletRequest httpServletRequest) {
 
-                PaymentHistoryResponse response = paymentService.getPaymentHistory(loanId, userDetails.getUsername());
+                PaymentHistoryResponse response = paymentService.getPaymentHistory(loanCode, userDetails.getUsername());
 
                 return ResponseEntity.ok(ApiResponse.of(
                         HttpStatus.OK,
@@ -58,7 +58,7 @@ public class PaymentController {
         }
 
 
-        @GetMapping("/my-history")
+        @GetMapping("/history")
         public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getMyPaymentHistory(
                 @AuthenticationPrincipal UserDetails userDetails,
                 HttpServletRequest httpServletRequest) {
@@ -75,9 +75,10 @@ public class PaymentController {
         @GetMapping("/all")
         @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
         public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getAllSystemPayments(
+                @AuthenticationPrincipal UserDetails userDetails,
                 HttpServletRequest httpServletRequest) {
 
-                List<PaymentHistoryResponse> responses = paymentService.getAllPayments();
+                List<PaymentHistoryResponse> responses = paymentService.getAllPayments(userDetails.getUsername());
 
                 return ResponseEntity.ok(ApiResponse.of(
                         HttpStatus.OK,

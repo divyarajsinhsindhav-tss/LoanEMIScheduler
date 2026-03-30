@@ -12,13 +12,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,32 +26,32 @@ public class LoanController {
     private final LoanService loanService;
     private final EmiService emiService;
 
-    @GetMapping("/{id}/schedule")
+    @GetMapping("/{loanCode}/schedule")
     public ResponseEntity<ApiResponse<List<EmiScheduleResponse>>> getSchedule(
-            @PathVariable UUID id,
+            @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
     ) {
-        // Service expects UUID and Email for security checks
-        List<EmiScheduleResponse> response = emiService.getSchedule(id, userDetails.getUsername());
+
+        List<EmiScheduleResponse> response = emiService.getSchedule(loanCode, userDetails.getUsername());
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
-                "Repayment schedule retrieved for loan: " + id,
+                "Repayment schedule retrieved for loan: " + loanCode,
                 httpServletRequest.getRequestURI(),
                 response
         ));
     }
 
 
-    @PostMapping("/applications/{appId}/decision")
+    @PostMapping("/applications/{applicationCode}/decision")
     public ResponseEntity<ApiResponse<LoanResponse>> processDecision(
-            @PathVariable UUID appId,
+            @PathVariable String applicationCode,
             @RequestBody @Valid OfficerDecisionRequest request,
             @AuthenticationPrincipal UserDetails officerDetails,
             HttpServletRequest httpServletRequest
     ) {
-        LoanResponse response = loanService.processDecision(appId, request, officerDetails.getUsername());
+        LoanResponse response = loanService.processDecision(applicationCode, request, officerDetails.getUsername());
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -63,13 +61,13 @@ public class LoanController {
         ));
     }
 
-    @GetMapping("/{id}/summary")
+    @GetMapping("/{loanCode}/summary")
     public ResponseEntity<ApiResponse<LoanSummaryResponse>> getLoanSummary(
-            @PathVariable UUID id,
+            @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
     ) {
-        LoanSummaryResponse response = loanService.getLoanSummary(id, userDetails.getUsername());
+        LoanSummaryResponse response = loanService.getLoanSummary(loanCode, userDetails.getUsername());
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,

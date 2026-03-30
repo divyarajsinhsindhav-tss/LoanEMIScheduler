@@ -2,8 +2,6 @@ package com.emiLoan.EMILoan.service.impl;
 
 import com.emiLoan.EMILoan.common.constants.AppConstants;
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
-import com.emiLoan.EMILoan.common.enums.AuditAction;
-import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.enums.RoleName;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
@@ -31,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -49,7 +46,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     private final BorrowerProfileMapper borrowerProfileMapper;
 
     private final NotificationService notificationService;
-    private final AuditService auditService;
 
     @Override
     @Transactional
@@ -84,7 +80,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         } catch (Exception e) {
             log.error("Failed to send submission email for app {}: {}", savedApplication.getApplicationId(), e.getMessage());
         }
-//        auditService.logOfficerAction(null, AuditAction.CREATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
 
         return applicationMapper.toResponse(savedApplication);
     }
@@ -131,8 +126,8 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public LoanApplicationDetailsResponse getById(UUID applicationId) {
-        LoanApplication application = applicationRepository.findById(applicationId)
+    public LoanApplicationDetailsResponse getByApplicationCode(String applicationCode) {
+        LoanApplication application = applicationRepository.findByApplicationCode(applicationCode)
                 .orElseThrow(() -> new BusinessRuleException("Application not found"));
 
         BorrowerProfile profile = borrowerProfileRepository.findByUser_UserId(application.getBorrower().getUserId())

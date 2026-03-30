@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface EmiService {
 
-    List<EmiScheduleResponse> getSchedule(UUID loanId, String email);
+    List<EmiScheduleResponse> getSchedule(String loanCode, String email);
 
     void generateAndSaveSchedule(Loan loan);
 

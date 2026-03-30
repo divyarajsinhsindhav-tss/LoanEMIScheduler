@@ -45,21 +45,12 @@ public class EmiServiceImpl implements EmiService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmiScheduleResponse> getSchedule(UUID loanId, String requesterEmail) {
-        Loan loan = loanRepository.findById(loanId)
-                .orElseThrow(() -> new BusinessRuleException("Loan record not found for ID: " + loanId));
+    public List<EmiScheduleResponse> getSchedule(String loanCode, String requesterEmail) {
+        Loan loan = loanRepository.findByLoanCode(loanCode)
+                .orElseThrow(() -> new BusinessRuleException("Loan record not found for ID: " + loanCode));
 
         User requester = userRepository.findByEmail(requesterEmail)
                 .orElseThrow(() -> new BusinessRuleException("Authenticated user session invalid."));
-
-        boolean isOwner = loan.getBorrower().getEmail().equalsIgnoreCase(requesterEmail);
-        boolean isStaff = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
-                requester.getRole().getRoleName() == RoleName.ADMIN;
-
-        if (!isOwner && !isStaff) {
-            log.warn("Security Alert: Unauthorized access attempt to Loan {} by {}", loanId, requesterEmail);
-            throw new BusinessRuleException("Access Denied: You do not have permission to view this schedule.");
-        }
 
         List<EmiSchedule> scheduleList = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan);
         return emiScheduleMapper.toResponseList(scheduleList);

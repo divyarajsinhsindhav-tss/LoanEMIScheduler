@@ -17,9 +17,9 @@ public interface LoanService {
 
     LoanResponse getLoanById(UUID loanId);
 
-    LoanSummaryResponse getLoanSummary(UUID loanId, String email);
+    LoanSummaryResponse getLoanSummary(String loanCode, String email);
 
     LoanResponse updateLoanStatus(UUID loanId, LoanStatusUpdateRequest request);
 
-    LoanResponse processDecision(UUID appId, OfficerDecisionRequest request,String officerEmail);
+    LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request,String officerEmail);
 }

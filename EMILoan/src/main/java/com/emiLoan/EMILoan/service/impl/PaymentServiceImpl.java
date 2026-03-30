@@ -88,8 +88,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment savedPayment = paymentRepository.save(payment);
 
-        //auditService.logOfficerAction(null, AuditAction.PAYMENT, AuditEntityType.LOAN, loan.getLoanId());
-
         if (paymentStatus == PaymentStatus.SUCCESS) {
             emi.setStatus(EmiStatus.PAID);
             emi.setPaidDate(LocalDate.now());
@@ -114,27 +112,23 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaymentHistoryResponse getPaymentHistory(UUID loanId, String requesterEmail) {
-        Loan loan = loanRepository.findById(loanId)
-                .orElseThrow(() -> new BusinessRuleException("Loan not found"));
-
+    public PaymentHistoryResponse getPaymentHistory(String loanCode, String requesterEmail) {
         User requester = userRepository.findByEmail(requesterEmail)
                 .orElseThrow(() -> new BusinessRuleException("User session invalid"));
 
-        boolean isOwner = loan.getBorrower().getEmail().equalsIgnoreCase(requesterEmail);
-        boolean isStaff = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
-                requester.getRole().getRoleName() == RoleName.ADMIN;
+        Loan loan = loanRepository.findByLoanCode(loanCode)
+                .orElseThrow(() -> new BusinessRuleException("Loan not found"));
 
-        if (!isOwner && !isStaff) {
-            throw new BusinessRuleException("Access Denied: You cannot view this payment history.");
-        }
+        log.info("Payment history of loan {} requested by {}", loan.getLoanCode(), requester.getEmail());
 
         return getHistoryForLoan(loan);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<PaymentHistoryResponse> getAllPayments() {
+    public List<PaymentHistoryResponse> getAllPayments(String email) {
+        User profile = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("User session invalid"));
         return loanRepository.findAll().stream()
                 .map(this::getHistoryForLoan)
                 .collect(Collectors.toList());
@@ -144,6 +138,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public List<PaymentHistoryResponse> getBorrowerPaymentHistory(String borrowerEmail) {
+        User profile = userRepository.findByEmail(borrowerEmail)
+                .orElseThrow(() -> new BusinessRuleException("User session invalid"));
+
         List<Loan> loans = loanRepository.findByBorrowerEmail(borrowerEmail);
 
         return loans.stream()
@@ -189,6 +186,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .transactions(transactions)
                 .build();
     }
+
     private PaymentHistoryResponse buildResponse(
             String loanCode,
             BigDecimal totalPaid,
