@@ -4,6 +4,8 @@ package com.emiLoan.EMILoan.service.interfaces;
 
 import com.emiLoan.EMILoan.common.enums.AuditAction;
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
+import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
+import com.emiLoan.EMILoan.dto.strategyAudit.StrategyAuditResponse;
 import com.emiLoan.EMILoan.entity.AuditLog;
 import com.emiLoan.EMILoan.entity.LoanApplication;
 import com.emiLoan.EMILoan.entity.StrategyAudit;
@@ -20,7 +22,7 @@ public interface AuditService {
 
     void logStrategyDecision(LoanApplication application, String systemSuggested, String officerChose, boolean overridden, User officer);
 
-    List<AuditLog> getEntityAuditHistory(AuditEntityType entityType, UUID entityId);
+    List<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId);
 
-    List<StrategyAudit> getRecentStrategyOverrides();
+    List<StrategyAuditResponse> getRecentStrategyOverrides();
 }

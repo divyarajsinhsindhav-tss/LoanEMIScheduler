@@ -3,6 +3,8 @@ package com.emiLoan.EMILoan.controller.audit;
 
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.response.ApiResponse;
+import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
+import com.emiLoan.EMILoan.dto.strategyAudit.StrategyAuditResponse;
 import com.emiLoan.EMILoan.entity.AuditLog;
 import com.emiLoan.EMILoan.entity.StrategyAudit;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
@@ -27,12 +29,12 @@ public class AuditController {
 
 
     @GetMapping("/entity/{entityType}/{entityId}")
-    public ResponseEntity<ApiResponse<List<AuditLog>>> getEntityAuditHistory(
+    public ResponseEntity<ApiResponse<List<AuditLogResponse>>> getEntityAuditHistory(
             @PathVariable AuditEntityType entityType,
             @PathVariable UUID entityId,
             HttpServletRequest request
     ) {
-        List<AuditLog> auditLogs = auditService.getEntityAuditHistory(entityType, entityId);
+        List<AuditLogResponse> auditLogs = auditService.getEntityAuditHistory(entityType, entityId);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -44,10 +46,10 @@ public class AuditController {
 
 
     @GetMapping("/strategy-overrides")
-    public ResponseEntity<ApiResponse<List<StrategyAudit>>> getStrategyOverrides(
+    public ResponseEntity<ApiResponse<List<StrategyAuditResponse>>> getStrategyOverrides(
             HttpServletRequest request
     ) {
-        List<StrategyAudit> overrides = auditService.getRecentStrategyOverrides();
+        List<StrategyAuditResponse> overrides = auditService.getRecentStrategyOverrides();
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,

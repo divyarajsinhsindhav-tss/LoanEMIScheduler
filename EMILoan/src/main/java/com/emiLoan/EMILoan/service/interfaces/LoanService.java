@@ -1,10 +1,12 @@
 package com.emiLoan.EMILoan.service.interfaces;
 
 
+import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
 import com.emiLoan.EMILoan.dto.loan.request.LoanStatusUpdateRequest;
 import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
 import com.emiLoan.EMILoan.dto.loan.response.LoanSummaryResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.request.OfficerDecisionRequest;
+import com.emiLoan.EMILoan.dto.strategyAudit.StrategyAuditResponse;
 import com.emiLoan.EMILoan.entity.AuditLog;
 import com.emiLoan.EMILoan.entity.StrategyAudit;
 
@@ -25,9 +27,8 @@ public interface LoanService {
 
     LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request,String officerEmail);
 
-    List<StrategyAudit> getStrategyOverrides(String requesterEmail);
+    List<StrategyAuditResponse> getStrategyOverrides(String requesterEmail);
 
-    List<AuditLog> getLoanAuditHistory(String loanCode, String requesterEmail);
+    List<AuditLogResponse> getLoanAuditHistory(String loanCode, String requesterEmail);
 
-    List<AuditLog> getApplicationAuditHistory(String applicationCode, String requesterEmail);
 }

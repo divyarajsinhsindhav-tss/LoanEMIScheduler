@@ -2,10 +2,14 @@ package com.emiLoan.EMILoan.service.impl;
 
 import com.emiLoan.EMILoan.common.enums.AuditAction;
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
+import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
+import com.emiLoan.EMILoan.dto.strategyAudit.StrategyAuditResponse;
 import com.emiLoan.EMILoan.entity.AuditLog;
 import com.emiLoan.EMILoan.entity.LoanApplication;
 import com.emiLoan.EMILoan.entity.StrategyAudit;
 import com.emiLoan.EMILoan.entity.User;
+import com.emiLoan.EMILoan.mapper.AuditLogMapper;
+import com.emiLoan.EMILoan.mapper.StrategyAuditMapper;
 import com.emiLoan.EMILoan.repository.AuditLogRepository;
 import com.emiLoan.EMILoan.repository.StrategyAuditRepository;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
@@ -26,6 +30,8 @@ public class AuditServiceImpl implements AuditService {
 
     private final AuditLogRepository auditLogRepository;
     private final StrategyAuditRepository strategyAuditRepository;
+    private final StrategyAuditMapper strategyAuditMapper;
+    private final AuditLogMapper auditLogMapper;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -87,13 +93,14 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuditLog> getEntityAuditHistory(AuditEntityType entityType, UUID entityId) {
-        return auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType, entityId);
+    public List<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId) {
+        //return auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType, entityId);
+        return auditLogMapper.toResponseList(auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType,entityId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<StrategyAudit> getRecentStrategyOverrides() {
-        return strategyAuditRepository.findByOverriddenTrueOrderByChangedAtDesc();
+    public List<StrategyAuditResponse> getRecentStrategyOverrides() {
+        return strategyAuditMapper.toResponseList(strategyAuditRepository.findByOverriddenTrueOrderByChangedAtDesc());
     }
 }

@@ -2,16 +2,19 @@ package com.emiLoan.EMILoan.service.impl;
 
 import com.emiLoan.EMILoan.common.constants.AppConstants;
 import com.emiLoan.EMILoan.common.enums.*;
+import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
 import com.emiLoan.EMILoan.dto.loan.request.LoanStatusUpdateRequest;
 import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
 import com.emiLoan.EMILoan.dto.loan.response.LoanSummaryResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.request.OfficerDecisionRequest;
+import com.emiLoan.EMILoan.dto.strategyAudit.StrategyAuditResponse;
 import com.emiLoan.EMILoan.entity.AuditLog;
 import com.emiLoan.EMILoan.entity.Loan;
 import com.emiLoan.EMILoan.entity.LoanApplication;
 import com.emiLoan.EMILoan.entity.StrategyAudit;
 import com.emiLoan.EMILoan.entity.User;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
+import com.emiLoan.EMILoan.mapper.AuditLogMapper;
 import com.emiLoan.EMILoan.mapper.LoanMapper;
 import com.emiLoan.EMILoan.repository.EmiScheduleRepository;
 import com.emiLoan.EMILoan.repository.LoanApplicationRepository;
@@ -50,6 +53,8 @@ public class LoanServiceImpl implements LoanService {
     private final NotificationService notificationService;
     private final AuditService auditService;
     private final EntityManager entityManager;
+
+    private final AuditLogMapper auditLogMapper;
 
     @Override
     @Transactional
@@ -228,19 +233,11 @@ public class LoanServiceImpl implements LoanService {
     }
 
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<AuditLog> getApplicationAuditHistory(String applicationCode, String requesterEmail) {
-        verifyAdminOrOfficerPrivileges(requesterEmail);
-        LoanApplication application = applicationRepository.findByApplicationCode(applicationCode)
-                .orElseThrow(() -> new BusinessRuleException("Application not found"));
 
-        return auditService.getEntityAuditHistory(AuditEntityType.APPLICATION, application.getApplicationId());
-    }
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuditLog> getLoanAuditHistory(String loanCode, String requesterEmail) {
+    public List<AuditLogResponse> getLoanAuditHistory(String loanCode, String requesterEmail) {
         verifyAdminOrOfficerPrivileges(requesterEmail);
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
@@ -250,7 +247,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<StrategyAudit> getStrategyOverrides(String requesterEmail) {
+    public List<StrategyAuditResponse> getStrategyOverrides(String requesterEmail) {
         verifyAdminOrOfficerPrivileges(requesterEmail);
         return auditService.getRecentStrategyOverrides();
     }
