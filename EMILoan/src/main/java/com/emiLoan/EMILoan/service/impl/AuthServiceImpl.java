@@ -1,5 +1,7 @@
 package com.emiLoan.EMILoan.service.impl;
 
+import com.emiLoan.EMILoan.common.enums.AuditAction;
+import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.enums.RoleName;
 import com.emiLoan.EMILoan.dto.user.AuthResponse;
 import com.emiLoan.EMILoan.dto.user.request.BorrowerRegistrationRequest;
@@ -12,11 +14,13 @@ import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
 import com.emiLoan.EMILoan.mapper.UserMapper;
 import com.emiLoan.EMILoan.repository.*;
 import com.emiLoan.EMILoan.security.JwtTokenProvider;
+import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import com.emiLoan.EMILoan.service.interfaces.AuthService;
 import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import com.emiLoan.EMILoan.utils.PANHashingUtil;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -34,13 +39,16 @@ public class AuthServiceImpl implements AuthService {
     private final PersonIdentityRepository personIdentityRepository;
     private final BorrowerProfileRepository borrowerProfileRepository;
     private final EmployeeProfileRepository employeeProfileRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
     private final PANHashingUtil panHashingUtil;
     private final EntityManager entityManager;
+
     private final NotificationService notificationService;
+    private final AuditService auditService;
 
     @Override
     public AuthResponse login(LoginRequest request) {
@@ -56,6 +64,12 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
+
+        notificationService.sendLoginNotification(user);
+
+        if (user.getRole().getRoleName() == RoleName.LOAN_OFFICER || user.getRole().getRoleName() == RoleName.ADMIN) {
+            log.info("Staff Login detected: {}", user.getEmail());
+        }
 
         return AuthResponse.builder()
                 .accessToken(token)
@@ -95,7 +109,9 @@ public class AuthServiceImpl implements AuthService {
                 .existingLoanCount(0)
                 .build();
         borrowerProfileRepository.save(profile);
+
         notificationService.sendWelcomeEmail(savedUser);
+        auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId());
 
         return userMapper.toResponse(savedUser);
     }
@@ -132,7 +148,9 @@ public class AuthServiceImpl implements AuthService {
                 .isActive(true)
                 .build();
         employeeProfileRepository.save(profile);
+
         notificationService.sendWelcomeEmail(savedUser);
+        auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId());
 
         return userMapper.toResponse(savedUser);
     }

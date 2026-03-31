@@ -19,6 +19,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,49 +98,6 @@ public class NotificationServiceImpl implements NotificationService {
                 "overdue-alert", props);
     }
 
-    @Async
-    private void sendEmail(User user, Loan loan, EmiSchedule emi, String subject, String templateName,
-            Map<String, Object> properties) {
-
-        Context context = new Context();
-        context.setVariables(properties);
-
-        String htmlBody = templateEngine.process(templateName, context);
-
-        Notification notification = Notification.builder()
-                .user(user)
-                .loan(loan)
-                .emiSchedule(emi)
-                .email(user.getEmail())
-                .subject(subject)
-                .message(htmlBody)
-                .sentAt(LocalDateTime.now())
-                .status(NotificationStatus.PENDING)
-                .build();
-
-        try {
-
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message,
-                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-            helper.setTo(user.getEmail());
-            helper.setSubject(subject);
-            helper.setText(htmlBody, true);
-
-            mailSender.send(message);
-
-            notification.setStatus(NotificationStatus.SENT);
-            log.info("Email successfully sent to {}", user.getEmail());
-
-        } catch (Exception e) {
-            notification.setStatus(NotificationStatus.FAILED);
-            log.error("Failed to send email to {}: {}", user.getEmail(), e.getMessage());
-        } finally {
-            notificationRepository.save(notification);
-        }
-    }
-
     @Override
     @Transactional
     @Async
@@ -164,5 +122,60 @@ public class NotificationServiceImpl implements NotificationService {
 
         sendEmail(user, loan, null, "Congratulations! Your Loan is Fully Repaid - " + loan.getLoanCode(),
                 "loan-closed", props);
+    }
+
+    @Override
+    @Transactional
+    @Async
+    public void sendLoginNotification(User user) {
+        Map<String, Object> props = new HashMap<>();
+        props.put("name", user.getFirstName());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
+        props.put("loginTime", LocalDateTime.now().format(formatter));
+
+        sendEmail(user, null, null, "Security Alert: New Login Detected",
+                "login-notification", props);
+    }
+
+    private void sendEmail(User user, Loan loan, EmiSchedule emi, String subject, String templateName,
+                           Map<String, Object> properties) {
+
+        Context context = new Context();
+        context.setVariables(properties);
+
+        String htmlBody = templateEngine.process(templateName, context);
+
+        Notification notification = Notification.builder()
+                .user(user)
+                .loan(loan)
+                .emiSchedule(emi)
+                .email(user.getEmail())
+                .subject(subject)
+                .message(htmlBody)
+                .sentAt(LocalDateTime.now())
+                .status(NotificationStatus.PENDING)
+                .build();
+
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true);
+
+            mailSender.send(message);
+
+            notification.setStatus(NotificationStatus.SENT);
+            log.info("Email successfully sent to {}", user.getEmail());
+
+        } catch (Exception e) {
+            notification.setStatus(NotificationStatus.FAILED);
+            log.error("Failed to send email to {}: {}", user.getEmail(), e.getMessage());
+        } finally {
+            notificationRepository.save(notification);
+        }
     }
 }

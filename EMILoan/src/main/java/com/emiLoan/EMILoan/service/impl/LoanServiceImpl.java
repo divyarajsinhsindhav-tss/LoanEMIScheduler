@@ -6,8 +6,10 @@ import com.emiLoan.EMILoan.dto.loan.request.LoanStatusUpdateRequest;
 import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
 import com.emiLoan.EMILoan.dto.loan.response.LoanSummaryResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.request.OfficerDecisionRequest;
+import com.emiLoan.EMILoan.entity.AuditLog;
 import com.emiLoan.EMILoan.entity.Loan;
 import com.emiLoan.EMILoan.entity.LoanApplication;
+import com.emiLoan.EMILoan.entity.StrategyAudit;
 import com.emiLoan.EMILoan.entity.User;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
 import com.emiLoan.EMILoan.mapper.LoanMapper;
@@ -217,8 +219,49 @@ public class LoanServiceImpl implements LoanService {
         loanMapper.updateEntityFromStatusRequest(request, loan);
 
         Loan updatedLoan = loanRepository.save(loan);
+
+        auditService.logSystemAction(AuditAction.UPDATE, AuditEntityType.LOAN, loanId);
+
         log.info("Loan {} status updated to {}", loan.getLoanCode(), updatedLoan.getLoanStatus());
 
         return loanMapper.toResponse(updatedLoan);
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AuditLog> getApplicationAuditHistory(String applicationCode, String requesterEmail) {
+        verifyAdminOrOfficerPrivileges(requesterEmail);
+        LoanApplication application = applicationRepository.findByApplicationCode(applicationCode)
+                .orElseThrow(() -> new BusinessRuleException("Application not found"));
+
+        return auditService.getEntityAuditHistory(AuditEntityType.APPLICATION, application.getApplicationId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AuditLog> getLoanAuditHistory(String loanCode, String requesterEmail) {
+        verifyAdminOrOfficerPrivileges(requesterEmail);
+        Loan loan = loanRepository.findByLoanCode(loanCode)
+                .orElseThrow(() -> new BusinessRuleException("Loan not found"));
+
+        return auditService.getEntityAuditHistory(AuditEntityType.LOAN, loan.getLoanId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StrategyAudit> getStrategyOverrides(String requesterEmail) {
+        verifyAdminOrOfficerPrivileges(requesterEmail);
+        return auditService.getRecentStrategyOverrides();
+    }
+
+    private void verifyAdminOrOfficerPrivileges(String email) {
+        User requester = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("Authenticated user session invalid."));
+
+        if (requester.getRole().getRoleName() != RoleName.LOAN_OFFICER &&
+                requester.getRole().getRoleName() != RoleName.ADMIN) {
+            throw new BusinessRuleException("Access Denied: You do not have permission to view audit logs.");
+        }
     }
 }

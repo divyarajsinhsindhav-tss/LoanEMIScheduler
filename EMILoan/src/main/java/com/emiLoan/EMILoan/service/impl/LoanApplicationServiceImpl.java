@@ -2,6 +2,8 @@ package com.emiLoan.EMILoan.service.impl;
 
 import com.emiLoan.EMILoan.common.constants.AppConstants;
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
+import com.emiLoan.EMILoan.common.enums.AuditAction;
+import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.enums.RoleName;
 import com.emiLoan.EMILoan.common.enums.LoanStatus;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
@@ -51,6 +53,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     private final EntityManager entityManager;
 
     private final NotificationService notificationService;
+    private final AuditService auditService; // Added AuditService
 
     @Override
     @Transactional
@@ -58,24 +61,21 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         BorrowerProfile profile = borrowerProfileRepository.findByUser_EmailWithUser(email)
                 .orElseThrow(() -> new BusinessRuleException("Borrower profile not found for email: " + email));
 
-        // Validation logic - Check for active loans instead of pending applications
         Long activeLoanCount = loanRepository.countActiveLoans(profile.getUser().getUserId(), LoanStatus.ACTIVE);
         if (activeLoanCount >= AppConstants.MAX_ACTIVE_LOANS) {
             throw new BusinessRuleException(
                     "Borrower cannot have more than " + AppConstants.MAX_ACTIVE_LOANS + " active loans at a time.");
         }
 
-        // Engine calculations
         BigDecimal dtiRatio = dtiEngine.calculate(request.getExistingEmi(), profile.getMonthlyIncome());
         String suggestedStrategy = strategyEngine.suggest(dtiRatio, request.getTenureMonths());
 
-        // Mapping and persistence
         LoanApplication application = applicationMapper.toEntity(request);
         application.setBorrower(profile.getUser());
         application.setDtiRatio(dtiRatio);
         application.setSuggestedStrategy(suggestedStrategy);
         application.setExistingEmi(request.getExistingEmi());
-        
+
         if (AppConstants.STRATEGY_REJECTED.equalsIgnoreCase(suggestedStrategy)) {
             application.setStatus(ApplicationStatus.REJECTED);
         } else {
@@ -87,15 +87,16 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         entityManager.refresh(savedApplication);
         log.info("New Loan Application {} created for borrower {}", savedApplication.getApplicationId(), email);
 
-        // Notification and Auditing
         try {
             if (savedApplication.getStatus() == ApplicationStatus.REJECTED) {
                 notificationService.sendLoanRejected(profile.getUser(), savedApplication);
+                auditService.logSystemAction(AuditAction.REJECTED, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
             } else {
                 notificationService.sendApplicationSubmitted(profile.getUser(), savedApplication);
+                auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
             }
         } catch (Exception e) {
-            log.error("Failed to send notification for app {}: {}", savedApplication.getApplicationId(),
+            log.error("Failed to send notification or audit for app {}: {}", savedApplication.getApplicationId(),
                     e.getMessage());
         }
 

@@ -73,7 +73,6 @@ public class PaymentController {
         }
 
         @GetMapping("/all")
-        @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
         public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getAllSystemPayments(
                 @AuthenticationPrincipal UserDetails userDetails,
                 HttpServletRequest httpServletRequest) {

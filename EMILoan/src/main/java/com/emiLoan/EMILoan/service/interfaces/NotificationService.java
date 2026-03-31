@@ -19,4 +19,5 @@ public interface NotificationService {
     void sendOverdueAlert(User user, EmiSchedule emi);
     void sendWelcomeEmail(User user);
     void sendLoanClosed(User user, Loan loan);
+    void sendLoginNotification(User user);
 }

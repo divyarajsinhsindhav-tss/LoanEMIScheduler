@@ -12,12 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +23,6 @@ import java.util.UUID;
 public class LoanApplicationController {
 
     private final LoanApplicationService loanApplicationService;
-
 
     @PostMapping("/apply")
     public ResponseEntity<ApiResponse<LoanApplicationResponse>> apply(
@@ -80,10 +77,10 @@ public class LoanApplicationController {
         ));
     }
 
-
-    @GetMapping("/details/{applicationCode}")
+    @GetMapping("/{applicationCode}/details")
     public ResponseEntity<ApiResponse<LoanApplicationDetailsResponse>> getApplicationDetails(
             @PathVariable String applicationCode,
+            @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
     ) {
         LoanApplicationDetailsResponse response = loanApplicationService.getByApplicationCode(applicationCode);

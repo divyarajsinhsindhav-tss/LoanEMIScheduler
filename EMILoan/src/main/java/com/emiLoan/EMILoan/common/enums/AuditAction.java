@@ -9,5 +9,6 @@ public enum AuditAction {
 
     REJECTED,
 
-    STRATEGY_OVERRIDE
+    STRATEGY_OVERRIDE,
+    UPDATE
 }

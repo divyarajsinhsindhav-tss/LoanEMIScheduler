@@ -16,4 +16,5 @@ public interface StrategyAuditRepository extends JpaRepository<StrategyAudit, UU
     List<StrategyAudit> findByOverriddenTrue();
     List<StrategyAudit> findByChangedByOrderByChangedAtDesc(User officer);
     Optional<StrategyAudit> findByApplicationApplicationId(UUID applicationId);
+    List<StrategyAudit> findByOverriddenTrueOrderByChangedAtDesc();
 }

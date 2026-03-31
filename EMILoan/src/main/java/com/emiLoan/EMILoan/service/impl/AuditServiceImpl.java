@@ -9,7 +9,6 @@ import com.emiLoan.EMILoan.entity.User;
 import com.emiLoan.EMILoan.repository.AuditLogRepository;
 import com.emiLoan.EMILoan.repository.StrategyAuditRepository;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
-import com.emiLoan.EMILoan.service.interfaces.NotificationService; // Added
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -39,8 +39,27 @@ public class AuditServiceImpl implements AuditService {
                 .build();
 
         auditLogRepository.save(auditLog);
-        log.info("Audit Logged: Officer {} performed {} on {} ID: {}",
-                officer.getEmail(), action, entityType, entityId);
+
+        String officerEmail = (officer != null) ? officer.getEmail() : "SYSTEM";
+        log.info("Audit Logged: {} performed {} on {} ID: {}",
+                officerEmail, action, entityType, entityId);
+    }
+
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void logSystemAction(AuditAction action, AuditEntityType entityType, UUID entityId) {
+        AuditLog auditLog = AuditLog.builder()
+                .officer(null)
+                .action(action)
+                .entityType(entityType)
+                .entityId(entityId)
+                .actionTime(LocalDateTime.now())
+                .build();
+
+        auditLogRepository.save(auditLog);
+        log.info("System Audit Logged: Automated process performed {} on {} ID: {}",
+                action, entityType, entityId);
     }
 
     @Override
@@ -63,5 +82,18 @@ public class AuditServiceImpl implements AuditService {
             log.warn("Strategy Override Detected: Application {} changed from {} to {} by {}",
                     application.getApplicationCode(), systemSuggested, officerChose, officer.getEmail());
         }
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AuditLog> getEntityAuditHistory(AuditEntityType entityType, UUID entityId) {
+        return auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType, entityId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StrategyAudit> getRecentStrategyOverrides() {
+        return strategyAuditRepository.findByOverriddenTrueOrderByChangedAtDesc();
     }
 }

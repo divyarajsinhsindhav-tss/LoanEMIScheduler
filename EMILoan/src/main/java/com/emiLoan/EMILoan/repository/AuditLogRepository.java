@@ -12,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface AuditLogRepository extends JpaRepository<AuditLog, UUID> {
     List<AuditLog> findByOfficerOrderByActionTimeDesc(User officer);
-    List<AuditLog> findByEntityIdAndEntityTypeOrderByActionTimeDesc(UUID entityId, AuditEntityType entityType);
     List<AuditLog> findByAction(AuditAction action);
     List<AuditLog> findByEntityType(AuditEntityType entityType);
+    List<AuditLog> findByEntityTypeAndEntityIdOrderByActionTimeDesc(AuditEntityType entityType, UUID entityId);
 }

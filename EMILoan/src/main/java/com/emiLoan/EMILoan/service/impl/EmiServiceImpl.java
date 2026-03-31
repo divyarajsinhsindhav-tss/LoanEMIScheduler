@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -42,7 +41,6 @@ public class EmiServiceImpl implements EmiService {
     private final NotificationService notificationService;
     private final AuditService auditService;
 
-
     @Override
     @Transactional(readOnly = true)
     public List<EmiScheduleResponse> getSchedule(String loanCode, String requesterEmail) {
@@ -52,10 +50,18 @@ public class EmiServiceImpl implements EmiService {
         User requester = userRepository.findByEmail(requesterEmail)
                 .orElseThrow(() -> new BusinessRuleException("Authenticated user session invalid."));
 
+        boolean isOwner = loan.getBorrower().getEmail().equalsIgnoreCase(requesterEmail);
+        boolean isStaff = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
+                requester.getRole().getRoleName() == RoleName.ADMIN;
+
+        if (!isOwner && !isStaff) {
+            log.warn("Security Alert: Unauthorized access attempt to Loan {} by {}", loanCode, requesterEmail);
+            throw new BusinessRuleException("Access Denied: You do not have permission to view this schedule.");
+        }
+
         List<EmiSchedule> scheduleList = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan);
         return emiScheduleMapper.toResponseList(scheduleList);
     }
-
 
     @Override
     @Transactional
@@ -80,7 +86,6 @@ public class EmiServiceImpl implements EmiService {
         log.info("Financial Event: Generated {} installments for Loan {}", schedules.size(), loan.getLoanCode());
     }
 
-
     @Override
     @Transactional
     public void processOverdueEmis(LocalDate currentDate) {
@@ -99,10 +104,11 @@ public class EmiServiceImpl implements EmiService {
             try {
                 notificationService.sendOverdueAlert(emi.getLoan().getBorrower(), emi);
 
-                auditService.logOfficerAction(null,
-                        AuditAction.STRATEGY_OVERRIDE,
+                auditService.logSystemAction(
+                        AuditAction.UPDATE,
                         AuditEntityType.EMI_SCHEDULE,
-                        emi.getEmiId());
+                        emi.getEmiId()
+                );
 
             } catch (Exception e) {
                 log.error("Batch Job Warning: Failed to notify/audit for EMI {}: {}", emi.getEmiId(), e.getMessage());

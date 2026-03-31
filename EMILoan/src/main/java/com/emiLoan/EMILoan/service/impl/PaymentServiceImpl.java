@@ -88,6 +88,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment savedPayment = paymentRepository.save(payment);
 
+        auditService.logOfficerAction(borrower, AuditAction.UPDATE, AuditEntityType.LOAN, loan.getLoanId());
+
         if (paymentStatus == PaymentStatus.SUCCESS) {
             emi.setStatus(EmiStatus.PAID);
             emi.setPaidDate(LocalDate.now());
