@@ -55,7 +55,6 @@ public class EmailConfig {
     public ClassLoaderTemplateResolver emailTemplateResolver() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
 
-        // Looks in src/main/resources/templates/ remaining task
         templateResolver.setPrefix("/templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);

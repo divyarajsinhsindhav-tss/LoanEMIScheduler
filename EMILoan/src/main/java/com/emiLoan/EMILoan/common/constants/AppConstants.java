@@ -1,5 +1,7 @@
 package com.emiLoan.EMILoan.common.constants;
 
+import com.emiLoan.EMILoan.common.enums.LoanStrategy;
+
 import java.math.BigDecimal;
 
 public final class AppConstants {
@@ -11,9 +13,9 @@ public final class AppConstants {
     public static final BigDecimal LOW_RISK_THRESHOLD = new BigDecimal("20.00");
     public static final BigDecimal HIGH_RISK_THRESHOLD = new BigDecimal("40.00");
     public static final int LONG_TERM_TENURE_THRESHOLD = 24;
-    public static final String STRATEGY_FLAT_RATE = "FLAT_RATE";
-    public static final String STRATEGY_REDUCING_BALANCE = "REDUCING_BALANCE";
-    public static final String STRATEGY_STEP_UP = "STEP_UP";
+    public static final String STRATEGY_FLAT_RATE = LoanStrategy.FLAT_RATE.name();
+    public static final String STRATEGY_REDUCING_BALANCE = LoanStrategy.REDUCING_BALANCE.name();
+    public static final String STRATEGY_STEP_UP = LoanStrategy.STEP_UP.name();
     public static final String STRATEGY_REJECTED = "REJECTED";
     public static final BigDecimal MAX_DB_DTI = new BigDecimal("999.99");
     public static final BigDecimal ANNUAL_STEP_UP_RATE = new BigDecimal("1.05");

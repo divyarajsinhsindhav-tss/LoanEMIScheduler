@@ -5,14 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.nio.file.AccessDeniedException;
+import org.springframework.security.access.AccessDeniedException;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
@@ -22,7 +24,9 @@ public class GlobalExceptionHandler {
             HttpServletRequest request) {
 
         Map<String, String> errors = new HashMap<>();
-        errors.put("code", ex.getErrorCode());
+        if (ex.getErrorCode() != null) {
+            errors.put("code", ex.getErrorCode());
+        }
 
         ErrorResponse errorResponse = ErrorResponse.of(
                 ex.getHttpStatus().value(),
@@ -38,7 +42,8 @@ public class GlobalExceptionHandler {
                 .status(ex.getHttpStatus())
                 .body(errorResponse);
     }
-     @ExceptionHandler(MethodArgumentNotValidException.class)
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
@@ -65,29 +70,9 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
-            Exception ex,
-            HttpServletRequest request) {
-
-        ErrorResponse errorResponse = ErrorResponse.of(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                "Something went wrong",
-                request.getRequestURI(),
-                null
-        );
-
-        log.error("Unhandled Exception: ", ex);
-
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(errorResponse);
-    }
-
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleSecurityAccessDeniedException(
-            org.springframework.security.access.AccessDeniedException ex,
+            AccessDeniedException ex,
             HttpServletRequest request) {
 
         ErrorResponse errorResponse = ErrorResponse.of(
@@ -97,6 +82,32 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
 
+        log.error("AccessDeniedException for URI {}: {}", request.getRequestURI(), ex.getMessage());
+
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(
+            Exception ex,
+            HttpServletRequest request) {
+
+        String errorName = ex.getClass().getSimpleName();
+        String exactConsoleMessage = ex.getMessage();
+
+        ErrorResponse errorResponse = ErrorResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                "An unexpected system error occurred.",
+                request.getRequestURI(),
+                null,
+                List.of("Exception Type: " + errorName, "Details: " + exactConsoleMessage) // Exposes details to Postman
+        );
+
+        log.error("Unhandled Exception: ", ex);
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorResponse);
     }
 }
