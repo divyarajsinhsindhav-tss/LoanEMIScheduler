@@ -61,6 +61,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         BorrowerProfile profile = borrowerProfileRepository.findByUser_EmailWithUser(email)
                 .orElseThrow(() -> new BusinessRuleException("Borrower profile not found for email: " + email));
 
+
         Long activeLoanCount = loanRepository.countActiveLoans(profile.getUser().getUserId(), LoanStatus.ACTIVE);
         if (activeLoanCount >= AppConstants.MAX_ACTIVE_LOANS) {
             throw new BusinessRuleException(
