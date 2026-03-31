@@ -103,4 +103,11 @@ public class AuditServiceImpl implements AuditService {
     public List<StrategyAuditResponse> getRecentStrategyOverrides() {
         return strategyAuditMapper.toResponseList(strategyAuditRepository.findByOverriddenTrueOrderByChangedAtDesc());
     }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AuditLogResponse> getAllAuditLogs(){
+        return auditLogMapper.toResponseList(auditLogRepository.findAll());
+    }
 }

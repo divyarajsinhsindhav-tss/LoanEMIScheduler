@@ -58,4 +58,16 @@ public class AuditController {
                 overrides
         ));
     }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<List<AuditLogResponse>>> getAllAuditLogs(HttpServletRequest request){
+        List<AuditLogResponse> auditLogs = auditService.getAllAuditLogs();
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "All AuditLogs retrieved successfully",
+                request.getRequestURI(),
+                auditLogs
+        ));
+    }
 }

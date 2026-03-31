@@ -25,4 +25,6 @@ public interface AuditService {
     List<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId);
 
     List<StrategyAuditResponse> getRecentStrategyOverrides();
+
+    List<AuditLogResponse> getAllAuditLogs();
 }
