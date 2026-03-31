@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.emiLoan.EMILoan.common.constants.AppConstants.REMINDER_DAYS_BEFORE;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class PaymentReminderScheduler {
     @Scheduled(cron = "${app.scheduler.reminder-cron:0 0 9 * * ?}")
     public void sendReminders() {
         LocalDate today = LocalDate.now();
-        LocalDate targetDate = today.plusDays(3);
+        LocalDate targetDate = today.plusDays(REMINDER_DAYS_BEFORE);
 
         log.info(">>>> Starting Daily Payment Reminder Job for due date: {}", targetDate);
         List<EmiSchedule> upcomingEmis = emiScheduleRepository
