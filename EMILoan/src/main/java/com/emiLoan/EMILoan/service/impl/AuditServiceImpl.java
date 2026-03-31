@@ -15,6 +15,7 @@ import com.emiLoan.EMILoan.repository.StrategyAuditRepository;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Async
     public void logOfficerAction(User officer, AuditAction action, AuditEntityType entityType, UUID entityId) {
         AuditLog auditLog = AuditLog.builder()
                 .officer(officer)
@@ -54,6 +56,7 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Async
     public void logSystemAction(AuditAction action, AuditEntityType entityType, UUID entityId) {
         AuditLog auditLog = AuditLog.builder()
                 .officer(null)
@@ -70,6 +73,7 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Async
     public void logStrategyDecision(LoanApplication application, String systemSuggested,
                                     String officerChose, boolean overridden, User officer) {
 
@@ -94,7 +98,6 @@ public class AuditServiceImpl implements AuditService {
     @Override
     @Transactional(readOnly = true)
     public List<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId) {
-        //return auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType, entityId);
         return auditLogMapper.toResponseList(auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType,entityId));
     }
 

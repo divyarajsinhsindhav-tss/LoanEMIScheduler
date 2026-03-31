@@ -19,12 +19,12 @@ public class BorrowerController {
     private final BorrowerService borrowerService;
 
     @GetMapping("/profile")
-    public ResponseEntity<ApiResponse<BorrowerResponse>> getProfile(HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<BorrowerResponse>> getProfile(HttpServletRequest httpServletRequest) {
         BorrowerResponse response = borrowerService.getProfile();
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
                 "Profile retrieved successfully",
-                request.getRequestURI(),
+                httpServletRequest.getRequestURI(),
                 response));
     }
 

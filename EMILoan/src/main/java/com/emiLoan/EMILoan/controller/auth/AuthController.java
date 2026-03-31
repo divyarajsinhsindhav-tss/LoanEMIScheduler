@@ -9,6 +9,7 @@ import com.emiLoan.EMILoan.service.interfaces.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -28,6 +30,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request,
             HttpServletRequest httpServletRequest
     ) {
+        log.info("Login request: {}", request.getEmail());
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -42,6 +45,7 @@ public class AuthController {
             @Valid @RequestBody BorrowerRegistrationRequest request,
             HttpServletRequest httpServletRequest
     ) {
+        log.info("Register request: {}", request.getEmail());
         UserResponse response = authService.registerBorrower(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of(
