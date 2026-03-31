@@ -264,3 +264,40 @@ The API returns a standard error object in case of failures:
   "path": "/api/v1/loan/applications/apply"
 }
 ```
+
+
+
+{
+"emiId": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+"amount": 5000.00,
+"paymentMode": "CARD",
+"methodDetails": {
+"type": "CARD",
+"cardholderName": "John Doe",
+"cardNumber": "1234567890123456",
+"expiryDate": "12/28",
+"cvv": "123"
+}
+}
+
+
+{
+"emiId": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+"amount": 2500.00,
+"paymentMode": "UPI",
+"methodDetails": {
+"type": "UPI",
+"upiId": "borrower@okhdfc"
+}
+}
+
+
+{
+"emiId": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+"amount": 10000.00,
+"paymentMode": "NET_BANKING",
+"methodDetails": {
+"type": "NET_BANKING",
+"bankCode": "SBI_RETAIL_001"
+}
+}

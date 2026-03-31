@@ -1,7 +1,6 @@
-package com.emiLoan.EMILoan.strategy;
+package com.emiLoan.EMILoan.strategy.EMI;
 
 
-import com.emiLoan.EMILoan.strategy.EmiRowData;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

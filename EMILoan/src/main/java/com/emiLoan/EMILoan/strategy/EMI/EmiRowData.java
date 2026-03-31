@@ -1,4 +1,4 @@
-package com.emiLoan.EMILoan.strategy;
+package com.emiLoan.EMILoan.strategy.EMI;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

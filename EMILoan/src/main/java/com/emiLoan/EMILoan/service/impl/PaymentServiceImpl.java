@@ -64,7 +64,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BusinessRuleException("Payment rejected: Loan is currently " + loan.getLoanStatus());
         }
         if (emi.getStatus() == EmiStatus.PAID) {
-            throw new BusinessRuleException("Payment rejected: Installment #" + emi.getInstallmentNo() + " is already paid.");
+            throw new BusinessRuleException("Payment rejected: Installment #" + emi.getInstallmentNo() + " is already fully paid.");
         }
 
         EmiSchedule firstUnpaid = emiScheduleRepository
@@ -72,16 +72,26 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElse(null);
 
         if (firstUnpaid != null && emi.getInstallmentNo() > firstUnpaid.getInstallmentNo()) {
-            throw new BusinessRuleException("Out of sequence: Please pay installment #" + firstUnpaid.getInstallmentNo() + " first.");
+            throw new BusinessRuleException("Out of sequence: Please clear installment #" + firstUnpaid.getInstallmentNo() + " first.");
+        }
+
+        BigDecimal currentAmountPaid = emi.getAmountPaid() != null ? emi.getAmountPaid() : BigDecimal.ZERO;
+        BigDecimal remainingAmount = emi.getTotalEmi().subtract(currentAmountPaid);
+
+        if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessRuleException("Payment amount must be greater than zero.");
+        }
+        if (request.getAmount().compareTo(remainingAmount) > 0) {
+            throw new BusinessRuleException("Overpayment prevented. You only owe ₹" + remainingAmount + " for this installment.");
         }
 
         PaymentGatewayStrategy gateway = paymentStrategyFactory.getStrategy(request.getPaymentMode());
-        PaymentStatus paymentStatus = gateway.processPayment(emi.getTotalEmi());
+        PaymentStatus paymentStatus = gateway.processPayment(request.getAmount(), request.getMethodDetails());
 
         Payment payment = Payment.builder()
                 .emiSchedule(emi)
                 .loan(loan)
-                .amountPaid(emi.getTotalEmi())
+                .amountPaid(request.getAmount())
                 .paymentMode(request.getPaymentMode())
                 .status(paymentStatus)
                 .build();
@@ -91,11 +101,21 @@ public class PaymentServiceImpl implements PaymentService {
         auditService.logOfficerAction(borrower, AuditAction.UPDATE, AuditEntityType.LOAN, loan.getLoanId());
 
         if (paymentStatus == PaymentStatus.SUCCESS) {
-            emi.setStatus(EmiStatus.PAID);
-            emi.setPaidDate(LocalDate.now());
-            emiScheduleRepository.save(emi);
 
-            log.info("EMI #{} for Loan {} successfully paid.", emi.getInstallmentNo(), loan.getLoanCode());
+            BigDecimal newTotalPaid = currentAmountPaid.add(request.getAmount());
+            emi.setAmountPaid(newTotalPaid);
+
+            if (newTotalPaid.compareTo(emi.getTotalEmi()) >= 0) {
+                emi.setStatus(EmiStatus.PAID);
+                emi.setPaidDate(LocalDate.now());
+                log.info("EMI #{} for Loan {} is now FULLY PAID.", emi.getInstallmentNo(), loan.getLoanCode());
+            } else {
+                emi.setStatus(EmiStatus.PARTIALLY_PAID);
+                log.info("EMI #{} for Loan {} is PARTIALLY PAID. Remaining: ₹{}",
+                        emi.getInstallmentNo(), loan.getLoanCode(), emi.getTotalEmi().subtract(newTotalPaid));
+            }
+
+            emiScheduleRepository.save(emi);
 
             boolean hasUnpaidEmis = emiScheduleRepository.existsByLoanAndStatusNot(loan, EmiStatus.PAID);
             if (!hasUnpaidEmis) {
@@ -136,7 +156,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public List<PaymentHistoryResponse> getBorrowerPaymentHistory(String borrowerEmail) {
@@ -150,11 +169,9 @@ public class PaymentServiceImpl implements PaymentService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public List<PaymentHistoryResponse> getLoanPaymentHistory(String loanId) {
-
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Loan loan = loanRepository.findByLoanCode(loanId)
@@ -194,7 +211,6 @@ public class PaymentServiceImpl implements PaymentService {
             BigDecimal totalPaid,
             List<Payment> payments
     ) {
-
         List<PaymentResponse> transactionResponses = payments.stream()
                 .map(paymentMapper::toResponse)
                 .collect(Collectors.toList());

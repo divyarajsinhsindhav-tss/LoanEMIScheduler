@@ -1,4 +1,4 @@
-package com.emiLoan.EMILoan.strategy;
+package com.emiLoan.EMILoan.strategy.EMI;
 
 
 import com.emiLoan.EMILoan.exceptions.StrategyNotFoundException;
