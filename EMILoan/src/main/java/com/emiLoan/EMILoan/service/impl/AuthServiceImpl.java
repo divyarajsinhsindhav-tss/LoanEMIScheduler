@@ -112,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
 
         notificationService.sendWelcomeEmail(savedUser);
         auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId());
-
+        log.info("User {} has been created", savedUser.getUserCode());
         return userMapper.toResponse(savedUser);
     }
 
