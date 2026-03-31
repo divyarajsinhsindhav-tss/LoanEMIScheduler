@@ -1,6 +1,7 @@
 package com.emiLoan.EMILoan.service.interfaces;
 
 
+import com.emiLoan.EMILoan.common.enums.LoanStatus;
 import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
 import com.emiLoan.EMILoan.dto.loan.request.LoanStatusUpdateRequest;
 import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
@@ -9,6 +10,7 @@ import com.emiLoan.EMILoan.dto.loanApplication.request.OfficerDecisionRequest;
 import com.emiLoan.EMILoan.dto.strategyAudit.StrategyAuditResponse;
 import com.emiLoan.EMILoan.entity.AuditLog;
 import com.emiLoan.EMILoan.entity.StrategyAudit;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +25,7 @@ public interface LoanService {
 
     LoanSummaryResponse getLoanSummary(String loanCode, String email);
 
-    LoanResponse updateLoanStatus(UUID loanId, LoanStatusUpdateRequest request);
+    LoanResponse updateLoanStatus(String loanCode, LoanStatusUpdateRequest request);
 
     LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request,String officerEmail);
 
@@ -31,4 +33,5 @@ public interface LoanService {
 
     List<AuditLogResponse> getLoanAuditHistory(String loanCode, String requesterEmail);
 
+    Page<LoanResponse> getAllLoans(String requesterEmail, int pageNumber, int pageSize, LoanStatus status);
 }

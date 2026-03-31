@@ -2,6 +2,8 @@ package com.emiLoan.EMILoan.repository;
 
 import com.emiLoan.EMILoan.common.enums.LoanStatus;
 import com.emiLoan.EMILoan.entity.Loan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,5 +30,5 @@ public interface LoanRepository extends JpaRepository<Loan, UUID> {
     @Query("SELECT COUNT(l) FROM Loan l WHERE l.borrower.userId = :userId AND l.loanStatus = :status")
     Long countActiveLoans(@Param("userId") UUID userId, @Param("status") LoanStatus status);
 
-    List<Loan> findByLoanStatus(LoanStatus status);
+    Page<Loan> findByLoanStatus(LoanStatus status, Pageable pageable);
 }

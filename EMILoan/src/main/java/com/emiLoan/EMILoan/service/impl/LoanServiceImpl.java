@@ -27,7 +27,10 @@ import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.AnyDiscriminatorImplicitValues;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -188,6 +191,23 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional(readOnly = true)
+    public Page<LoanResponse> getAllLoans(String requesterEmail, int pageNumber, int pageSize, LoanStatus status) {
+        verifyAdminOrOfficerPrivileges(requesterEmail);
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "startDate"));
+        Page<Loan> loans;
+
+        if (status != null) {
+            loans = loanRepository.findByLoanStatus(status, pageable);
+        } else {
+            loans = loanRepository.findAll(pageable);
+        }
+
+        return loans.map(loanMapper::toResponse);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public LoanResponse getLoan(String loanCode, String email) {
         User profile = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessRuleException("User not found"));
@@ -217,23 +237,20 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
-    public LoanResponse updateLoanStatus(UUID loanId, LoanStatusUpdateRequest request) {
-        Loan loan = loanRepository.findById(loanId)
+    public LoanResponse updateLoanStatus(String loanCode, LoanStatusUpdateRequest request) {
+        Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
 
         loanMapper.updateEntityFromStatusRequest(request, loan);
 
         Loan updatedLoan = loanRepository.save(loan);
 
-        auditService.logSystemAction(AuditAction.UPDATE, AuditEntityType.LOAN, loanId);
+        auditService.logSystemAction(AuditAction.UPDATE, AuditEntityType.LOAN, loan.getLoanId());
 
         log.info("Loan {} status updated to {}", loan.getLoanCode(), updatedLoan.getLoanStatus());
 
         return loanMapper.toResponse(updatedLoan);
     }
-
-
-
 
     @Override
     @Transactional(readOnly = true)
@@ -241,8 +258,7 @@ public class LoanServiceImpl implements LoanService {
         verifyAdminOrOfficerPrivileges(requesterEmail);
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
-
-        return auditService.getEntityAuditHistory(AuditEntityType.LOAN, loan.getLoanId());
+       return auditService.getEntityAuditHistory(AuditEntityType.LOAN, loan.getLoanId());
     }
 
     @Override
@@ -258,7 +274,7 @@ public class LoanServiceImpl implements LoanService {
 
         if (requester.getRole().getRoleName() != RoleName.LOAN_OFFICER &&
                 requester.getRole().getRoleName() != RoleName.ADMIN) {
-            throw new BusinessRuleException("Access Denied: You do not have permission to view audit logs.");
+            throw new BusinessRuleException("Access Denied: You do not have permission to perform this action.");
         }
     }
 }
