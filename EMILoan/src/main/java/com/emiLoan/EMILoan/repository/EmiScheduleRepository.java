@@ -34,4 +34,5 @@ public interface EmiScheduleRepository extends JpaRepository<EmiSchedule, UUID> 
 
     Optional<EmiSchedule> findFirstByLoanAndStatusInOrderByInstallmentNoAsc(Loan loan, List<EmiStatus> statuses);
 
+    List<EmiSchedule> findAllByLoanAndStatusInOrderByInstallmentNoAsc(Loan loan, List<EmiStatus> statuses);
 }

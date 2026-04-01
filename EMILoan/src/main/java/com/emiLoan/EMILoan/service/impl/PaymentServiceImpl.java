@@ -207,74 +207,85 @@ public class PaymentServiceImpl implements PaymentService {
                 .transactions(transactionResponses)
                 .build();
     }
-
     @Override
     @Transactional
     public PaymentResponse forecloseLoan(ForeclosureRequest request, String email) {
+
         Loan loan = loanRepository.findByLoanCode(request.getLoanCode())
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
 
         if (!loan.getBorrower().getEmail().equalsIgnoreCase(email)) {
             throw new BusinessRuleException("Unauthorized: This loan does not belong to you.");
         }
+
         if (loan.getLoanStatus() != LoanStatus.ACTIVE) {
             throw new BusinessRuleException("Foreclosure rejected: Loan is currently " + loan.getLoanStatus());
         }
 
-        EmiSchedule nextEmi = emiScheduleRepository
-                .findFirstByLoanAndStatusNotOrderByInstallmentNoAsc(loan, EmiStatus.PAID)
-                .orElseThrow(() -> new BusinessRuleException("No pending EMIs found. Loan might be cleared."));
+        List<EmiSchedule> unpaidEmis = emiScheduleRepository
+                .findAllByLoanAndStatusInOrderByInstallmentNoAsc(
+                        loan,
+                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID)
+                );
 
-        BigDecimal currentAmountPaid = nextEmi.getAmountPaid() != null ? nextEmi.getAmountPaid() : BigDecimal.ZERO;
+        if (unpaidEmis.isEmpty()) {
+            throw new BusinessRuleException("Loan already cleared.");
+        }
 
-        BigDecimal requiredForeclosureAmount = nextEmi.getRemainingBalance()
-                .add(nextEmi.getPrincipalComponent())
-                .add(nextEmi.getInterestComponent())
-                .subtract(currentAmountPaid);
+        EmiSchedule currentEmi = unpaidEmis.get(0);
+        BigDecimal currentPaid = currentEmi.getAmountPaid() != null ? currentEmi.getAmountPaid() : BigDecimal.ZERO;
+
+        BigDecimal requiredForeclosureAmount = currentEmi.getRemainingBalance()
+                .add(currentEmi.getPrincipalComponent())
+                .add(currentEmi.getInterestComponent())
+                .subtract(currentPaid);
 
         if (request.getAmount().compareTo(requiredForeclosureAmount) < 0) {
-            throw new BusinessRuleException("Foreclosure failed: Amount provided (₹" + request.getAmount() +
-                    ") is less than the required settlement amount (₹" + requiredForeclosureAmount + ").");
+            throw new BusinessRuleException(
+                    "Foreclosure failed: Amount provided (₹" + request.getAmount() +
+                            ") is less than the required settlement amount (₹" + requiredForeclosureAmount + ")."
+            );
         }
 
         PaymentGatewayStrategy gateway = paymentStrategyFactory.getStrategy(request.getPaymentMode());
         PaymentStatus paymentStatus = gateway.processPayment(request.getAmount(), request.getMethodDetails());
 
         Payment payment = Payment.builder()
-                .emiSchedule(nextEmi)
                 .loan(loan)
+                .emiSchedule(currentEmi)
                 .amountPaid(request.getAmount())
                 .paymentMode(request.getPaymentMode())
                 .status(paymentStatus)
                 .build();
 
         Payment savedPayment = paymentRepository.save(payment);
+
         auditService.logOfficerAction(loan.getBorrower(), AuditAction.UPDATE, AuditEntityType.LOAN, loan.getLoanId());
 
         if (paymentStatus == PaymentStatus.SUCCESS) {
-            log.info("Foreclosure payment of ₹{} successful for Loan {}", request.getAmount(), loan.getLoanCode());
 
+            log.info("Foreclosure payment of ₹{} successful for Loan {}", request.getAmount(), loan.getLoanCode());
             notificationService.sendPaymentConfirmation(loan.getBorrower(), savedPayment);
 
-            nextEmi.setAmountPaid(currentAmountPaid.add(request.getAmount()));
-            nextEmi.setStatus(EmiStatus.PAID);
-            nextEmi.setPaidDate(LocalDate.now());
-            emiScheduleRepository.save(nextEmi);
+            currentEmi.setAmountPaid(currentPaid.add(request.getAmount()));
+            currentEmi.setStatus(EmiStatus.PAID);
+            currentEmi.setPaidDate(LocalDate.now());
+            emiScheduleRepository.save(currentEmi);
 
-            List<EmiSchedule> futureEmis = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan).stream()
-                    .filter(emi -> emi.getInstallmentNo() > nextEmi.getInstallmentNo() && emi.getStatus() != EmiStatus.PAID)
-                    .collect(Collectors.toList());
-
-            emiScheduleRepository.deleteAll(futureEmis);
-            log.info("Waived and deleted {} future EMI records for foreclosed loan.", futureEmis.size());
+            if (unpaidEmis.size() > 1) {
+                List<EmiSchedule> futureEmis = unpaidEmis.subList(1, unpaidEmis.size());
+                emiScheduleRepository.deleteAll(futureEmis);
+                log.info("Waived and deleted {} future EMI records for foreclosed loan.", futureEmis.size());
+            }
 
             loan.setLoanStatus(LoanStatus.CLOSED);
             loanRepository.save(loan);
 
+            log.info("Loan {} successfully foreclosed and closed.", loan.getLoanCode());
             notificationService.sendLoanClosed(loan.getBorrower(), loan);
-        } else {
-            log.warn("Foreclosure Payment Gateway returned FAILURE for Loan {}", loan.getLoanCode());
 
+        } else {
+            log.warn("Foreclosure Payment FAILED for Loan {}", loan.getLoanCode());
             notificationService.sendPaymentFailed(loan.getBorrower(), savedPayment);
         }
 

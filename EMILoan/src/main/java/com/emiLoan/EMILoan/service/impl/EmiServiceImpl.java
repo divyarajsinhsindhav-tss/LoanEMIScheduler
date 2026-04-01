@@ -106,28 +106,33 @@ public class EmiServiceImpl implements EmiService {
     @Override
     @Transactional(readOnly = true)
     public BigDecimal getForeclosureQuote(String loanCode, String requesterEmail) {
+
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan record not found"));
 
         validateAccess(loan, requesterEmail);
 
-        EmiSchedule nextEmi = emiScheduleRepository
-                .findFirstByLoanAndStatusInOrderByInstallmentNoAsc(
+        List<EmiSchedule> allEmis = emiScheduleRepository
+                .findAllByLoanAndStatusInOrderByInstallmentNoAsc(
                         loan,
                         List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID)
-                )
-                .orElse(null);
+                );
 
-        if (nextEmi == null) {
-            return BigDecimal.ZERO; // Loan is already cleared
+        if (allEmis.isEmpty()) {
+            return BigDecimal.ZERO;
         }
 
-        BigDecimal foreclosureAmount = nextEmi.getRemainingBalance()
-                .add(nextEmi.getPrincipalComponent())
-                .add(nextEmi.getInterestComponent())
-                .subtract(nextEmi.getAmountPaid() != null ? nextEmi.getAmountPaid() : BigDecimal.ZERO);
+        BigDecimal total = BigDecimal.ZERO;
 
-        return foreclosureAmount;
+        for (EmiSchedule emi : allEmis) {
+            BigDecimal emiAmount = emi.getPrincipalComponent()
+                    .add(emi.getInterestComponent())
+                    .subtract(emi.getAmountPaid() != null ? emi.getAmountPaid() : BigDecimal.ZERO);
+
+            total = total.add(emiAmount);
+        }
+
+        return total;
     }
 
     private void validateAccess(Loan loan, String requesterEmail) {
