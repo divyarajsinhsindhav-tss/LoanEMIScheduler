@@ -87,34 +87,60 @@ public class EmiServiceImpl implements EmiService {
     }
 
     @Override
-    @Transactional
-    public void processOverdueEmis(LocalDate currentDate) {
-        log.info("Batch Job Started: Identifying overdue installments for {}", currentDate);
+    @Transactional(readOnly = true)
+    public EmiScheduleResponse getNextUpcomingEmi(String loanCode, String requesterEmail) {
+        Loan loan = loanRepository.findByLoanCode(loanCode)
+                .orElseThrow(() -> new BusinessRuleException("Loan record not found"));
 
-        List<EmiSchedule> overdueList = emiScheduleRepository.findByDueDateBeforeAndStatus(currentDate, EmiStatus.PENDING);
+        validateAccess(loan, requesterEmail);
 
-        if (overdueList.isEmpty()) {
-            log.info("Batch Job Finished: No overdue installments found.");
-            return;
+        EmiSchedule nextEmi = emiScheduleRepository
+                .findFirstByLoanAndStatusInOrderByInstallmentNoAsc(
+                        loan,
+                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID)
+                )
+                .orElseThrow(() -> new BusinessRuleException("No pending EMIs found. The loan might be fully paid."));
+
+        return emiScheduleMapper.toResponse(nextEmi);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public BigDecimal getForeclosureQuote(String loanCode, String requesterEmail) {
+        Loan loan = loanRepository.findByLoanCode(loanCode)
+                .orElseThrow(() -> new BusinessRuleException("Loan record not found"));
+
+        validateAccess(loan, requesterEmail);
+
+        EmiSchedule nextEmi = emiScheduleRepository
+                .findFirstByLoanAndStatusInOrderByInstallmentNoAsc(
+                        loan,
+                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID)
+                )
+                .orElse(null);
+
+        if (nextEmi == null) {
+            return BigDecimal.ZERO; // Loan is already cleared
         }
 
-        int updatedCount = emiScheduleRepository.updateStatusToOverdueForPastDue(currentDate);
+        BigDecimal foreclosureAmount = nextEmi.getRemainingBalance()
+                .add(nextEmi.getPrincipalComponent())
+                .add(nextEmi.getInterestComponent())
+                .subtract(nextEmi.getAmountPaid() != null ? nextEmi.getAmountPaid() : BigDecimal.ZERO);
 
-        for (EmiSchedule emi : overdueList) {
-            try {
-                notificationService.sendOverdueAlert(emi.getLoan().getBorrower(), emi);
+        return foreclosureAmount;
+    }
 
-                auditService.logSystemAction(
-                        AuditAction.UPDATE,
-                        AuditEntityType.EMI_SCHEDULE,
-                        emi.getEmiId()
-                );
+    private void validateAccess(Loan loan, String requesterEmail) {
+        User requester = userRepository.findByEmail(requesterEmail)
+                .orElseThrow(() -> new BusinessRuleException("Authenticated user session invalid."));
 
-            } catch (Exception e) {
-                log.error("Batch Job Warning: Failed to notify/audit for EMI {}: {}", emi.getEmiId(), e.getMessage());
-            }
+        boolean isOwner = loan.getBorrower().getEmail().equalsIgnoreCase(requesterEmail);
+        boolean isStaff = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
+                requester.getRole().getRoleName() == RoleName.ADMIN;
+
+        if (!isOwner && !isStaff) {
+            log.warn("Security Alert: Unauthorized access attempt to Loan {} by {}", loan.getLoanCode(), requesterEmail);
+            throw new BusinessRuleException("Access Denied: You do not have permission to view this loan data.");
         }
-
-        log.info("Batch Job Finished: {} records marked as OVERDUE and processed.", updatedCount);
     }
 }

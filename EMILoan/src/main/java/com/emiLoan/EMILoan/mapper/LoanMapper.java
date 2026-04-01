@@ -13,7 +13,6 @@ public interface LoanMapper {
     @Mapping(target = "applicationId", source = "application.applicationId")
     @Mapping(target = "applicationCode", source = "application.applicationCode")
     @Mapping(target = "borrowerId", source = "borrower.userId")
-    // Use a clean helper for the V5 optional last name
     @Mapping(target = "borrowerName", source = "borrower", qualifiedByName = "mapFullName")
     LoanResponse toResponse(Loan loan);
 

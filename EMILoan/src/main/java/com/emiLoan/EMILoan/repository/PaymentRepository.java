@@ -17,11 +17,6 @@ import java.util.UUID;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, UUID> {
     List<Payment> findByLoanOrderByPaymentDateDesc(Loan loan);
-    List<Payment> findByEmiScheduleEmiId(UUID emiId);
-    List<Payment> findByStatus(PaymentStatus status);
     @Query("SELECT SUM(p.amountPaid) FROM Payment p WHERE p.loan = :loan AND p.status = 'SUCCESS'")
     BigDecimal sumSuccessfulPaymentsByLoan(@Param("loan") Loan loan);
-    boolean existsByEmiScheduleEmiIdAndStatus(UUID emiId, PaymentStatus status);
-    @Query("SELECT SUM(p.amountPaid) FROM Payment p WHERE p.loan.borrower = :borrower AND p.status = 'SUCCESS'")
-    BigDecimal sumSuccessfulPaymentsByBorrower(@Param("borrower") User borrower);
 }

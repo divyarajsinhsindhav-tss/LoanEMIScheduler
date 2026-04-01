@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Failed - Action Required</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        .email-wrapper {
+            width: 100%;
+            background-color: #f4f7f6;
+            padding: 40px 0;
+        }
+        .email-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            background-color: #ef4444; /* Crimson Red for Alert */
+            color: #ffffff;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .header .alert-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .content {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .message {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555555;
+            margin-bottom: 25px;
+        }
+        .receipt-box {
+            background-color: #fef2f2; /* Very light red background */
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .receipt-table td {
+            padding: 10px 0;
+            font-size: 15px;
+            border-bottom: 1px solid #fecaca;
+        }
+        .receipt-table tr:last-child td {
+            border-bottom: none;
+        }
+        .receipt-label {
+            color: #7f1d1d;
+            font-weight: 500;
+        }
+        .receipt-value {
+            text-align: right;
+            font-weight: 600;
+            color: #450a0a;
+        }
+        .amount-highlight {
+            font-size: 20px;
+            color: #ef4444;
+        }
+        .action-button {
+            display: block;
+            width: 200px;
+            margin: 0 auto 25px auto;
+            background-color: #2563eb;
+            color: #ffffff !important;
+            text-align: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .footer {
+            background-color: #f8fafc;
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="email-wrapper">
+    <div class="email-card">
+
+        <div class="header">
+            <div class="alert-icon">&#10006;</div> <h1>Payment Failed</h1>
+        </div>
+
+        <div class="content">
+            <div class="greeting">Hello <span th:text="${name}">Customer</span>,</div>
+            <div class="message">
+                We recently attempted to process your EMI payment, but unfortunately, the transaction was declined by your bank or payment provider.
+                <br><br>
+                <strong>Don't worry!</strong> If any money was deducted from your account, it will be automatically refunded by your bank within 3-5 business days.
+            </div>
+
+            <div class="receipt-box">
+                <table class="receipt-table">
+                    <tr>
+                        <td class="receipt-label">Attempted Amount</td>
+                        <td class="receipt-value amount-highlight">₹<span th:text="${amountAttempted}">0.00</span></td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-label">Loan Account Number</td>
+                        <td class="receipt-value" th:text="${loanCode}">LN-000000</td>
+                    </tr>
+                    <tr>
+                        <td class="receipt-label">Attempted Mode</td>
+                        <td class="receipt-value" th:text="${paymentMode}">UPI</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="message" style="text-align: center;">
+                Please ensure you have sufficient balance and try making the payment again to avoid any late fees on your loan.
+            </div>
+
+            <a href="https://your-frontend-url.com/dashboard" class="action-button">Retry Payment</a>
+
+        </div>
+
+        <div class="footer">
+            <p>If you continue to face issues, please contact our support team.</p>
+            <p>This is an automatically generated email. Please do not reply.</p>
+            <p>&copy; 2026 EMI Loan System. All rights reserved.</p>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

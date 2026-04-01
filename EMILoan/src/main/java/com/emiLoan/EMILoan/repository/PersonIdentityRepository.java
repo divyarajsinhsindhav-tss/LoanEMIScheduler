@@ -9,6 +9,4 @@ import java.util.UUID;
 @Repository
 public interface PersonIdentityRepository extends JpaRepository<PersonIdentity, UUID> {
     Optional<PersonIdentity> findByPanHash(String panHash);
-    Optional<PersonIdentity> findByPersonCode(String personCode);
-    Boolean existsByPanHash(String panHash);
 }

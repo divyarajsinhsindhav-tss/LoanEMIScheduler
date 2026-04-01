@@ -48,6 +48,18 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     @Async
+    public void sendApplicationWithdrawn(User user, LoanApplication application) {
+        Map<String, Object> props = new HashMap<>();
+        props.put("name", user.getFirstName());
+        props.put("appCode", application.getApplicationCode());
+
+        sendEmail(user, null, null, "Application Withdrawn - " + application.getApplicationCode(),
+                "application-withdrawn", props);
+    }
+
+    @Override
+    @Transactional
+    @Async
     public void sendLoanApproved(User user, Loan loan) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -177,5 +189,39 @@ public class NotificationServiceImpl implements NotificationService {
         } finally {
             notificationRepository.save(notification);
         }
+    }
+
+    @Override
+    @Transactional
+    @Async
+    public void sendPaymentConfirmation(User user, Payment payment) {
+        Map<String, Object> props = new HashMap<>();
+        props.put("name", user.getFirstName());
+        props.put("loanCode", payment.getLoan().getLoanCode());
+        props.put("amountPaid", payment.getAmountPaid());
+        props.put("paymentMode", payment.getPaymentMode().toString());
+        props.put("installmentNo", payment.getEmiSchedule().getInstallmentNo());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
+        props.put("paymentDate", LocalDateTime.now().format(formatter));
+
+        sendEmail(user, payment.getLoan(), payment.getEmiSchedule(),
+                "Payment Receipt: ₹" + payment.getAmountPaid() + " Received",
+                "payment-confirmation", props);
+    }
+
+    @Override
+    @Transactional
+    @Async
+    public void sendPaymentFailed(User user, Payment payment) {
+        Map<String, Object> props = new HashMap<>();
+        props.put("name", user.getFirstName());
+        props.put("loanCode", payment.getLoan().getLoanCode());
+        props.put("amountAttempted", payment.getAmountPaid());
+        props.put("paymentMode", payment.getPaymentMode().toString());
+
+        sendEmail(user, payment.getLoan(), payment.getEmiSchedule(),
+                "Payment Failed - Action Required for Loan " + payment.getLoan().getLoanCode(),
+                "payment-failed", props);
     }
 }

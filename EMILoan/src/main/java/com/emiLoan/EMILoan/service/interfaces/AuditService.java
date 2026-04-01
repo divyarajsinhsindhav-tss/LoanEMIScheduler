@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.service.interfaces;
 
 
-
 import com.emiLoan.EMILoan.common.enums.AuditAction;
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
@@ -10,6 +9,7 @@ import com.emiLoan.EMILoan.entity.AuditLog;
 import com.emiLoan.EMILoan.entity.LoanApplication;
 import com.emiLoan.EMILoan.entity.StrategyAudit;
 import com.emiLoan.EMILoan.entity.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,5 +26,5 @@ public interface AuditService {
 
     List<StrategyAuditResponse> getRecentStrategyOverrides();
 
-    List<AuditLogResponse> getAllAuditLogs();
+    Page<AuditLogResponse> getAllAuditLogs(int page, int size);
 }

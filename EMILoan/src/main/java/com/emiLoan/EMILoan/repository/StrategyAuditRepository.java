@@ -10,11 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 @Repository
 public interface StrategyAuditRepository extends JpaRepository<StrategyAudit, UUID> {
-    Optional<StrategyAudit> findByApplication(LoanApplication application);
-    List<StrategyAudit> findByOverriddenTrue();
-    List<StrategyAudit> findByChangedByOrderByChangedAtDesc(User officer);
-    Optional<StrategyAudit> findByApplicationApplicationId(UUID applicationId);
     List<StrategyAudit> findByOverriddenTrueOrderByChangedAtDesc();
 }

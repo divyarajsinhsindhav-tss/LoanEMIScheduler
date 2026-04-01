@@ -17,14 +17,21 @@ import java.util.UUID;
 @Repository
 public interface EmiScheduleRepository extends JpaRepository<EmiSchedule, UUID> {
     List<EmiSchedule> findByDueDateBeforeAndStatus(LocalDate date, EmiStatus status);
+
     Optional<EmiSchedule> findFirstByLoanAndStatusNotOrderByInstallmentNoAsc(Loan loan, EmiStatus status);
-    Optional<EmiSchedule> findFirstByLoan_LoanIdAndStatusOrderByDueDateAsc(UUID loanId, EmiStatus status);
+
     Optional<EmiSchedule> findFirstByLoan_LoanCodeAndStatusOrderByDueDateAsc(String loanCode, EmiStatus status);
+
     List<EmiSchedule> findByLoanOrderByInstallmentNoAsc(Loan loan);
-    @Modifying
-    @Query("UPDATE EmiSchedule e SET e.status = 'OVERDUE' " +
-            "WHERE e.dueDate < :currentDate AND e.status = 'PENDING'")
-    int updateStatusToOverdueForPastDue(@Param("currentDate") LocalDate currentDate);
+
     boolean existsByLoanAndStatusNot(Loan loan, EmiStatus status);
+
     List<EmiSchedule> findByStatusAndDueDateBetween(EmiStatus status, LocalDate startDate, LocalDate endDate);
+
+    @Query("SELECT COUNT(e) FROM EmiSchedule e WHERE e.loan.borrower.email = :email " +
+            "AND e.status != 'PAID' AND e.dueDate <= :targetDate")
+    Integer countUpcomingPayments(@Param("email") String email, @Param("targetDate") LocalDate targetDate);
+
+    Optional<EmiSchedule> findFirstByLoanAndStatusInOrderByInstallmentNoAsc(Loan loan, List<EmiStatus> statuses);
+
 }

@@ -26,13 +26,6 @@ public interface LoanApplicationMapper {
 
     LoanApplicationDetailsResponse toDetailsResponse(LoanApplication application);
 
-    @Mapping(target = "applicationId", ignore = true)
-    @Mapping(target = "borrower", ignore = true)
-    @Mapping(target = "appliedAt", ignore = true)
-    @Mapping(target = "officerStrategy", source = "officerStrategy")
-    @Mapping(target = "status", source = "status")
-    void updateEntityFromDecision(OfficerDecisionRequest request, @MappingTarget LoanApplication application);
-
     @Named("mapFullName")
     default String mapFullName(User user) {
         if (user == null) return null;

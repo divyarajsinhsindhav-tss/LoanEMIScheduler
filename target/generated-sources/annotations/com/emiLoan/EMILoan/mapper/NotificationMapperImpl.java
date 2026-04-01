@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.mapper;
 
 import com.emiLoan.EMILoan.dto.notification.NotificationResponse;
-import com.emiLoan.EMILoan.dto.notification.NotificationSummaryResponse;
 import com.emiLoan.EMILoan.entity.EmiSchedule;
 import com.emiLoan.EMILoan.entity.Loan;
 import com.emiLoan.EMILoan.entity.Notification;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-28T18:41:18+0530",
+    date = "2026-03-31T22:23:53+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -42,22 +41,6 @@ public class NotificationMapperImpl implements NotificationMapper {
     }
 
     @Override
-    public NotificationSummaryResponse toSummaryResponse(Notification notification) {
-        if ( notification == null ) {
-            return null;
-        }
-
-        NotificationSummaryResponse notificationSummaryResponse = new NotificationSummaryResponse();
-
-        notificationSummaryResponse.setPreview( createPreview( notification.getMessage() ) );
-        notificationSummaryResponse.setSubject( notification.getSubject() );
-        notificationSummaryResponse.setSentAt( notification.getSentAt() );
-        notificationSummaryResponse.setStatus( notification.getStatus() );
-
-        return notificationSummaryResponse;
-    }
-
-    @Override
     public List<NotificationResponse> toResponseList(List<Notification> notifications) {
         if ( notifications == null ) {
             return null;
@@ -66,20 +49,6 @@ public class NotificationMapperImpl implements NotificationMapper {
         List<NotificationResponse> list = new ArrayList<NotificationResponse>( notifications.size() );
         for ( Notification notification : notifications ) {
             list.add( toResponse( notification ) );
-        }
-
-        return list;
-    }
-
-    @Override
-    public List<NotificationSummaryResponse> toSummaryList(List<Notification> notifications) {
-        if ( notifications == null ) {
-            return null;
-        }
-
-        List<NotificationSummaryResponse> list = new ArrayList<NotificationSummaryResponse>( notifications.size() );
-        for ( Notification notification : notifications ) {
-            list.add( toSummaryResponse( notification ) );
         }
 
         return list;

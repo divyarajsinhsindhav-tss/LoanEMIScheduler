@@ -1,6 +1,7 @@
 package com.emiLoan.EMILoan.service.impl;
 
 import com.emiLoan.EMILoan.common.enums.*;
+import com.emiLoan.EMILoan.dto.payment.ForeclosureRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentHistoryResponse;
 import com.emiLoan.EMILoan.dto.payment.PaymentRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentResponse;
@@ -102,6 +103,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (paymentStatus == PaymentStatus.SUCCESS) {
 
+            notificationService.sendPaymentConfirmation(borrower, savedPayment);
+
             BigDecimal newTotalPaid = currentAmountPaid.add(request.getAmount());
             emi.setAmountPaid(newTotalPaid);
 
@@ -127,6 +130,8 @@ public class PaymentServiceImpl implements PaymentService {
             }
         } else {
             log.warn("Payment Gateway returned FAILURE for EMI ID {}", emi.getEmiId());
+
+            notificationService.sendPaymentFailed(borrower, savedPayment);
         }
 
         return paymentMapper.toResponse(savedPayment);
@@ -169,25 +174,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<PaymentHistoryResponse> getLoanPaymentHistory(String loanId) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Loan loan = loanRepository.findByLoanCode(loanId)
-                .orElseThrow(() -> new BusinessRuleException("Loan not found"));
-
-        if (!loan.getBorrower().getEmail().equals(email)) {
-            throw new BusinessRuleException("Unauthorized access");
-        }
-
-        List<Payment> payments = paymentRepository.findByLoanOrderByPaymentDateDesc(loan);
-
-        BigDecimal totalPaid = paymentRepository.sumSuccessfulPaymentsByLoan(loan);
-        if (totalPaid == null) totalPaid = BigDecimal.ZERO;
-
-        return List.of(buildResponse(loan.getLoanCode(), totalPaid, payments));
-    }
 
     private PaymentHistoryResponse getHistoryForLoan(Loan loan) {
         List<Payment> payments = paymentRepository.findByLoanOrderByPaymentDateDesc(loan);
@@ -220,5 +206,78 @@ public class PaymentServiceImpl implements PaymentService {
                 .totalAmountPaid(totalPaid)
                 .transactions(transactionResponses)
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public PaymentResponse forecloseLoan(ForeclosureRequest request, String email) {
+        Loan loan = loanRepository.findByLoanCode(request.getLoanCode())
+                .orElseThrow(() -> new BusinessRuleException("Loan not found"));
+
+        if (!loan.getBorrower().getEmail().equalsIgnoreCase(email)) {
+            throw new BusinessRuleException("Unauthorized: This loan does not belong to you.");
+        }
+        if (loan.getLoanStatus() != LoanStatus.ACTIVE) {
+            throw new BusinessRuleException("Foreclosure rejected: Loan is currently " + loan.getLoanStatus());
+        }
+
+        EmiSchedule nextEmi = emiScheduleRepository
+                .findFirstByLoanAndStatusNotOrderByInstallmentNoAsc(loan, EmiStatus.PAID)
+                .orElseThrow(() -> new BusinessRuleException("No pending EMIs found. Loan might be cleared."));
+
+        BigDecimal currentAmountPaid = nextEmi.getAmountPaid() != null ? nextEmi.getAmountPaid() : BigDecimal.ZERO;
+
+        BigDecimal requiredForeclosureAmount = nextEmi.getRemainingBalance()
+                .add(nextEmi.getPrincipalComponent())
+                .add(nextEmi.getInterestComponent())
+                .subtract(currentAmountPaid);
+
+        if (request.getAmount().compareTo(requiredForeclosureAmount) < 0) {
+            throw new BusinessRuleException("Foreclosure failed: Amount provided (₹" + request.getAmount() +
+                    ") is less than the required settlement amount (₹" + requiredForeclosureAmount + ").");
+        }
+
+        PaymentGatewayStrategy gateway = paymentStrategyFactory.getStrategy(request.getPaymentMode());
+        PaymentStatus paymentStatus = gateway.processPayment(request.getAmount(), request.getMethodDetails());
+
+        Payment payment = Payment.builder()
+                .emiSchedule(nextEmi)
+                .loan(loan)
+                .amountPaid(request.getAmount())
+                .paymentMode(request.getPaymentMode())
+                .status(paymentStatus)
+                .build();
+
+        Payment savedPayment = paymentRepository.save(payment);
+        auditService.logOfficerAction(loan.getBorrower(), AuditAction.UPDATE, AuditEntityType.LOAN, loan.getLoanId());
+
+        if (paymentStatus == PaymentStatus.SUCCESS) {
+            log.info("Foreclosure payment of ₹{} successful for Loan {}", request.getAmount(), loan.getLoanCode());
+
+            notificationService.sendPaymentConfirmation(loan.getBorrower(), savedPayment);
+
+            nextEmi.setAmountPaid(currentAmountPaid.add(request.getAmount()));
+            nextEmi.setStatus(EmiStatus.PAID);
+            nextEmi.setPaidDate(LocalDate.now());
+            emiScheduleRepository.save(nextEmi);
+
+            List<EmiSchedule> futureEmis = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan).stream()
+                    .filter(emi -> emi.getInstallmentNo() > nextEmi.getInstallmentNo() && emi.getStatus() != EmiStatus.PAID)
+                    .collect(Collectors.toList());
+
+            emiScheduleRepository.deleteAll(futureEmis);
+            log.info("Waived and deleted {} future EMI records for foreclosed loan.", futureEmis.size());
+
+            loan.setLoanStatus(LoanStatus.CLOSED);
+            loanRepository.save(loan);
+
+            notificationService.sendLoanClosed(loan.getBorrower(), loan);
+        } else {
+            log.warn("Foreclosure Payment Gateway returned FAILURE for Loan {}", loan.getLoanCode());
+
+            notificationService.sendPaymentFailed(loan.getBorrower(), savedPayment);
+        }
+
+        return paymentMapper.toResponse(savedPayment);
     }
 }

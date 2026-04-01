@@ -25,6 +25,7 @@ public class LoanApplicationController {
     private final LoanApplicationService loanApplicationService;
 
     @PostMapping("/apply")
+    @PreAuthorize("hasAuthority('BORROWER')")
     public ResponseEntity<ApiResponse<LoanApplicationResponse>> apply(
             @RequestBody @Valid LoanApplicationRequest request,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -42,6 +43,7 @@ public class LoanApplicationController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<LoanApplicationDetailsResponse>>> getApplications(
             @RequestParam(defaultValue = "0") Integer pageNumber,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -78,6 +80,7 @@ public class LoanApplicationController {
     }
 
     @GetMapping("/{applicationCode}/details")
+    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<LoanApplicationDetailsResponse>> getApplicationDetails(
             @PathVariable String applicationCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -91,5 +94,16 @@ public class LoanApplicationController {
                 httpServletRequest.getRequestURI(),
                 response
         ));
+    }
+
+    @PatchMapping("/{applicationCode}/withdraw")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<ApiResponse<LoanApplicationResponse>> withdrawApplication(
+            @PathVariable String applicationCode,
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest request
+    ) {
+        LoanApplicationResponse response = loanApplicationService.withdrawApplication(applicationCode, userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.of(HttpStatus.OK, "Application withdrawn successfully", request.getRequestURI(), response));
     }
 }

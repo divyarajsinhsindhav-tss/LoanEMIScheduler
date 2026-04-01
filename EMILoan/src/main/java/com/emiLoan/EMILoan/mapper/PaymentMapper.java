@@ -27,9 +27,4 @@ public interface PaymentMapper {
     PaymentResponse toResponse(Payment payment);
 
     List<PaymentResponse> toResponseList(List<Payment> payments);
-
-    @Mapping(target = "loanCode", source = "loan.loanCode")
-    @Mapping(target = "totalAmountPaid", source = "totalAmountPaid")
-    @Mapping(target = "transactions", source = "transactions")
-    PaymentHistoryResponse toHistoryResponse(Loan loan, BigDecimal totalAmountPaid, List<PaymentResponse> transactions);
 }

@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.mapper;
 
 import com.emiLoan.EMILoan.dto.emiSchedule.response.EmiScheduleResponse;
-import com.emiLoan.EMILoan.dto.emiSchedule.response.LoanScheduleWrapperResponse;
 import com.emiLoan.EMILoan.entity.EmiSchedule;
 import com.emiLoan.EMILoan.entity.Loan;
 import java.util.ArrayList;

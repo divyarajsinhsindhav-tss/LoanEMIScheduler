@@ -22,4 +22,8 @@ public final class AppConstants {
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String AUTH_HEADER = "Authorization";
     public static final int REMINDER_DAYS_BEFORE = 3;
+    public static final BigDecimal DIVISOR_1200 = BigDecimal.valueOf(1200);
+    public static final int INTERNAL_PRECISION = 10;
+    public static final int CURRENCY_PRECISION = 2;
+    public static final String ALGORITHM = "SHA-256";
 }

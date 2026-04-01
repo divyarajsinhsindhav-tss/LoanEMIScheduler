@@ -168,18 +168,6 @@ public class LoanServiceImpl implements LoanService {
         return loanMapper.toResponse(savedLoan);
     }
 
-    @Override
-    @Transactional
-    public LoanResponse createLoanFromApplication(UUID applicationId) {
-        LoanApplication application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new BusinessRuleException("Application not found"));
-
-        if (application.getStatus() != ApplicationStatus.APPROVED) {
-            throw new BusinessRuleException("Cannot generate loan. Application status is: " + application.getStatus());
-        }
-
-        return generateAndPersistLoan(application);
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -258,7 +246,7 @@ public class LoanServiceImpl implements LoanService {
         verifyAdminOrOfficerPrivileges(requesterEmail);
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
-       return auditService.getEntityAuditHistory(AuditEntityType.LOAN, loan.getLoanId());
+        return auditService.getEntityAuditHistory(AuditEntityType.LOAN, loan.getLoanId());
     }
 
     @Override

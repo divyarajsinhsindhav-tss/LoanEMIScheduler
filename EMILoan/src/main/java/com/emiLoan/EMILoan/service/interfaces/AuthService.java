@@ -15,4 +15,12 @@ public interface AuthService {
     UserResponse registerBorrower(BorrowerRegistrationRequest request);
 
     UserResponse registerLoanOfficer(LoanOfficerRegistrationRequest request);
+
+    void logout();
+
+    void deleteUser(String email);
+
+    UserResponse getCurrentUser(String email);
+
+    AuthResponse recoverAccount(LoginRequest request);
 }

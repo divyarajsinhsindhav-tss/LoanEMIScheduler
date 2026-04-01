@@ -1,0 +1,546 @@
+2026-03-31 17:22:03 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-31 17:22:08 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-31 17:22:08 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-03-31 17:22:10 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-03-31 17:22:10 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-31 17:22:10 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-31 17:22:14 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-31 17:22:19 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 17:22:19 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 17:22:19 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 17:22:19 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-03-31 17:22:36 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-03-31 17:22:36 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-03-31 17:22:37 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-03-31 17:22:37 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-03-31 17:22:44 DEBUG [task-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 22:23:58 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-31 22:24:03 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-31 22:24:03 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-03-31 22:24:04 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-03-31 22:24:04 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-31 22:24:04 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-31 22:24:06 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-31 22:24:09 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 22:24:09 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 22:24:09 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 22:24:09 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-03-31 22:38:28 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-31 22:38:35 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-31 22:38:35 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-03-31 22:38:37 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-03-31 22:38:37 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-31 22:38:37 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-31 22:38:39 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-31 22:41:11 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-31 22:41:18 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-31 22:41:18 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-03-31 22:41:20 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-03-31 22:41:20 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-31 22:41:20 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-31 22:41:26 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-31 22:41:33 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 22:41:33 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 22:41:33 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 22:41:33 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-03-31 22:49:27 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-31 22:49:32 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-31 22:49:32 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-03-31 22:49:33 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-03-31 22:49:33 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-31 22:49:33 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-31 22:49:35 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-31 22:49:40 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 22:49:40 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 22:49:40 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 22:49:40 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-03-31 23:25:33 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-31 23:25:39 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-31 23:25:39 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-03-31 23:25:40 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-03-31 23:25:40 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-31 23:25:40 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-31 23:25:42 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-31 23:29:22 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-31 23:29:27 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-31 23:29:27 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-03-31 23:29:28 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-03-31 23:29:29 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-31 23:29:29 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-31 23:29:30 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-31 23:29:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 23:29:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 23:29:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 23:29:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-03-31 23:34:41 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-31 23:34:46 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-31 23:34:46 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-03-31 23:34:48 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-03-31 23:34:48 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-31 23:34:48 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-31 23:34:50 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-31 23:34:54 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 23:34:54 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 23:34:54 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-03-31 23:34:54 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?

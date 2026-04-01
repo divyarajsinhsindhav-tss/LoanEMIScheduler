@@ -12,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -54,5 +54,60 @@ public class AuthController {
                         httpServletRequest.getRequestURI(),
                         response
                 ));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout(HttpServletRequest request) {
+        authService.logout();
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Logged out successfully. Please discard your token.",
+                request.getRequestURI(),
+                null
+        ));
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<UserResponse>> getCurrentUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest request
+    ) {
+        UserResponse response = authService.getCurrentUser(userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Profile retrieved",
+                request.getRequestURI(),
+                response
+        ));
+    }
+
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> deleteAccount(
+            @RequestParam String email,
+            HttpServletRequest request
+    ) {
+        authService.deleteUser(email);
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Account " + email + " has been removed from the system",
+                request.getRequestURI(),
+                null
+        ));
+    }
+
+    @PostMapping("/recover")
+    public ResponseEntity<ApiResponse<AuthResponse>> recoverAccount(
+            @Valid @RequestBody LoginRequest request,
+            HttpServletRequest httpServletRequest
+    ) {
+        AuthResponse response = authService.recoverAccount(request);
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Account successfully recovered and logged in.",
+                httpServletRequest.getRequestURI(),
+                response
+        ));
     }
 }

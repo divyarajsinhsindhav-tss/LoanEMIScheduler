@@ -15,6 +15,10 @@ import com.emiLoan.EMILoan.repository.StrategyAuditRepository;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -108,9 +112,13 @@ public class AuditServiceImpl implements AuditService {
     }
 
 
+
     @Override
     @Transactional(readOnly = true)
-    public List<AuditLogResponse> getAllAuditLogs(){
-        return auditLogMapper.toResponseList(auditLogRepository.findAll());
+    public Page<AuditLogResponse> getAllAuditLogs(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "actionDate"));
+        Page<AuditLog> logs = auditLogRepository.findAll(pageable);
+        return logs.map(auditLogMapper::toResponse);
     }
+
 }

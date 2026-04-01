@@ -169,4 +169,87 @@ public class AuthServiceImpl implements AuthService {
                     return savedPerson;
                 });
     }
+
+    @Override
+    public void logout() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("User {} is logging out", email);
+        SecurityContextHolder.clearContext();
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("User not found with email: " + email));
+
+        if (!user.getIsActive()) {
+            throw new BusinessRuleException("Account is already deleted.");
+        }
+
+        log.warn("Soft deleting user account: {}", email);
+
+        user.setIsActive(false);
+        userRepository.save(user);
+
+        if (user.getRole().getRoleName() == RoleName.LOAN_OFFICER || user.getRole().getRoleName() == RoleName.ADMIN) {
+            employeeProfileRepository.findByUser_Email(email).ifPresent(profile -> {
+                profile.setIsActive(false);
+                employeeProfileRepository.save(profile);
+            });
+        }
+
+        auditService.logSystemAction(AuditAction.DELETE, AuditEntityType.USER, user.getUserId());
+        log.info("User {} successfully soft-deleted (deactivated)", email);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponse getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("User session invalid"));
+        return userMapper.toResponse(user);
+    }
+
+    @Override
+    @Transactional
+    public AuthResponse recoverAccount(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new AuthanticationException("Email or password incorrect"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new AuthanticationException("Email or password incorrect");
+        }
+
+        if (user.getIsActive()) {
+            throw new BusinessRuleException("This account is already active. Please use the standard login page.");
+        }
+
+        user.setIsActive(true);
+        userRepository.save(user);
+
+        if (user.getRole().getRoleName() == RoleName.LOAN_OFFICER || user.getRole().getRoleName() == RoleName.ADMIN) {
+            employeeProfileRepository.findByUser_Email(request.getEmail()).ifPresent(profile -> {
+                profile.setIsActive(true);
+                employeeProfileRepository.save(profile);
+            });
+        }
+
+        auditService.logSystemAction(AuditAction.UPDATE, AuditEntityType.USER, user.getUserId());
+        log.info("User {} account successfully recovered", user.getEmail());
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        return AuthResponse.builder()
+                .accessToken(token)
+                .tokenType("Bearer")
+                .user(userMapper.toResponse(user))
+                .build();
+    }
+
 }

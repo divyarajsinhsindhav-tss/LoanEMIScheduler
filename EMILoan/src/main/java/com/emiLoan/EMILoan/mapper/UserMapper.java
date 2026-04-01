@@ -50,12 +50,4 @@ public interface UserMapper {
     @Mapping(target = "pan", ignore = true)
     UserResponse toResponse(User user);
 
-    @AfterMapping
-    default void setMaskedPan(@MappingTarget UserResponse response, User user) {
-        if (user.getPerson() != null) {
-            String first3 = user.getPerson().getPanFirst3();
-            String last2 = user.getPerson().getPanLast2();
-            response.setPan(first3 + "*****" + last2);
-        }
-    }
 }

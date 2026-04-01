@@ -53,7 +53,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     private final EntityManager entityManager;
 
     private final NotificationService notificationService;
-    private final AuditService auditService; // Added AuditService
+    private final AuditService auditService;
 
     @Override
     @Transactional
@@ -159,4 +159,34 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
                 .panLast2(profile.getUser().getPerson().getPanLast2())
                 .build();
     }
+
+    @Override
+    @Transactional
+    public LoanApplicationResponse withdrawApplication(String applicationCode, String email) {
+        LoanApplication application = applicationRepository
+                .findByBorrowerEmailAndApplicationCode(email, applicationCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Application", applicationCode));
+
+        if (application.getStatus() != ApplicationStatus.PENDING) {
+            throw new BusinessRuleException(
+                    "Cannot withdraw application. It is currently in '" + application.getStatus() + "' state."
+            );
+        }
+
+        application.setStatus(ApplicationStatus.WITHDRAWN);
+        LoanApplication savedApplication = applicationRepository.save(application);
+
+        log.info("Application {} was withdrawn by borrower {}", applicationCode, email);
+
+        auditService.logSystemAction(AuditAction.UPDATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
+
+        try {
+            notificationService.sendApplicationWithdrawn(savedApplication.getBorrower(), savedApplication);
+        } catch (Exception e) {
+            log.error("Failed to send withdrawal notification for app {}: {}", savedApplication.getApplicationId(), e.getMessage());
+        }
+
+        return applicationMapper.toResponse(savedApplication);
+    }
+
 }

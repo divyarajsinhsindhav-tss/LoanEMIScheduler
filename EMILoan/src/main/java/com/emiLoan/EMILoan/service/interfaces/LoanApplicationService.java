@@ -24,4 +24,7 @@ public interface LoanApplicationService {
             ApplicationStatus status
     );
 
+    LoanApplicationResponse withdrawApplication(String applicationCode, String email);
+
+
 }

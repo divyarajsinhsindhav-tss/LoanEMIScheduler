@@ -1,6 +1,7 @@
 package com.emiLoan.EMILoan.controller.payment;
 
 import com.emiLoan.EMILoan.common.response.ApiResponse;
+import com.emiLoan.EMILoan.dto.payment.ForeclosureRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentHistoryResponse;
 import com.emiLoan.EMILoan.dto.payment.PaymentRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentResponse;
@@ -16,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,62 +27,86 @@ public class PaymentController {
 
 
         @PostMapping("/pay")
+        @PreAuthorize("hasAuthority('BORROWER')")
         public ResponseEntity<ApiResponse<PaymentResponse>> makePayment(
-                @RequestBody @Valid PaymentRequest request,
+                @Valid @RequestBody PaymentRequest request,
                 @AuthenticationPrincipal UserDetails userDetails,
-                HttpServletRequest httpServletRequest) {
-
-                // Pass the authenticated email to the service for security validation
+                HttpServletRequest httpServletRequest
+        ) {
                 PaymentResponse response = paymentService.makePayment(request, userDetails.getUsername());
 
-                return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.of(
-                        HttpStatus.CREATED,
-                        "Payment processed successfully. Status: " + response.getStatus(),
+                return ResponseEntity.ok(ApiResponse.of(
+                        HttpStatus.OK,
+                        "Payment processed successfully",
                         httpServletRequest.getRequestURI(),
-                        response));
+                        response
+                ));
         }
 
-        @GetMapping("/loan/{loanCode}")
+        @PostMapping("/foreclose")
+        @PreAuthorize("hasAuthority('BORROWER')")
+        public ResponseEntity<ApiResponse<PaymentResponse>> forecloseLoan(
+                @Valid @RequestBody ForeclosureRequest request,
+                @AuthenticationPrincipal UserDetails userDetails,
+                HttpServletRequest httpServletRequest
+        ) {
+                PaymentResponse response = paymentService.forecloseLoan(request, userDetails.getUsername());
+
+                return ResponseEntity.ok(ApiResponse.of(
+                        HttpStatus.OK,
+                        "Foreclosure payment processed and loan closed.",
+                        httpServletRequest.getRequestURI(),
+                        response
+                ));
+        }
+
+
+        @GetMapping("/history/my")
+        @PreAuthorize("hasAuthority('BORROWER')")
+        public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getMyPaymentHistory(
+                @AuthenticationPrincipal UserDetails userDetails,
+                HttpServletRequest httpServletRequest
+        ) {
+                List<PaymentHistoryResponse> response = paymentService.getBorrowerPaymentHistory(userDetails.getUsername());
+
+                return ResponseEntity.ok(ApiResponse.of(
+                        HttpStatus.OK,
+                        "Your payment history retrieved successfully.",
+                        httpServletRequest.getRequestURI(),
+                        response
+                ));
+        }
+
+        @GetMapping("/history/loan/{loanCode}")
+        @PreAuthorize("hasAnyAuthority('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
         public ResponseEntity<ApiResponse<PaymentHistoryResponse>> getLoanPaymentHistory(
                 @PathVariable String loanCode,
                 @AuthenticationPrincipal UserDetails userDetails,
-                HttpServletRequest httpServletRequest) {
-
+                HttpServletRequest httpServletRequest
+        ) {
                 PaymentHistoryResponse response = paymentService.getPaymentHistory(loanCode, userDetails.getUsername());
 
                 return ResponseEntity.ok(ApiResponse.of(
                         HttpStatus.OK,
-                        "Payment history for loan: " + response.getLoanCode(),
+                        "Payment history retrieved for loan: " + loanCode,
                         httpServletRequest.getRequestURI(),
-                        response));
+                        response
+                ));
         }
 
-
-        @GetMapping("/history")
-        public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getMyPaymentHistory(
+        @GetMapping("/history/all")
+        @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+        public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getAllPayments(
                 @AuthenticationPrincipal UserDetails userDetails,
-                HttpServletRequest httpServletRequest) {
-
-                List<PaymentHistoryResponse> responses = paymentService.getBorrowerPaymentHistory(userDetails.getUsername());
+                HttpServletRequest httpServletRequest
+        ) {
+                List<PaymentHistoryResponse> response = paymentService.getAllPayments(userDetails.getUsername());
 
                 return ResponseEntity.ok(ApiResponse.of(
                         HttpStatus.OK,
-                        "Complete personal payment history retrieved.",
+                        "Master payment ledger retrieved.",
                         httpServletRequest.getRequestURI(),
-                        responses));
-        }
-
-        @GetMapping("/all")
-        public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getAllSystemPayments(
-                @AuthenticationPrincipal UserDetails userDetails,
-                HttpServletRequest httpServletRequest) {
-
-                List<PaymentHistoryResponse> responses = paymentService.getAllPayments(userDetails.getUsername());
-
-                return ResponseEntity.ok(ApiResponse.of(
-                        HttpStatus.OK,
-                        "Master payment records retrieved.",
-                        httpServletRequest.getRequestURI(),
-                        responses));
+                        response
+                ));
         }
 }

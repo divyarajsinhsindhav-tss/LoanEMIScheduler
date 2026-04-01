@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.mapper;
 
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
-import com.emiLoan.EMILoan.dto.loanApplication.request.OfficerDecisionRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
 import com.emiLoan.EMILoan.entity.LoanApplication;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-30T11:40:38+0530",
+    date = "2026-03-31T22:23:53+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -70,17 +69,6 @@ public class LoanApplicationMapperImpl implements LoanApplicationMapper {
         loanApplicationDetailsResponse.application( toResponse( application ) );
 
         return loanApplicationDetailsResponse.build();
-    }
-
-    @Override
-    public void updateEntityFromDecision(OfficerDecisionRequest request, LoanApplication application) {
-        if ( request == null ) {
-            return;
-        }
-
-        application.setOfficerStrategy( request.getOfficerStrategy() );
-        application.setStatus( request.getStatus() );
-        application.setInterestRate( request.getInterestRate() );
     }
 
     private UUID applicationBorrowerUserId(LoanApplication loanApplication) {

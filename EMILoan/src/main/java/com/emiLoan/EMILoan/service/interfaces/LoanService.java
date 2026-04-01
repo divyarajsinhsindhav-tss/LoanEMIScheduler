@@ -17,7 +17,6 @@ import java.util.UUID;
 
 public interface LoanService {
 
-    LoanResponse createLoanFromApplication(UUID applicationId);
 
     List<LoanResponse> getMyLoans(String email);
 
@@ -27,7 +26,7 @@ public interface LoanService {
 
     LoanResponse updateLoanStatus(String loanCode, LoanStatusUpdateRequest request);
 
-    LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request,String officerEmail);
+    LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request, String officerEmail);
 
     List<StrategyAuditResponse> getStrategyOverrides(String requesterEmail);
 

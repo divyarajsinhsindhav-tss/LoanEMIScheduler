@@ -2,11 +2,13 @@ package com.emiLoan.EMILoan.controller.loan;
 
 import com.emiLoan.EMILoan.common.enums.LoanStatus;
 import com.emiLoan.EMILoan.common.response.ApiResponse;
+import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
 import com.emiLoan.EMILoan.dto.emiSchedule.response.EmiScheduleResponse;
 import com.emiLoan.EMILoan.dto.loan.request.LoanStatusUpdateRequest;
 import com.emiLoan.EMILoan.dto.loan.response.LoanResponse;
 import com.emiLoan.EMILoan.dto.loan.response.LoanSummaryResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.request.OfficerDecisionRequest;
+import com.emiLoan.EMILoan.dto.strategyAudit.StrategyAuditResponse;
 import com.emiLoan.EMILoan.service.interfaces.EmiService;
 import com.emiLoan.EMILoan.service.interfaces.LoanService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,8 +22,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +33,9 @@ public class LoanController {
     private final LoanService loanService;
     private final EmiService emiService;
 
-    @GetMapping("/my")
+
+    @GetMapping("/")
+    @PreAuthorize("hasAuthority('BORROWER')")
     public ResponseEntity<ApiResponse<List<LoanResponse>>> getMyLoans(
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
@@ -47,6 +51,7 @@ public class LoanController {
     }
 
     @GetMapping("/{loanCode}")
+    @PreAuthorize("hasAnyAuthority('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<LoanResponse>> getLoanDetails(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -63,6 +68,7 @@ public class LoanController {
     }
 
     @GetMapping("/{loanCode}/summary")
+    @PreAuthorize("hasAuthority('BORROWER')")
     public ResponseEntity<ApiResponse<LoanSummaryResponse>> getLoanSummary(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -78,7 +84,9 @@ public class LoanController {
         ));
     }
 
+
     @GetMapping("/{loanCode}/schedule")
+    @PreAuthorize("hasAnyAuthority('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<EmiScheduleResponse>>> getSchedule(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -93,6 +101,41 @@ public class LoanController {
                 response
         ));
     }
+
+    @GetMapping("/{loanCode}/schedule/next")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<ApiResponse<EmiScheduleResponse>> getNextUpcomingEmi(
+            @PathVariable String loanCode,
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest httpServletRequest
+    ) {
+        EmiScheduleResponse response = emiService.getNextUpcomingEmi(loanCode, userDetails.getUsername());
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Next upcoming EMI retrieved for loan: " + loanCode,
+                httpServletRequest.getRequestURI(),
+                response
+        ));
+    }
+
+    @GetMapping("/{loanCode}/foreclosure-quote")
+    @PreAuthorize("hasAuthority('BORROWER')")
+    public ResponseEntity<ApiResponse<BigDecimal>> getForeclosureQuote(
+            @PathVariable String loanCode,
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest httpServletRequest
+    ) {
+        BigDecimal response = emiService.getForeclosureQuote(loanCode, userDetails.getUsername());
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Foreclosure quote calculated for loan: " + loanCode,
+                httpServletRequest.getRequestURI(),
+                response
+        ));
+    }
+
 
     @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
@@ -143,6 +186,40 @@ public class LoanController {
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
                 "Loan status updated successfully.",
+                httpServletRequest.getRequestURI(),
+                response
+        ));
+    }
+
+
+    @GetMapping("/{loanCode}/audit-history")
+    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<AuditLogResponse>>> getLoanAuditHistory(
+            @PathVariable String loanCode,
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest httpServletRequest
+    ) {
+        List<AuditLogResponse> response = loanService.getLoanAuditHistory(loanCode, userDetails.getUsername());
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Audit history retrieved for loan: " + loanCode,
+                httpServletRequest.getRequestURI(),
+                response
+        ));
+    }
+
+    @GetMapping("/strategy-overrides")
+    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<StrategyAuditResponse>>> getStrategyOverrides(
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest httpServletRequest
+    ) {
+        List<StrategyAuditResponse> response = loanService.getStrategyOverrides(userDetails.getUsername());
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Strategy overrides retrieved successfully.",
                 httpServletRequest.getRequestURI(),
                 response
         ));
