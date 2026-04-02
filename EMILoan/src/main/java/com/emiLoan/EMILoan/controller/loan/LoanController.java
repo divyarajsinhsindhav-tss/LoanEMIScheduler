@@ -15,6 +15,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,11 +39,14 @@ public class LoanController {
 
     @GetMapping("/")
     @PreAuthorize("hasAuthority('BORROWER')")
-    public ResponseEntity<ApiResponse<List<LoanResponse>>> getMyLoans(
+    public ResponseEntity<ApiResponse<Page<LoanResponse>>> getMyLoans(
             @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletRequest httpServletRequest
-    ) {
-        List<LoanResponse> response = loanService.getMyLoans(userDetails.getUsername());
+            HttpServletRequest httpServletRequest,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+            ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<LoanResponse> response = loanService.getMyLoans(userDetails.getUsername(),pageable);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -87,12 +93,15 @@ public class LoanController {
 
     @GetMapping("/{loanCode}/schedule")
     @PreAuthorize("hasAnyAuthority('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
-    public ResponseEntity<ApiResponse<List<EmiScheduleResponse>>> getSchedule(
+    public ResponseEntity<ApiResponse<Page<EmiScheduleResponse>>> getSchedule(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             HttpServletRequest httpServletRequest
     ) {
-        List<EmiScheduleResponse> response = emiService.getSchedule(loanCode, userDetails.getUsername());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<EmiScheduleResponse> response = emiService.getSchedule(loanCode, userDetails.getUsername(),pageable);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -126,7 +135,7 @@ public class LoanController {
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
     ) {
-        BigDecimal response = emiService.getForeclosureQuote(loanCode, userDetails.getUsername());
+        BigDecimal response = emiService.getForeclosureQuote(loanCode, userDetails.getUsername(),Pageable.unpaged());
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -194,12 +203,15 @@ public class LoanController {
 
     @GetMapping("/{loanCode}/audit-history")
     @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
-    public ResponseEntity<ApiResponse<List<AuditLogResponse>>> getLoanAuditHistory(
+    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getLoanAuditHistory(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             HttpServletRequest httpServletRequest
     ) {
-        List<AuditLogResponse> response = loanService.getLoanAuditHistory(loanCode, userDetails.getUsername());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AuditLogResponse> response = loanService.getLoanAuditHistory(loanCode, userDetails.getUsername(),pageable);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -211,11 +223,14 @@ public class LoanController {
 
     @GetMapping("/strategy-overrides")
     @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
-    public ResponseEntity<ApiResponse<List<StrategyAuditResponse>>> getStrategyOverrides(
+    public ResponseEntity<ApiResponse<Page<StrategyAuditResponse>>> getStrategyOverrides(
             @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             HttpServletRequest httpServletRequest
     ) {
-        List<StrategyAuditResponse> response = loanService.getStrategyOverrides(userDetails.getUsername());
+        PageRequest pageable = PageRequest.of(page, size);
+        Page<StrategyAuditResponse> response = loanService.getStrategyOverrides(userDetails.getUsername(),pageable);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,

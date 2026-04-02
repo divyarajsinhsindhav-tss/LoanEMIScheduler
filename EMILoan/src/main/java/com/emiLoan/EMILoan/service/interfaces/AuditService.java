@@ -10,6 +10,7 @@ import com.emiLoan.EMILoan.entity.LoanApplication;
 import com.emiLoan.EMILoan.entity.StrategyAudit;
 import com.emiLoan.EMILoan.entity.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,9 +23,9 @@ public interface AuditService {
 
     void logStrategyDecision(LoanApplication application, String systemSuggested, String officerChose, boolean overridden, User officer);
 
-    List<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId);
-
-    List<StrategyAuditResponse> getRecentStrategyOverrides();
+    Page<StrategyAuditResponse> getRecentStrategyOverrides(Pageable pageable);
 
     Page<AuditLogResponse> getAllAuditLogs(int page, int size);
+
+    Page<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId, Pageable pageable);
 }

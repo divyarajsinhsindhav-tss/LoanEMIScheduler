@@ -77,7 +77,6 @@ public class BorrowerServiceImpl implements BorrowerService {
     @Override
     @Transactional(readOnly = true)
     public BorrowerResponse getProfileByUserCode(String userCode) {
-        // Note: Make sure to secure this endpoint with @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')") in the Controller
         BorrowerProfile profile = borrowerProfileRepository.findByUser_UserCode(userCode)
                 .orElseThrow(() -> new BusinessRuleException("Borrower not found with code: " + userCode));
 

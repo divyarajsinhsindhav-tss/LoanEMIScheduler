@@ -26,7 +26,7 @@ public class LoanApplicationController {
 
     @PostMapping("/apply")
     @PreAuthorize("hasAuthority('BORROWER')")
-    public ResponseEntity<ApiResponse<LoanApplicationResponse>> apply(
+    public ResponseEntity<ApiResponse<String>> apply(
             @RequestBody @Valid LoanApplicationRequest request,
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
@@ -38,7 +38,7 @@ public class LoanApplicationController {
                         HttpStatus.CREATED,
                         "Application " + response.getApplicationCode() + " submitted successfully.",
                         httpServletRequest.getRequestURI(),
-                        response
+                        "Loan Applied SuccessFully by :" + response.getBorrowerName() + " Loan Application code is : " + response.getApplicationCode()
                 ));
     }
 

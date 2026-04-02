@@ -101,14 +101,16 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId) {
-        return auditLogMapper.toResponseList(auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType,entityId));
+    public Page<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId,Pageable pageable) {
+        Page<AuditLog> auditLogResponsePage = auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType,entityId,pageable);
+        return auditLogResponsePage.map(auditLogMapper::toResponse);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<StrategyAuditResponse> getRecentStrategyOverrides() {
-        return strategyAuditMapper.toResponseList(strategyAuditRepository.findByOverriddenTrueOrderByChangedAtDesc());
+    public Page<StrategyAuditResponse> getRecentStrategyOverrides(Pageable pageable) {
+        Page<StrategyAudit> auditPage = strategyAuditRepository.findByOverriddenTrueOrderByChangedAtDesc(pageable);
+        return auditPage.map(strategyAuditMapper::toResponse);
     }
 
 
@@ -116,7 +118,8 @@ public class AuditServiceImpl implements AuditService {
     @Override
     @Transactional(readOnly = true)
     public Page<AuditLogResponse> getAllAuditLogs(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "actionDate"));
+        Pageable pageable = PageRequest.of(page, size);
+
         Page<AuditLog> logs = auditLogRepository.findAll(pageable);
         return logs.map(auditLogMapper::toResponse);
     }

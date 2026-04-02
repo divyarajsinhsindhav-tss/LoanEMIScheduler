@@ -160,7 +160,7 @@ public class LoanServiceImpl implements LoanService {
         entityManager.flush();
         entityManager.refresh(savedLoan);
 
-        emiServicePort.generateAndSaveSchedule(savedLoan);
+        emiServicePort.generateAndSaveSchedule(savedLoan,Pageable.unpaged());
 
         log.info("Successfully generated Loan {} (Code: {}) for application {}",
                 savedLoan.getLoanId(), savedLoan.getLoanCode(), application.getApplicationId());
@@ -171,10 +171,8 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<LoanResponse> getMyLoans(String email) {
-        return loanRepository.findByBorrowerEmail(email).stream()
-                .map(loanMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<LoanResponse> getMyLoans(String email,Pageable pageable) {
+        return loanRepository.findByBorrowerEmail(email,pageable).map(loanMapper::toResponse);
     }
 
     @Override
@@ -242,18 +240,18 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuditLogResponse> getLoanAuditHistory(String loanCode, String requesterEmail) {
+    public Page<AuditLogResponse> getLoanAuditHistory(String loanCode, String requesterEmail,Pageable pageable) {
         verifyAdminOrOfficerPrivileges(requesterEmail);
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
-        return auditService.getEntityAuditHistory(AuditEntityType.LOAN, loan.getLoanId());
+        return auditService.getEntityAuditHistory(AuditEntityType.LOAN, loan.getLoanId(),pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<StrategyAuditResponse> getStrategyOverrides(String requesterEmail) {
+    public Page<StrategyAuditResponse> getStrategyOverrides(String requesterEmail,Pageable pageable) {
         verifyAdminOrOfficerPrivileges(requesterEmail);
-        return auditService.getRecentStrategyOverrides();
+        return auditService.getRecentStrategyOverrides(pageable);
     }
 
     private void verifyAdminOrOfficerPrivileges(String email) {

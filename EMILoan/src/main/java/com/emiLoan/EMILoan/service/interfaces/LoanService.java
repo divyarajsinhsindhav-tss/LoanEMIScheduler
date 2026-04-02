@@ -11,14 +11,13 @@ import com.emiLoan.EMILoan.dto.strategyAudit.StrategyAuditResponse;
 import com.emiLoan.EMILoan.entity.AuditLog;
 import com.emiLoan.EMILoan.entity.StrategyAudit;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface LoanService {
 
-
-    List<LoanResponse> getMyLoans(String email);
 
     LoanResponse getLoan(String loanCode, String email);
 
@@ -28,9 +27,11 @@ public interface LoanService {
 
     LoanResponse processDecision(String applicationCode, OfficerDecisionRequest request, String officerEmail);
 
-    List<StrategyAuditResponse> getStrategyOverrides(String requesterEmail);
-
-    List<AuditLogResponse> getLoanAuditHistory(String loanCode, String requesterEmail);
+    Page<AuditLogResponse> getLoanAuditHistory(String loanCode, String requesterEmail,Pageable pageable);
 
     Page<LoanResponse> getAllLoans(String requesterEmail, int pageNumber, int pageSize, LoanStatus status);
+
+    Page<StrategyAuditResponse> getStrategyOverrides(String requesterEmail,Pageable pageable);
+
+    Page<LoanResponse> getMyLoans(String email,Pageable pageable);
 }

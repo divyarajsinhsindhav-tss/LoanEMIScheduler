@@ -8,12 +8,13 @@ import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,12 +26,15 @@ public class AuditController {
 
     @GetMapping("/entity/{entityType}/{entityId}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
-    public ResponseEntity<ApiResponse<List<AuditLogResponse>>> getEntityAuditHistory(
+    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getEntityAuditHistory(
             @PathVariable AuditEntityType entityType,
             @PathVariable UUID entityId,
-            HttpServletRequest request
+            HttpServletRequest request,
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "3") Integer pageSize
     ) {
-        List<AuditLogResponse> auditLogs = auditService.getEntityAuditHistory(entityType, entityId);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<AuditLogResponse> auditLogs = auditService.getEntityAuditHistory(entityType, entityId, pageable);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -42,10 +46,14 @@ public class AuditController {
 
     @GetMapping("/strategy-overrides")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
-    public ResponseEntity<ApiResponse<List<StrategyAuditResponse>>> getStrategyOverrides(
+    public ResponseEntity<ApiResponse<Page<StrategyAuditResponse>>> getStrategyOverrides(
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize,
             HttpServletRequest request
     ) {
-        List<StrategyAuditResponse> overrides = auditService.getRecentStrategyOverrides();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<StrategyAuditResponse> overrides = auditService.getRecentStrategyOverrides(pageable);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -61,7 +69,7 @@ public class AuditController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             HttpServletRequest request
-    ){
+    ) {
         Page<AuditLogResponse> auditLogs = auditService.getAllAuditLogs(page, size);
 
         return ResponseEntity.ok(ApiResponse.of(

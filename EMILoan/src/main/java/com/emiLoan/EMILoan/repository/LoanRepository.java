@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,7 +17,7 @@ import java.util.UUID;
 public interface LoanRepository extends JpaRepository<Loan, UUID> {
 
     @Query("SELECT l FROM Loan l WHERE l.borrower.email = :email ORDER BY l.createdAt DESC")
-    List<Loan> findByBorrowerEmail(@Param("email") String email);
+    Page<Loan> findByBorrowerEmail(@Param("email") String email,Pageable pageable);
 
     @Query("SELECT l FROM Loan l WHERE l.application.applicationId = :applicationId")
     Optional<Loan> findByApplicationId(@Param("applicationId") UUID applicationId);

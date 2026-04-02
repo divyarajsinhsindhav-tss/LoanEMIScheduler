@@ -1,7 +1,5 @@
 package com.emiLoan.EMILoan.service.impl;
 
-import com.emiLoan.EMILoan.common.enums.AuditAction;
-import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.enums.EmiStatus;
 import com.emiLoan.EMILoan.common.enums.RoleName;
 import com.emiLoan.EMILoan.dto.emiSchedule.response.EmiScheduleResponse;
@@ -19,12 +17,15 @@ import com.emiLoan.EMILoan.service.interfaces.EmiService;
 import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -43,7 +44,7 @@ public class EmiServiceImpl implements EmiService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmiScheduleResponse> getSchedule(String loanCode, String requesterEmail) {
+    public Page<EmiScheduleResponse> getSchedule(String loanCode, String requesterEmail, Pageable pageable) {
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan record not found for ID: " + loanCode));
 
@@ -58,15 +59,14 @@ public class EmiServiceImpl implements EmiService {
             log.warn("Security Alert: Unauthorized access attempt to Loan {} by {}", loanCode, requesterEmail);
             throw new BusinessRuleException("Access Denied: You do not have permission to view this schedule.");
         }
-
-        List<EmiSchedule> scheduleList = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan);
-        return emiScheduleMapper.toResponseList(scheduleList);
+        Page<EmiSchedule> schedulePage = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan, pageable);
+        return schedulePage.map(emiScheduleMapper::toResponse);
     }
 
     @Override
     @Transactional
-    public void generateAndSaveSchedule(Loan loan) {
-        if (!emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan).isEmpty()) {
+    public void generateAndSaveSchedule(Loan loan,Pageable pageable) {
+        if (!emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan,pageable).isEmpty()) {
             log.warn("Schedule skipped: Loan {} already has an active EMI schedule.", loan.getLoanCode());
             return;
         }
@@ -105,7 +105,7 @@ public class EmiServiceImpl implements EmiService {
     }
     @Override
     @Transactional(readOnly = true)
-    public BigDecimal getForeclosureQuote(String loanCode, String requesterEmail) {
+    public BigDecimal getForeclosureQuote(String loanCode, String requesterEmail,Pageable pageable) {
 
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan record not found"));
@@ -115,8 +115,8 @@ public class EmiServiceImpl implements EmiService {
         List<EmiSchedule> allEmis = emiScheduleRepository
                 .findAllByLoanAndStatusInOrderByInstallmentNoAsc(
                         loan,
-                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID)
-                );
+                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID),pageable
+                ).stream().collect(Collectors.toList());
 
         if (allEmis.isEmpty()) {
             return BigDecimal.ZERO;

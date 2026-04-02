@@ -22,14 +22,15 @@ import com.emiLoan.EMILoan.strategy.payment.PaymentGatewayStrategy;
 import com.emiLoan.EMILoan.strategy.payment.PaymentStrategyFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -163,22 +164,23 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PaymentHistoryResponse> getBorrowerPaymentHistory(String borrowerEmail) {
+    public List<PaymentHistoryResponse> getBorrowerPaymentHistory(String borrowerEmail, Pageable pageable) {
         User profile = userRepository.findByEmail(borrowerEmail)
                 .orElseThrow(() -> new BusinessRuleException("User session invalid"));
 
-        List<Loan> loans = loanRepository.findByBorrowerEmail(borrowerEmail);
+        Page<Loan> loanPage = loanRepository.findByBorrowerEmail(borrowerEmail, pageable);
 
-        return loans.stream()
+        return loanPage.stream()
                 .map(this::getHistoryForLoan)
                 .collect(Collectors.toList());
     }
 
-
     private PaymentHistoryResponse getHistoryForLoan(Loan loan) {
-        List<Payment> payments = paymentRepository.findByLoanOrderByPaymentDateDesc(loan);
-        BigDecimal totalPaid = paymentRepository.sumSuccessfulPaymentsByLoan(loan);
+        Page<Payment> paymentPage = paymentRepository.findByLoanOrderByPaymentDateDesc(loan, Pageable.unpaged());
 
+        List<Payment> payments = paymentPage.getContent();
+
+        BigDecimal totalPaid = paymentRepository.sumSuccessfulPaymentsByLoan(loan);
         if (totalPaid == null) totalPaid = BigDecimal.ZERO;
 
         List<PaymentResponse> transactions = payments.stream()
@@ -191,7 +193,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .transactions(transactions)
                 .build();
     }
-
     private PaymentHistoryResponse buildResponse(
             String loanCode,
             BigDecimal totalPaid,
@@ -225,8 +226,8 @@ public class PaymentServiceImpl implements PaymentService {
         List<EmiSchedule> unpaidEmis = emiScheduleRepository
                 .findAllByLoanAndStatusInOrderByInstallmentNoAsc(
                         loan,
-                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID)
-                );
+                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID),Pageable.unpaged()
+                ).stream().toList();
 
         if (unpaidEmis.isEmpty()) {
             throw new BusinessRuleException("Loan already cleared.");

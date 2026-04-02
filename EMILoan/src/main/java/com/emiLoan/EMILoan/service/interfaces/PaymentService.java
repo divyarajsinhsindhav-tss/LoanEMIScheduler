@@ -4,6 +4,8 @@ import com.emiLoan.EMILoan.dto.payment.ForeclosureRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentHistoryResponse;
 import com.emiLoan.EMILoan.dto.payment.PaymentRequest;
 import com.emiLoan.EMILoan.dto.payment.PaymentResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,11 +14,11 @@ public interface PaymentService {
 
     PaymentResponse makePayment(PaymentRequest request,String email);
 
-    List<PaymentHistoryResponse> getBorrowerPaymentHistory(String borrowerEmail);
-
     List<PaymentHistoryResponse> getAllPayments(String email);
 
     PaymentHistoryResponse getPaymentHistory(String loanCode, String requesterEmail);
 
     PaymentResponse forecloseLoan(ForeclosureRequest request, String email);
+
+    List<PaymentHistoryResponse> getBorrowerPaymentHistory(String borrowerEmail, Pageable pageable);
 }

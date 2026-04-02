@@ -9,6 +9,9 @@ import com.emiLoan.EMILoan.service.interfaces.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,9 +68,12 @@ public class PaymentController {
         @PreAuthorize("hasAuthority('BORROWER')")
         public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getMyPaymentHistory(
                 @AuthenticationPrincipal UserDetails userDetails,
-                HttpServletRequest httpServletRequest
-        ) {
-                List<PaymentHistoryResponse> response = paymentService.getBorrowerPaymentHistory(userDetails.getUsername());
+                HttpServletRequest httpServletRequest,
+                @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "10") int size
+                ) {
+                Pageable pageable = PageRequest.of(page, size);
+                List<PaymentHistoryResponse> response = paymentService.getBorrowerPaymentHistory(userDetails.getUsername(),pageable);
 
                 return ResponseEntity.ok(ApiResponse.of(
                         HttpStatus.OK,

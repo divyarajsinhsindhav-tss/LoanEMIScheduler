@@ -111,7 +111,6 @@ class LoanServiceImplTest {
         verify(emiServicePort).generateAndSaveSchedule(any());
     }
 
-    // REJECT FLOW
     @Test
     void processDecision_shouldRejectApplication() {
 
