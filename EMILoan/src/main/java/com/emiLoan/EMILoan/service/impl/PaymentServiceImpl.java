@@ -193,21 +193,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .transactions(transactions)
                 .build();
     }
-    private PaymentHistoryResponse buildResponse(
-            String loanCode,
-            BigDecimal totalPaid,
-            List<Payment> payments
-    ) {
-        List<PaymentResponse> transactionResponses = payments.stream()
-                .map(paymentMapper::toResponse)
-                .collect(Collectors.toList());
 
-        return PaymentHistoryResponse.builder()
-                .loanCode(loanCode)
-                .totalAmountPaid(totalPaid)
-                .transactions(transactionResponses)
-                .build();
-    }
     @Override
     @Transactional
     public PaymentResponse forecloseLoan(ForeclosureRequest request, String email) {
@@ -270,6 +256,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             currentEmi.setAmountPaid(currentPaid.add(request.getAmount()));
             currentEmi.setStatus(EmiStatus.PAID);
+            currentEmi.setRemainingBalance(BigDecimal.ZERO);
             currentEmi.setPaidDate(LocalDate.now());
             emiScheduleRepository.save(currentEmi);
 
