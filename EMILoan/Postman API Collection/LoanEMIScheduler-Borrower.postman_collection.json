@@ -1,0 +1,816 @@
+{
+  "info": {
+    "_postman_id": "49435788-0950-41db-99d4-91df1d129079",
+    "name": "LoanEMIScheduler-Borrower",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53105028",
+    "_collection_link": "https://go.postman.co/collection/53105028-49435788-0950-41db-99d4-91df1d129079?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"odk1572@gmail.com\",\r\n    \"password\": \"SecurePassword123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"password\": \"SecurePassword123\",\r\n    \"phone\": \"9876543210\",\r\n    \"pan\": \"ABCDE1234F\",\r\n    \"monthlyIncome\": 50000.0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register/borrower",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                "borrower"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get my info",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/borrower/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "borrower",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update income",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/borrower/profile/income?newMonthlyIncome=50000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "borrower",
+                "profile",
+                "income"
+              ],
+              "query": [
+                {
+                  "key": "newMonthlyIncome",
+                  "value": "50000"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get dashboard stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/borrower/dashboard",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "borrower",
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "loan application",
+      "item": [
+        {
+          "name": "apply for loan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"requestedAmount\": 50000,\r\n    \"tenureMonths\": 5,\r\n    \"existingEmi\": 0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/loan/applications/apply",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loan",
+                "applications",
+                "apply"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all application details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loan/applications",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loan",
+                "applications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get application details by code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loan/applications/{{app_code}}/details",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loan",
+                "applications",
+                "{{app_code}}",
+                "details"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "withdraw application",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loan/applications/{{app_code}}/withdraw",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loan",
+                "applications",
+                "{{app_code}}",
+                "withdraw"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "loan",
+      "item": [
+        {
+          "name": "get my loans",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get loan details by code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/{{loan_code}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "{{loan_code}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get loan summary",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/{{loan_code}}/summary",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "{{loan_code}}",
+                "summary"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get emi schedule of loan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/{{loan_code}}/schedule",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "{{loan_code}}",
+                "schedule"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get next upcoming emi details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/{{loan_Code}}/schedule/next",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "{{loan_Code}}",
+                "schedule",
+                "next"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get foreclosure quote",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/{{loan_code}}/foreclosure-quote",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "{{loan_code}}",
+                "foreclosure-quote"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "item": [
+        {
+          "name": "pay emi by card",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"emiId\": \"d2d6858a-dd46-4b58-89a8-ca797e5e9bdb\",\r\n\"amount\": 50000,\r\n\"paymentMode\": \"CARD\",\r\n\"methodDetails\": {\r\n\"type\": \"CARD\",\r\n\"cardholderName\": \"John Doe\",\r\n\"cardNumber\": \"1234567890123456\",\r\n\"expiryDate\": \"12/28\",\r\n\"cvv\": \"123\"\r\n}\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/payments/pay",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "pay"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "pay emi by upi",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"emiId\": \"a1b2c3d4-e5f6-7890-1234-56789abcdef0\",\r\n\"amount\": 2500.00,\r\n\"paymentMode\": \"UPI\",\r\n\"methodDetails\": {\r\n\"type\": \"UPI\",\r\n\"upiId\": \"borrower@okhdfc\"\r\n}\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/payments/pay",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "pay"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "pay emi by netbanking",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"emiId\": \"a1b2c3d4-e5f6-7890-1234-56789abcdef0\",\r\n\"amount\": 10000.00,\r\n\"paymentMode\": \"NET_BANKING\",\r\n\"methodDetails\": {\r\n\"type\": \"NET_BANKING\",\r\n\"bankCode\": \"SBI_RETAIL_001\"\r\n}\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/payments/pay",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "pay"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "foreclose loan by card",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"loanCode\":\"LAN000002\" ,\r\n\"amount\":50083.32 ,\r\n\"paymentMode\": \"CARD\",\r\n\"methodDetails\": {\r\n\"type\": \"CARD\",\r\n\"cardholderName\": \"John Doe\",\r\n\"cardNumber\": \"1234567890123456\",\r\n\"expiryDate\": \"12/28\",\r\n\"cvv\": \"123\"\r\n}\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/payments/foreclose",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "foreclose"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "foreclose loan by upi",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"loanCode\":\"LAN000002\" ,\r\n\"amount\":50083.32 ,\r\n\"paymentMode\": \"UPI\",\r\n\"methodDetails\": {\r\n\"type\": \"UPI\",\r\n\"upiId\": \"borrower@okhdfc\"\r\n}\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/payments/foreclose",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "foreclose"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "foreclose loan by netbanking",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"loanCode\":\"LAN000002\" ,\r\n\"amount\":50083.32 ,\r\n\"paymentMode\": \"NET_BANKING\",\r\n\"methodDetails\": {\r\n\"type\": \"NET_BANKING\",\r\n\"bankCode\": \"SBI_RETAIL_001\"\r\n}\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/payments/foreclose",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "foreclose"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET my payment history",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/payments/history/my",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "history",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get loan payment history",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{borrower_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/payments/history/loan/{{loan_code}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "history",
+                "loan",
+                "{{loan_code}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "borrower_token",
+      "value": ""
+    }
+  ]
+}

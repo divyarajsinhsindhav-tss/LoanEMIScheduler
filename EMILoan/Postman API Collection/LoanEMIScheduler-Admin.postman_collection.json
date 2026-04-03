@@ -1,0 +1,852 @@
+{
+  "info": {
+    "_postman_id": "2539fe6d-9773-4e20-a37d-015fc28973ed",
+    "name": "LoanEMIScheduler-Admin",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53105028",
+    "_collection_link": "https://go.postman.co/collection/53105028-2539fe6d-9773-4e20-a37d-015fc28973ed?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "add new loan officer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"Officer\",\r\n    \"lastName\": \"One\",\r\n    \"email\": \"om.kariya@gmail.com\",\r\n    \"password\": \"Password123\",\r\n    \"phone\": \"9000800070\",\r\n    \"pan\": \"OFFIC5678B\",\r\n    \"salary\": 68000.0,\r\n    \"joiningDate\": \"2024-03-29\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/employee/admin/register/officer",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employee",
+                "admin",
+                "register",
+                "officer"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get dashboard stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/employee/dashboard",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employee",
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all loan officers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/employee/admin/all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employee",
+                "admin",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get loan officer by code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/employee/admin/{{USERCODE}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employee",
+                "admin",
+                "{{USERCODE}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update loan officer details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"salary\" : 50000,\r\n    \"isActive\" : true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/employee/admin/{{USERCODE}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employee",
+                "admin",
+                "{{USERCODE}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@loan.com\",\r\n    \"password\": \"Password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get my info",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete account",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/delete?email=odk1572@gmail.com",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "delete"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "odk1572@gmail.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "recover deleted account",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"om.kariya@tssconsultancy.com\",\r\n    \"password\": \"SecurePassword123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/recover",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "recover"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get profile by usercode",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/borrower/profile/{{USERCODE}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "borrower",
+                "profile",
+                "{{USERCODE}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "loan applications",
+      "item": [
+        {
+          "name": "get all application details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loan/applications",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loan",
+                "applications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get application details by code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loan/applications/{{app_code}}/details",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loan",
+                "applications",
+                "{{app_code}}",
+                "details"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "loan",
+      "item": [
+        {
+          "name": "get loan details by code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/{{loan_code}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "{{loan_code}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get emi schedule of loan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/{{loan_code}}/schedule",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "{{loan_code}}",
+                "schedule"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all loans",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "process decision for a loan application",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"APPROVED\",\r\n    \"interestRate\": 0.5,\r\n    \"officerStrategy\": null,\r\n    \"remarks\": \"congrats\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/loans/applications/{{app_code}}/decision",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "applications",
+                "{{app_code}}",
+                "decision"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateLoanStatus",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"loanStatus\":\"CLOSED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/loans/LAN000002/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "LAN000002",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get loan code audit history",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/LAN000001/audit-history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "LAN000001",
+                "audit-history"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "item": [
+        {
+          "name": "get payment history by loan code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/payments/history/loan/{{loan_code}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "history",
+                "loan",
+                "{{loan_code}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all payments",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/payments/history/all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "payments",
+                "history",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "audit",
+      "item": [
+        {
+          "name": "get logs by entity type and id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit/entity/LOAN/{{id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "audit",
+                "entity",
+                "LOAN",
+                "{{id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "strategy-overrides",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/audit/strategy-overrides",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "audit",
+                "strategy-overrides"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all logs",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit/all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "audit",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get audit logs by officer id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit/officer/{{officer_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "audit",
+                "officer",
+                "{{officer_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get audit logs by action",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit/action/{{action}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "audit",
+                "action",
+                "{{action}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "admin_token",
+      "value": ""
+    }
+  ]
+}
