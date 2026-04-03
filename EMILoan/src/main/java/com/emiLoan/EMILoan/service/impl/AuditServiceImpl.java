@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -56,7 +55,6 @@ public class AuditServiceImpl implements AuditService {
         log.info("Audit Logged: {} performed {} on {} ID: {}",
                 officerEmail, action, entityType, entityId);
     }
-
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -101,8 +99,8 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId,Pageable pageable) {
-        Page<AuditLog> auditLogResponsePage = auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType,entityId,pageable);
+    public Page<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId, Pageable pageable) {
+        Page<AuditLog> auditLogResponsePage = auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType, entityId, pageable);
         return auditLogResponsePage.map(auditLogMapper::toResponse);
     }
 
@@ -113,15 +111,26 @@ public class AuditServiceImpl implements AuditService {
         return auditPage.map(strategyAuditMapper::toResponse);
     }
 
-
-
     @Override
     @Transactional(readOnly = true)
     public Page<AuditLogResponse> getAllAuditLogs(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-
         Page<AuditLog> logs = auditLogRepository.findAll(pageable);
         return logs.map(auditLogMapper::toResponse);
     }
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AuditLogResponse> getAuditLogsByOfficer(UUID officerId, Pageable pageable) {
+        Page<AuditLog> logs = auditLogRepository.findByOfficerUserIdOrderByActionTimeDesc(officerId, pageable);
+        return logs.map(auditLogMapper::toResponse);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AuditLogResponse> getAuditLogsByAction(AuditAction action, Pageable pageable) {
+        Page<AuditLog> logs = auditLogRepository.findByActionOrderByActionTimeDesc(action, pageable);
+        return logs.map(auditLogMapper::toResponse);
+    }
 }

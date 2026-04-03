@@ -32,7 +32,7 @@ class StrategySelectionEngineTest {
     void suggest_shouldReturnReducingBalance_whenMidRiskAndShortTenure() {
         BigDecimal dti = LOW_RISK_THRESHOLD.add(new BigDecimal("1"));
 
-        String result = engine.suggest(dti, LONG_TERM_TENURE_THRESHOLD - 1);
+        String result = engine.suggest(dti, LONG_TERM_TENURES_DTI - 1);
 
         assertEquals(STRATEGY_REDUCING_BALANCE, result);
     }

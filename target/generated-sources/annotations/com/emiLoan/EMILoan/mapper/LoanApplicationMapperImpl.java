@@ -1,8 +1,11 @@
 package com.emiLoan.EMILoan.mapper;
 
+import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
+import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationSubmitResponse;
+import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationWithdrawResponse;
 import com.emiLoan.EMILoan.entity.LoanApplication;
 import com.emiLoan.EMILoan.entity.User;
 import java.util.UUID;
@@ -11,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-31T22:23:53+0530",
+    date = "2026-04-03T06:38:17+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -69,6 +72,42 @@ public class LoanApplicationMapperImpl implements LoanApplicationMapper {
         loanApplicationDetailsResponse.application( toResponse( application ) );
 
         return loanApplicationDetailsResponse.build();
+    }
+
+    @Override
+    public LoanApplicationSubmitResponse toSubmitResponse(LoanApplication application) {
+        if ( application == null ) {
+            return null;
+        }
+
+        LoanApplicationSubmitResponse.LoanApplicationSubmitResponseBuilder loanApplicationSubmitResponse = LoanApplicationSubmitResponse.builder();
+
+        loanApplicationSubmitResponse.applicationCode( application.getApplicationCode() );
+        loanApplicationSubmitResponse.requestedAmount( application.getRequestedAmount() );
+        loanApplicationSubmitResponse.tenureMonths( application.getTenureMonths() );
+        loanApplicationSubmitResponse.status( application.getStatus() );
+        loanApplicationSubmitResponse.appliedAt( application.getAppliedAt() );
+
+        loanApplicationSubmitResponse.message( application.getStatus() == ApplicationStatus.REJECTED ? "We're sorry, your application did not meet our current lending criteria." : "Your application has been received and is under review." );
+
+        return loanApplicationSubmitResponse.build();
+    }
+
+    @Override
+    public LoanApplicationWithdrawResponse toWithdrawResponse(LoanApplication application) {
+        if ( application == null ) {
+            return null;
+        }
+
+        LoanApplicationWithdrawResponse.LoanApplicationWithdrawResponseBuilder loanApplicationWithdrawResponse = LoanApplicationWithdrawResponse.builder();
+
+        loanApplicationWithdrawResponse.applicationCode( application.getApplicationCode() );
+        loanApplicationWithdrawResponse.requestedAmount( application.getRequestedAmount() );
+        loanApplicationWithdrawResponse.status( application.getStatus() );
+
+        loanApplicationWithdrawResponse.message( "Your loan application has been successfully withdrawn." );
+
+        return loanApplicationWithdrawResponse.build();
     }
 
     private UUID applicationBorrowerUserId(LoanApplication loanApplication) {

@@ -13,21 +13,27 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AuditLogMapper {
 
-    @Mapping(target = "officerId", source = "officer.userId")
-    @Mapping(target = "officerEmail", source = "officer.email")
-    @Mapping(target = "officerName", source = "officer", qualifiedByName = "mapFullName")
-    @Mapping(target = "actionTime", source = "actionTime")
+    @Mapping(source = "officer", target = "officer", qualifiedByName = "mapOfficerDetails")
     AuditLogResponse toResponse(AuditLog auditLog);
 
     List<AuditLogResponse> toResponseList(List<AuditLog> auditLogs);
 
-    @Named("mapFullName")
-    default String mapFullName(User officer) {
-        if (officer == null) return "SYSTEM";
+    @Named("mapOfficerDetails")
+    default AuditLogResponse.OfficerDetails mapOfficerDetails(User officer) {
+        if (officer == null) {
+            return AuditLogResponse.OfficerDetails.builder()
+                    .name("SYSTEM")
+                    .build();
+        }
 
         String first = officer.getFirstName() != null ? officer.getFirstName() : "";
         String last = officer.getLastName() != null ? officer.getLastName() : "";
+        String fullName = (first + " " + last).trim();
 
-        return (first + " " + last).trim();
+        return AuditLogResponse.OfficerDetails.builder()
+                .officerId(officer.getUserId())
+                .name(fullName.isEmpty() ? "SYSTEM" : fullName)
+                .email(officer.getEmail())
+                .build();
     }
 }

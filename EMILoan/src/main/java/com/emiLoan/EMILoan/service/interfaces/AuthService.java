@@ -5,6 +5,7 @@ import com.emiLoan.EMILoan.dto.user.AuthResponse;
 import com.emiLoan.EMILoan.dto.user.request.BorrowerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoginRequest;
+import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 
 public interface AuthService {
@@ -12,15 +13,13 @@ public interface AuthService {
 
     AuthResponse login(LoginRequest request);
 
-    UserResponse registerBorrower(BorrowerRegistrationRequest request);
-
-    UserResponse registerLoanOfficer(LoanOfficerRegistrationRequest request);
-
-    void logout();
+    RegistrationResponse registerBorrower(BorrowerRegistrationRequest request);
 
     void deleteUser(String email);
 
     UserResponse getCurrentUser(String email);
 
     AuthResponse recoverAccount(LoginRequest request);
+
+    RegistrationResponse registerLoanOfficer(LoanOfficerRegistrationRequest request);
 }

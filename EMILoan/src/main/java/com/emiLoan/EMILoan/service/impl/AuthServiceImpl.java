@@ -7,6 +7,7 @@ import com.emiLoan.EMILoan.dto.user.AuthResponse;
 import com.emiLoan.EMILoan.dto.user.request.BorrowerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoginRequest;
+import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.entity.*;
 import com.emiLoan.EMILoan.exceptions.AuthanticationException;
@@ -80,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public UserResponse registerBorrower(BorrowerRegistrationRequest request) {
+    public RegistrationResponse registerBorrower(BorrowerRegistrationRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BusinessRuleException("Email already exists");
         }
@@ -112,12 +113,12 @@ public class AuthServiceImpl implements AuthService {
         notificationService.sendWelcomeEmail(savedUser);
         auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId());
         log.info("User {} has been created", savedUser.getUserCode());
-        return userMapper.toResponse(savedUser);
+        return userMapper.toRegistrationResponse(savedUser);
     }
 
     @Override
     @Transactional
-    public UserResponse registerLoanOfficer(LoanOfficerRegistrationRequest request) {
+    public RegistrationResponse registerLoanOfficer(LoanOfficerRegistrationRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BusinessRuleException("Email already exists");
         }
@@ -151,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
         notificationService.sendWelcomeEmail(savedUser);
         auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId());
 
-        return userMapper.toResponse(savedUser);
+        return userMapper.toRegistrationResponse(savedUser);
     }
 
     private PersonIdentity getOrCreatePersonIdentity(String pan) {
@@ -167,13 +168,6 @@ public class AuthServiceImpl implements AuthService {
                     entityManager.refresh(savedPerson);
                     return savedPerson;
                 });
-    }
-
-    @Override
-    public void logout() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("User {} is logging out", email);
-        SecurityContextHolder.clearContext();
     }
 
 

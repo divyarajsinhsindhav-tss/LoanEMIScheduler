@@ -31,4 +31,6 @@ public interface LoanApplicationRepository extends JpaRepository<LoanApplication
 
     Long countByStatus(ApplicationStatus status);
 
+    Long countByBorrower_UserIdAndStatus(UUID userId, ApplicationStatus status);
+
 }

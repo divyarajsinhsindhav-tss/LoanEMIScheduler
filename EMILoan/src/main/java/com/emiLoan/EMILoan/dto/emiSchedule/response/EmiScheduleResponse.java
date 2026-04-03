@@ -26,4 +26,7 @@ public class EmiScheduleResponse {
 
     private EmiStatus status;
     private LocalDate paidDate;
+
+    private BigDecimal amountPaid;
+    private BigDecimal amountDue;
 }

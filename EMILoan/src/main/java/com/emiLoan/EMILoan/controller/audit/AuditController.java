@@ -1,5 +1,6 @@
 package com.emiLoan.EMILoan.controller.audit;
 
+import com.emiLoan.EMILoan.common.enums.AuditAction;
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.response.ApiResponse;
 import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
@@ -75,6 +76,44 @@ public class AuditController {
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
                 "Master audit log retrieved successfully",
+                request.getRequestURI(),
+                auditLogs
+        ));
+    }
+
+    @GetMapping("/officer/{officerId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAuditLogsByOfficer(
+            @PathVariable UUID officerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest request
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AuditLogResponse> auditLogs = auditService.getAuditLogsByOfficer(officerId, pageable);
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Audit logs retrieved successfully for officer ID: " + officerId,
+                request.getRequestURI(),
+                auditLogs
+        ));
+    }
+
+    @GetMapping("/action/{action}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAuditLogsByAction(
+            @PathVariable AuditAction action,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest request
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AuditLogResponse> auditLogs = auditService.getAuditLogsByAction(action, pageable);
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Audit logs retrieved successfully for action: " + action,
                 request.getRequestURI(),
                 auditLogs
         ));

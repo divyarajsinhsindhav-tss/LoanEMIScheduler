@@ -1,19 +1,4 @@
-2026-04-02 07:13:37 ERROR [task-1] c.e.E.s.impl.NotificationServiceImpl - Failed to send email to admin@loan.com: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout -1;
-  nested exception is:
-	java.net.UnknownHostException: smtp.gmail.com
-2026-04-02 07:15:14 ERROR [task-2] c.e.E.s.impl.NotificationServiceImpl - Failed to send email to 22ce259.om.kariya@vvpedulink.ac.in: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout -1;
-  nested exception is:
-	java.net.UnknownHostException: smtp.gmail.com
-2026-04-02 07:17:42 ERROR [task-4] c.e.E.s.impl.NotificationServiceImpl - Failed to send email to 22ce259.om.kariya@vvpedulink.ac.in: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout -1;
-  nested exception is:
-	java.net.UnknownHostException: smtp.gmail.com
-2026-04-02 07:19:21 ERROR [task-1] c.e.E.s.impl.NotificationServiceImpl - Failed to send email to 22ce259.om.kariya@vvpedulink.ac.in: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout -1;
-  nested exception is:
-	java.net.UnknownHostException: smtp.gmail.com
-2026-04-02 07:20:11 ERROR [task-2] c.e.E.s.impl.NotificationServiceImpl - Failed to send email to odk1572@gmail.com: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout -1;
-  nested exception is:
-	java.net.UnknownHostException: smtp.gmail.com
-2026-04-02 07:24:00 ERROR [task-1] c.e.E.s.impl.NotificationServiceImpl - Failed to send email to 22ce259.om.kariya@vvpedulink.ac.in: Mail server connection failed. Failed messages: org.eclipse.angus.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout -1;
-  nested exception is:
-	java.net.UnknownHostException: smtp.gmail.com
-2026-04-02 07:27:03 ERROR [http-nio-8080-exec-2] c.e.E.e.GlobalExceptionHandler - ApplicationException: ErrorResponse(status=422, error=Unprocessable Entity, message=Email already exists, path=/api/v1/auth/register/borrower, timestamp=2026-04-02T01:57:03.103512900Z, fieldErrors={code=BUSINESS_RULE_VIOLATION}, details=null)
+2026-04-03 06:40:14 ERROR [http-nio-8080-exec-1] c.e.E.e.GlobalExceptionHandler - ApplicationException: ErrorResponse(status=422, error=Unprocessable Entity, message=Registration failed: A borrower account with this PAN card is already registered., path=/api/v1/auth/register/borrower, timestamp=2026-04-03T01:10:14.771592500Z, fieldErrors={code=BUSINESS_RULE_VIOLATION}, details=null)
+2026-04-03 06:40:26 ERROR [http-nio-8080-exec-6] c.e.E.e.GlobalExceptionHandler - ApplicationException: ErrorResponse(status=422, error=Unprocessable Entity, message=Registration failed: A borrower account with this PAN card is already registered., path=/api/v1/auth/register/borrower, timestamp=2026-04-03T01:10:26.528118900Z, fieldErrors={code=BUSINESS_RULE_VIOLATION}, details=null)
+2026-04-03 07:55:59 ERROR [http-nio-8080-exec-1] c.e.E.security.JwtTokenProvider - Expired JWT token
+2026-04-03 07:56:08 ERROR [http-nio-8080-exec-3] c.e.E.security.JwtTokenProvider - Expired JWT token

@@ -12,7 +12,7 @@ public final class AppConstants {
     public static final int MAX_ACTIVE_LOANS = 3;
     public static final BigDecimal LOW_RISK_THRESHOLD = new BigDecimal("20.00");
     public static final BigDecimal HIGH_RISK_THRESHOLD = new BigDecimal("40.00");
-    public static final int LONG_TERM_TENURE_THRESHOLD = 24;
+    public static final int LONG_TERM_TENURE_THRESHOLD = 72;
     public static final String STRATEGY_FLAT_RATE = LoanStrategy.FLAT_RATE.name();
     public static final String STRATEGY_REDUCING_BALANCE = LoanStrategy.REDUCING_BALANCE.name();
     public static final String STRATEGY_STEP_UP = LoanStrategy.STEP_UP.name();
@@ -26,4 +26,6 @@ public final class AppConstants {
     public static final int INTERNAL_PRECISION = 10;
     public static final int CURRENCY_PRECISION = 2;
     public static final String ALGORITHM = "SHA-256";
+    public static final BigDecimal LOAN_REQUEST_AMOUNT_THRESHOLD = new BigDecimal("3000000.00");
+    public static final int LONG_TERM_TENURES_DTI = 24;
 }

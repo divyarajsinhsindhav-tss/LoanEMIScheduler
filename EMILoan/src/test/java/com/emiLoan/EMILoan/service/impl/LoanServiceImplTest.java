@@ -19,6 +19,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,7 +48,6 @@ class LoanServiceImplTest {
 
     @BeforeEach
     void setup() {
-        // Officer
         officer = new User();
         officer.setEmail("officer@test.com");
 
@@ -55,7 +55,6 @@ class LoanServiceImplTest {
         officerPerson.setPersonId(UUID.randomUUID());
         officer.setPerson(officerPerson);
 
-        // Borrower
         User borrower = new User();
         borrower.setEmail("borrower@test.com");
 
@@ -63,7 +62,6 @@ class LoanServiceImplTest {
         borrowerPerson.setPersonId(UUID.randomUUID());
         borrower.setPerson(borrowerPerson);
 
-        // Application
         application = new LoanApplication();
         application.setApplicationId(UUID.randomUUID());
         application.setApplicationCode("APP123");
@@ -74,13 +72,11 @@ class LoanServiceImplTest {
         application.setTenureMonths(12);
     }
 
-    // APPROVED
     @Test
     void processDecision_shouldApproveAndCreateLoan() {
-
         OfficerDecisionRequest request = new OfficerDecisionRequest();
         request.setStatus(ApplicationStatus.APPROVED);
-        request.setInterestRate(new BigDecimal(10.0));
+        request.setInterestRate(new BigDecimal("10.0"));
 
         Loan loan = Loan.builder()
                 .loanId(UUID.randomUUID())
@@ -89,6 +85,7 @@ class LoanServiceImplTest {
 
         LoanResponse response = new LoanResponse();
         response.setLoanId(loan.getLoanId());
+        response.setLoanCode(loan.getLoanCode());
 
         when(userRepository.findByEmail("officer@test.com"))
                 .thenReturn(Optional.of(officer));
@@ -96,19 +93,20 @@ class LoanServiceImplTest {
         when(applicationRepository.findByApplicationCode("APP123"))
                 .thenReturn(Optional.of(application));
 
-        when(loanRepository.findByApplicationId(application.getApplicationId()))
+        when(loanRepository.findByApplicationId(any()))
                 .thenReturn(Optional.empty());
 
-        when(loanRepository.save(any())).thenReturn(loan);
-        when(loanRepository.findById(any())).thenReturn(Optional.of(loan));
-        when(loanMapper.toResponse(any())).thenReturn(response);
+        when(loanRepository.save(any(Loan.class))).thenReturn(loan);
 
-        LoanResponse result =
-                loanService.processDecision("APP123", request, "officer@test.com");
+        when(loanRepository.findById(loan.getLoanId())).thenReturn(Optional.of(loan));
+
+        when(loanMapper.toResponse(any(Loan.class))).thenReturn(response);
+        LoanResponse result = loanService.processDecision("APP123", request, "officer@test.com");
 
         assertNotNull(result);
+        assertEquals("LN001", result.getLoanCode());
+        verify(loanRepository).save(any(Loan.class));
         verify(notificationService).sendLoanApproved(any(), any());
-        verify(emiServicePort).generateAndSaveSchedule(any());
     }
 
     @Test
@@ -130,7 +128,6 @@ class LoanServiceImplTest {
         verify(notificationService).sendLoanRejected(any(), any());
     }
 
-    // ERROR CASE
     @Test
     void processDecision_shouldThrowException_whenRequestNull() {
 

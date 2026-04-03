@@ -4,6 +4,7 @@ import com.emiLoan.EMILoan.common.response.ApiResponse;
 import com.emiLoan.EMILoan.dto.user.AuthResponse;
 import com.emiLoan.EMILoan.dto.user.request.BorrowerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoginRequest;
+import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.service.interfaces.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,12 +42,12 @@ public class AuthController {
     }
 
     @PostMapping("/register/borrower")
-    public ResponseEntity<ApiResponse<UserResponse>> registerBorrower(
+    public ResponseEntity<ApiResponse<RegistrationResponse>> registerBorrower(
             @Valid @RequestBody BorrowerRegistrationRequest request,
             HttpServletRequest httpServletRequest
     ) {
         log.info("Register request: {}", request.getEmail());
-        UserResponse response = authService.registerBorrower(request);
+        RegistrationResponse response = authService.registerBorrower(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of(
                         HttpStatus.CREATED,
@@ -54,17 +55,6 @@ public class AuthController {
                         httpServletRequest.getRequestURI(),
                         response
                 ));
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(HttpServletRequest request) {
-        authService.logout();
-        return ResponseEntity.ok(ApiResponse.of(
-                HttpStatus.OK,
-                "Logged out successfully. Please discard your token.",
-                request.getRequestURI(),
-                null
-        ));
     }
 
     @GetMapping("/me")
@@ -98,6 +88,7 @@ public class AuthController {
     }
 
     @PostMapping("/recover")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse<AuthResponse>> recoverAccount(
             @Valid @RequestBody LoginRequest request,
             HttpServletRequest httpServletRequest

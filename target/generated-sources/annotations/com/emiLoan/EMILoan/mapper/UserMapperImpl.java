@@ -3,6 +3,7 @@ package com.emiLoan.EMILoan.mapper;
 import com.emiLoan.EMILoan.dto.user.request.BorrowerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.UserRegistrationRequest;
+import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.entity.PersonIdentity;
 import com.emiLoan.EMILoan.entity.User;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-04-01T12:57:46+0530",
+    date = "2026-04-03T06:38:17+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -91,6 +92,25 @@ public class UserMapperImpl implements UserMapper {
         userResponse.pan( user.getPerson() != null ? user.getPerson().getPanFirst3() + "*****" + user.getPerson().getPanLast2() : null );
 
         return userResponse.build();
+    }
+
+    @Override
+    public RegistrationResponse toRegistrationResponse(User user) {
+        if ( user == null ) {
+            return null;
+        }
+
+        RegistrationResponse.RegistrationResponseBuilder registrationResponse = RegistrationResponse.builder();
+
+        registrationResponse.userId( user.getUserId() );
+        registrationResponse.userCode( user.getUserCode() );
+        registrationResponse.firstName( user.getFirstName() );
+        registrationResponse.email( user.getEmail() );
+        registrationResponse.isActive( user.getIsActive() );
+
+        registrationResponse.role( user.getRole() != null ? user.getRole().getRoleName().name() : "BORROWER" );
+
+        return registrationResponse.build();
     }
 
     private String userPersonPersonCode(User user) {

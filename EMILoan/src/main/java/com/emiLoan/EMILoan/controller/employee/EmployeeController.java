@@ -5,6 +5,7 @@ import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.UpdateEmployeeRequest;
 import com.emiLoan.EMILoan.dto.user.response.EmployeeDashboardResponse;
 import com.emiLoan.EMILoan.dto.user.response.LoanOfficerResponse;
+import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.service.interfaces.AuthService;
 import com.emiLoan.EMILoan.service.interfaces.EmployeeService;
@@ -49,11 +50,11 @@ public class EmployeeController {
 
     @PostMapping("/admin/register/officer")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<ApiResponse<UserResponse>> registerLoanOfficer(
+    public ResponseEntity<ApiResponse<RegistrationResponse>> registerLoanOfficer(
             @Valid @RequestBody LoanOfficerRegistrationRequest request,
             HttpServletRequest httpServletRequest
     ) {
-        UserResponse response = authService.registerLoanOfficer(request);
+        RegistrationResponse response = authService.registerLoanOfficer(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of(
                         HttpStatus.CREATED,

@@ -5,6 +5,8 @@ import com.emiLoan.EMILoan.common.response.ApiResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
+import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationSubmitResponse;
+import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationWithdrawResponse;
 import com.emiLoan.EMILoan.service.interfaces.LoanApplicationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -26,19 +28,19 @@ public class LoanApplicationController {
 
     @PostMapping("/apply")
     @PreAuthorize("hasAuthority('BORROWER')")
-    public ResponseEntity<ApiResponse<String>> apply(
+    public ResponseEntity<ApiResponse<LoanApplicationSubmitResponse>> apply(
             @RequestBody @Valid LoanApplicationRequest request,
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
     ) {
-        LoanApplicationResponse response = loanApplicationService.apply(request, userDetails.getUsername());
+        LoanApplicationSubmitResponse response = loanApplicationService.apply(request, userDetails.getUsername());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of(
                         HttpStatus.CREATED,
                         "Application " + response.getApplicationCode() + " submitted successfully.",
                         httpServletRequest.getRequestURI(),
-                        "Loan Applied SuccessFully by :" + response.getBorrowerName() + " Loan Application code is : " + response.getApplicationCode()
+                        response
                 ));
     }
 
@@ -62,8 +64,8 @@ public class LoanApplicationController {
         ));
     }
 
-
     @GetMapping("/{applicationCode}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<LoanApplicationResponse>> getApplication(
             @PathVariable String applicationCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -98,12 +100,12 @@ public class LoanApplicationController {
 
     @PatchMapping("/{applicationCode}/withdraw")
     @PreAuthorize("hasAuthority('BORROWER')")
-    public ResponseEntity<ApiResponse<LoanApplicationResponse>> withdrawApplication(
+    public ResponseEntity<ApiResponse<LoanApplicationWithdrawResponse>> withdrawApplication(
             @PathVariable String applicationCode,
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest request
     ) {
-        LoanApplicationResponse response = loanApplicationService.withdrawApplication(applicationCode, userDetails.getUsername());
+        LoanApplicationWithdrawResponse response = loanApplicationService.withdrawApplication(applicationCode, userDetails.getUsername());
         return ResponseEntity.ok(ApiResponse.of(HttpStatus.OK, "Application withdrawn successfully", request.getRequestURI(), response));
     }
 }

@@ -28,4 +28,8 @@ public interface AuditService {
     Page<AuditLogResponse> getAllAuditLogs(int page, int size);
 
     Page<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId, Pageable pageable);
+
+    Page<AuditLogResponse> getAuditLogsByOfficer(UUID officerId, Pageable pageable);
+
+    Page<AuditLogResponse> getAuditLogsByAction(AuditAction action, Pageable pageable);
 }

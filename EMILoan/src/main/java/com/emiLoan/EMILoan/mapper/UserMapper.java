@@ -3,6 +3,7 @@ package com.emiLoan.EMILoan.mapper;
 import com.emiLoan.EMILoan.dto.user.request.BorrowerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.UserRegistrationRequest;
+import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.entity.User;
 import org.mapstruct.Mapper;
@@ -46,4 +47,7 @@ public interface UserMapper {
     @Mapping(target = "role", source = "role")
     @Mapping(target = "pan", expression = "java(user.getPerson() != null ? user.getPerson().getPanFirst3() + \"*****\" + user.getPerson().getPanLast2() : null)")
     UserResponse toResponse(User user);
+
+    @Mapping(target = "role", expression = "java(user.getRole() != null ? user.getRole().getRoleName().name() : \"BORROWER\")")
+    RegistrationResponse toRegistrationResponse(User user);
 }
