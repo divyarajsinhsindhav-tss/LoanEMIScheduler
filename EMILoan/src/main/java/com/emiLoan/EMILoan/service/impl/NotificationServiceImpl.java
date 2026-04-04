@@ -34,7 +34,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendApplicationSubmitted(User user, LoanApplication application) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -47,7 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendApplicationWithdrawn(User user, LoanApplication application) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -59,7 +59,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendLoanApproved(User user, Loan loan) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -73,7 +73,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendLoanRejected(User user, LoanApplication application) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -85,7 +85,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendPaymentReminder(User user, EmiSchedule emi) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -99,7 +99,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendOverdueAlert(User user, EmiSchedule emi) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -112,7 +112,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendWelcomeEmail(User user) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -124,7 +124,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendLoanClosed(User user, Loan loan) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -138,7 +138,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendLoginNotification(User user) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -193,7 +193,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendPaymentConfirmation(User user, Payment payment) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -212,7 +212,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendPaymentFailed(User user, Payment payment) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());
@@ -227,23 +227,21 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    @Async
-    public void sendRegistrationOtp(String email, String firstName, String otp) {
+    @Async("taskExecutor")
+    public void sendRegistrationOtp(User user, String otp) {
         Map<String, Object> props = new HashMap<>();
-        props.put("name", firstName);
+        props.put("name", user.getFirstName());
         props.put("otp", otp);
         props.put("expiry", "5 minutes");
         props.put("purpose", "Creating your EMI Loan Account");
 
-        User tempUser = User.builder().email(email).firstName(firstName).build();
-
-        sendEmail(tempUser, null, null, "Verify Your Email - OTP: " + otp,
+        sendEmail(user, null, null, "Verify Your Email - OTP: " + otp,
                 "otp-email", props);
     }
 
     @Override
     @Transactional
-    @Async
+    @Async("taskExecutor")
     public void sendLoginOtp(User user, String otp) {
         Map<String, Object> props = new HashMap<>();
         props.put("name", user.getFirstName());

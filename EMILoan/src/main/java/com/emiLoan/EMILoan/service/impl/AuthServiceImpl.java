@@ -113,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(role);
         user.setPerson(person);
 
-        user.setIsActive(true);
+        user.setIsActive(false);
         user.setDeleted(false);
 
         User savedUser = userRepository.saveAndFlush(user);
@@ -126,19 +126,65 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         borrowerProfileRepository.save(profile);
 
-        notificationService.sendWelcomeEmail(savedUser);
+        String otp = otpService.generateAndSaveOtp(savedUser.getEmail(), OtpPurpose.REGISTRATION);
+        notificationService.sendRegistrationOtp(savedUser,otp);
 
         auditService.logAction(savedUser, AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId(),
-                "Borrower self-registered and account activated immediately", null, userMapper.toResponse(savedUser));
+                "Borrower self-registered (Pending OTP Verification)", null, userMapper.toResponse(savedUser));
 
-        log.info("User {} has been created and activated", savedUser.getUserCode());
+        log.info("User {} has been created but is inactive pending OTP", savedUser.getUserCode());
 
         RegistrationResponse response = userMapper.toRegistrationResponse(savedUser);
-        response.setMessage("Registration successful! You can now log in to your account.");
-        response.setVerified(true);
+        response.setMessage("Registration initiated successfully! Please check your email for the OTP to verify your account.");
+        response.setVerified(false);
 
         return response;
     }
+//    public RegistrationResponse registerBorrower(BorrowerRegistrationRequest request) {
+//        if (userRepository.existsByEmail(request.getEmail())) {
+//            throw new BusinessRuleException("Email already exists");
+//        }
+//
+//        String panHash = panHashingUtil.hash(request.getPan());
+//        if (userRepository.existsByPerson_PanHashAndRole_RoleName(panHash, RoleName.BORROWER)) {
+//            throw new BusinessRuleException("Registration failed: A borrower account with this PAN card is already registered.");
+//        }
+//
+//        PersonIdentity person = getOrCreatePersonIdentity(request.getPan());
+//        Role role = roleRepository.findByRoleName(RoleName.BORROWER)
+//                .orElseThrow(() -> new BusinessRuleException("Default role not found"));
+//
+//        User user = userMapper.toEntity(request);
+//        user.setPassword(passwordEncoder.encode(request.getPassword()));
+//        user.setRole(role);
+//        user.setPerson(person);
+//
+//        user.setIsActive(true);
+//        user.setDeleted(false);
+//
+//        User savedUser = userRepository.saveAndFlush(user);
+//        entityManager.refresh(savedUser);
+//
+//        BorrowerProfile profile = BorrowerProfile.builder()
+//                .user(savedUser)
+//                .monthlyIncome(request.getMonthlyIncome())
+//                .existingLoanCount(0)
+//                .build();
+//        borrowerProfileRepository.save(profile);
+//
+//        notificationService.sendWelcomeEmail(savedUser);
+//
+//        auditService.logAction(savedUser, AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId(),
+//                "Borrower self-registered and account activated immediately", null, userMapper.toResponse(savedUser));
+//
+//        log.info("User {} has been created and activated", savedUser.getUserCode());
+//
+//        RegistrationResponse response = userMapper.toRegistrationResponse(savedUser);
+//        response.setMessage("Registration successful! You can now log in to your account.");
+//        response.setVerified(true);
+//
+//        return response;
+//    }
 
     @Override
     @Transactional
@@ -173,6 +219,45 @@ public class AuthServiceImpl implements AuthService {
                 .tokenType("Bearer")
                 .user(userMapper.toShort(user))
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public RegistrationResponse verifyRegistrationOtp(String email, String otpCode) {
+        otpService.verifyOtp(email, otpCode, OtpPurpose.REGISTRATION);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessRuleException("User not found"));
+
+        if (user.getIsActive()) {
+            throw new BusinessRuleException("Account is already active. Please proceed to login.");
+        }
+
+        UserResponse oldState = userMapper.toResponse(user);
+
+        user.setIsActive(true);
+        User savedUser = userRepository.save(user);
+        UserResponse newState = userMapper.toResponse(savedUser);
+
+        notificationService.sendWelcomeEmail(savedUser);
+
+        auditService.logAction(
+                savedUser,
+                AuditAction.UPDATE,
+                AuditEntityType.USER,
+                savedUser.getUserId(),
+                "Email verified via OTP. Account activated.",
+                oldState,
+                newState
+        );
+
+        log.info("User {} account successfully activated via OTP", savedUser.getEmail());
+
+        RegistrationResponse response = userMapper.toRegistrationResponse(savedUser);
+        response.setMessage("Email verified successfully! Your account is now active.");
+        response.setVerified(true);
+
+        return response;
     }
 
     @Override

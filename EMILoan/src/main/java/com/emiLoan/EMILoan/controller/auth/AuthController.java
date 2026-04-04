@@ -55,10 +55,27 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of(
                         HttpStatus.CREATED,
-                        "Registration successful! Your account is now active. Please log in.",
+                        "Registration initiated successfully! Please check your email for the OTP to verify your account.",
                         httpServletRequest.getRequestURI(),
                         response
                 ));
+    }
+
+    @PostMapping("/verify-registration")
+    public ResponseEntity<ApiResponse<RegistrationResponse>> verifyRegistration(
+            @Valid @RequestBody VerifyOtpRequest request,
+            HttpServletRequest httpServletRequest
+    ) {
+        log.info("Verifying registration OTP for: {}", request.getEmail());
+
+        RegistrationResponse response = authService.verifyRegistrationOtp(request.getEmail(), request.getOtpCode());
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                response.getMessage(),
+                httpServletRequest.getRequestURI(),
+                response
+        ));
     }
 
     @PostMapping("/verify-login")

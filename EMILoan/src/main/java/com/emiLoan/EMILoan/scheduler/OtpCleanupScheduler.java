@@ -23,6 +23,7 @@ public class OtpCleanupScheduler {
     private final EmployeeProfileRepository employeeProfileRepository;
 
     @Scheduled(cron = "0 */5 * * * *")
+
     @Transactional
     public void cleanUpExpiredData() {
         LocalDateTime now = LocalDateTime.now();
@@ -33,10 +34,10 @@ public class OtpCleanupScheduler {
         try {
             otpTokenRepository.deleteExpiredTokens(now);
 
+            userRepository.hardDeleteUnverifiedAccounts(userCutoff);
 //            borrowerProfileRepository.deleteProfilesForUnverifiedUsers(userCutoff);
 //            employeeProfileRepository.deleteEmployeeProfilesForUnverifiedUsers(userCutoff);
-//
-//            userRepository.hardDeleteUnverifiedAccounts();
+//               userRepository.hardDeleteUnverifiedAccounts();
 
             log.info("Cleanup completed: Expired OTPs and unverified accounts successfully removed.");
         } catch (Exception e) {

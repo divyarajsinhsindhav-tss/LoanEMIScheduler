@@ -27,7 +27,7 @@ public interface NotificationService {
 
     void sendApplicationWithdrawn(User user, LoanApplication application);
 
-    void sendRegistrationOtp(String email, String firstName, String otp);
+    void sendRegistrationOtp(User user, String otp);
 
     void sendLoginOtp(User user, String otp);
 }
