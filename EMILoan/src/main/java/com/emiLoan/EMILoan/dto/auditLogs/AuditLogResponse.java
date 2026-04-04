@@ -2,6 +2,7 @@ package com.emiLoan.EMILoan.dto.auditLogs;
 
 import com.emiLoan.EMILoan.common.enums.AuditAction;
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,15 +22,21 @@ public class AuditLogResponse {
     private AuditEntityType entityType;
     private UUID entityId;
     private LocalDateTime actionTime;
-    private OfficerDetails officer;
+
+    private String description;
+    private Object oldValue;
+    private Object newValue;
+
+    private UserDetails actor;
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class OfficerDetails {
-        private UUID officerId;
+    public static class UserDetails {
+        private UUID userId;
         private String name;
         private String email;
+        private String role;
     }
 }

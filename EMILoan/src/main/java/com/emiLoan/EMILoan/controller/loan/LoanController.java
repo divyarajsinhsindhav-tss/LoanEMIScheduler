@@ -135,7 +135,7 @@ public class LoanController {
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest
     ) {
-        BigDecimal response = emiService.getForeclosureQuote(loanCode, userDetails.getUsername(),Pageable.unpaged());
+        BigDecimal response = emiService.getForeclosureQuote(loanCode, userDetails.getUsername());
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,

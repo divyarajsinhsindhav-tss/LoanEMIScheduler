@@ -1,5 +1,7 @@
 package com.emiLoan.EMILoan.service.impl;
 
+import com.emiLoan.EMILoan.common.enums.AuditAction;
+import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.enums.EmiStatus;
 import com.emiLoan.EMILoan.common.enums.RoleName;
 import com.emiLoan.EMILoan.dto.emiSchedule.response.EmiScheduleResponse;
@@ -48,20 +50,12 @@ public class EmiServiceImpl implements EmiService {
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan record not found for ID: " + loanCode));
 
-        User requester = userRepository.findByEmail(requesterEmail)
-                .orElseThrow(() -> new BusinessRuleException("Authenticated user session invalid."));
+        validateAccess(loan, requesterEmail);
 
-        boolean isOwner = loan.getBorrower().getEmail().equalsIgnoreCase(requesterEmail);
-        boolean isStaff = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
-                requester.getRole().getRoleName() == RoleName.ADMIN;
-
-        if (!isOwner && !isStaff) {
-            log.warn("Security Alert: Unauthorized access attempt to Loan {} by {}", loanCode, requesterEmail);
-            throw new BusinessRuleException("Access Denied: You do not have permission to view this schedule.");
-        }
         Page<EmiSchedule> schedulePage = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan, pageable);
         return schedulePage.map(emiScheduleMapper::toResponse);
     }
+
 
     @Override
     @Transactional
@@ -84,8 +78,9 @@ public class EmiServiceImpl implements EmiService {
         loanRepository.save(loan);
 
         log.info("Financial Event: Generated {} installments for Loan {}", schedules.size(), loan.getLoanCode());
-    }
 
+        auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.EMI_SCHEDULE, loan.getLoanId());
+    }
     @Override
     @Transactional(readOnly = true)
     public EmiScheduleResponse getNextUpcomingEmi(String loanCode, String requesterEmail) {
@@ -103,36 +98,35 @@ public class EmiServiceImpl implements EmiService {
 
         return emiScheduleMapper.toResponse(nextEmi);
     }
+
     @Override
     @Transactional(readOnly = true)
-    public BigDecimal getForeclosureQuote(String loanCode, String requesterEmail,Pageable pageable) {
+    public BigDecimal getForeclosureQuote(String loanCode, String requesterEmail) {
 
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan record not found"));
 
         validateAccess(loan, requesterEmail);
-
-        List<EmiSchedule> allEmis = emiScheduleRepository
+        List<EmiSchedule> unpaidEmis = emiScheduleRepository
                 .findAllByLoanAndStatusInOrderByInstallmentNoAsc(
                         loan,
-                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID),pageable
-                ).stream().collect(Collectors.toList());
+                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID),
+                        Pageable.unpaged()
+                ).getContent();
 
-        if (allEmis.isEmpty()) {
+        if (unpaidEmis.isEmpty()) {
             return BigDecimal.ZERO;
         }
 
-        BigDecimal total = BigDecimal.ZERO;
+        EmiSchedule currentEmi = unpaidEmis.get(0);
 
-        for (EmiSchedule emi : allEmis) {
-            BigDecimal emiAmount = emi.getPrincipalComponent()
-                    .add(emi.getInterestComponent())
-                    .subtract(emi.getAmountPaid() != null ? emi.getAmountPaid() : BigDecimal.ZERO);
+        BigDecimal remainingPrincipal = currentEmi.getRemainingBalance().add(currentEmi.getPrincipalComponent());
+        BigDecimal currentMonthInterest = currentEmi.getInterestComponent();
+        BigDecimal amountAlreadyPaidThisMonth = currentEmi.getAmountPaid() != null ? currentEmi.getAmountPaid() : BigDecimal.ZERO;
 
-            total = total.add(emiAmount);
-        }
+        BigDecimal foreclosureAmount = remainingPrincipal.add(currentMonthInterest).subtract(amountAlreadyPaidThisMonth);
 
-        return total;
+        return foreclosureAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : foreclosureAmount;
     }
 
     private void validateAccess(Loan loan, String requesterEmail) {

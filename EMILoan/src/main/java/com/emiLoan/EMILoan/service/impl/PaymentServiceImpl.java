@@ -10,6 +10,8 @@ import com.emiLoan.EMILoan.entity.Loan;
 import com.emiLoan.EMILoan.entity.Payment;
 import com.emiLoan.EMILoan.entity.User;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
+import com.emiLoan.EMILoan.mapper.EmiScheduleMapper;
+import com.emiLoan.EMILoan.mapper.LoanMapper;
 import com.emiLoan.EMILoan.mapper.PaymentMapper;
 import com.emiLoan.EMILoan.repository.EmiScheduleRepository;
 import com.emiLoan.EMILoan.repository.LoanRepository;
@@ -48,7 +50,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final NotificationService notificationService;
     private final AuditService auditService;
-
+    private final LoanMapper loanMapper;
+    private final EmiScheduleMapper emiScheduleMapper;
 
     @Override
     @Transactional
@@ -100,7 +103,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment savedPayment = paymentRepository.save(payment);
 
-        auditService.logOfficerAction(borrower, AuditAction.UPDATE, AuditEntityType.LOAN, loan.getLoanId());
+        Object oldEmiState = emiScheduleMapper.toResponse(emi);
 
         if (paymentStatus == PaymentStatus.SUCCESS) {
 
@@ -119,18 +122,53 @@ public class PaymentServiceImpl implements PaymentService {
                         emi.getInstallmentNo(), loan.getLoanCode(), emi.getTotalEmi().subtract(newTotalPaid));
             }
 
-            emiScheduleRepository.save(emi);
+            EmiSchedule savedEmi = emiScheduleRepository.save(emi);
+
+            Object newEmiState = emiScheduleMapper.toResponse(savedEmi);
+            auditService.logAction(
+                    borrower,
+                    AuditAction.UPDATE,
+                    AuditEntityType.EMI_SCHEDULE,
+                    savedEmi.getEmiId(),
+                    "Borrower made a successful payment of ₹" + request.getAmount(),
+                    oldEmiState,
+                    newEmiState
+            );
 
             boolean hasUnpaidEmis = emiScheduleRepository.existsByLoanAndStatusNot(loan, EmiStatus.PAID);
             if (!hasUnpaidEmis) {
+                Object oldLoanState = loanMapper.toResponse(loan);
+
                 loan.setLoanStatus(LoanStatus.CLOSED);
-                loanRepository.save(loan);
+                Loan savedLoan = loanRepository.save(loan);
+
+                Object newLoanState = loanMapper.toResponse(savedLoan);
+
+                auditService.logAction(
+                        borrower,
+                        AuditAction.PAYMENT,
+                        AuditEntityType.LOAN,
+                        savedLoan.getLoanId(),
+                        "Loan fully paid off and automatically closed",
+                        oldLoanState,
+                        newLoanState
+                );
 
                 log.info("Loan {} has no more pending EMIs. Status updated to CLOSED.", loan.getLoanCode());
                 notificationService.sendLoanClosed(borrower, loan);
             }
         } else {
             log.warn("Payment Gateway returned FAILURE for EMI ID {}", emi.getEmiId());
+
+            auditService.logAction(
+                    borrower,
+                    AuditAction.PAYMENT_FAILED,
+                    AuditEntityType.PAYMENT,
+                    savedPayment.getPaymentId(),
+                    "Payment gateway declined/failed the transaction",
+                    null,
+                    paymentMapper.toResponse(savedPayment)
+            );
 
             notificationService.sendPaymentFailed(borrower, savedPayment);
         }
@@ -212,8 +250,9 @@ public class PaymentServiceImpl implements PaymentService {
         List<EmiSchedule> unpaidEmis = emiScheduleRepository
                 .findAllByLoanAndStatusInOrderByInstallmentNoAsc(
                         loan,
-                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID),Pageable.unpaged()
-                ).stream().toList();
+                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID),
+                        Pageable.unpaged()
+                ).getContent();
 
         if (unpaidEmis.isEmpty()) {
             throw new BusinessRuleException("Loan already cleared.");
@@ -247,7 +286,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment savedPayment = paymentRepository.save(payment);
 
-        auditService.logOfficerAction(loan.getBorrower(), AuditAction.UPDATE, AuditEntityType.LOAN, loan.getLoanId());
+        Object oldLoanState = loanMapper.toResponse(loan);
 
         if (paymentStatus == PaymentStatus.SUCCESS) {
 
@@ -267,16 +306,40 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             loan.setLoanStatus(LoanStatus.CLOSED);
-            loanRepository.save(loan);
+            Loan savedLoan = loanRepository.save(loan);
+
+            Object newLoanState = loanMapper.toResponse(savedLoan);
+
+            auditService.logAction(
+                    loan.getBorrower(),
+                    AuditAction.PAYMENT,
+                    AuditEntityType.LOAN,
+                    savedLoan.getLoanId(),
+                    "Borrower successfully foreclosed the loan. All future unaccrued EMIs were waived and deleted.",
+                    oldLoanState,
+                    newLoanState
+            );
 
             log.info("Loan {} successfully foreclosed and closed.", loan.getLoanCode());
             notificationService.sendLoanClosed(loan.getBorrower(), loan);
 
         } else {
             log.warn("Foreclosure Payment FAILED for Loan {}", loan.getLoanCode());
+
+            auditService.logAction(
+                    loan.getBorrower(),
+                    AuditAction.PAYMENT_FAILED,
+                    AuditEntityType.PAYMENT,
+                    savedPayment.getPaymentId(),
+                    "Foreclosure payment gateway transaction failed",
+                    null,
+                    paymentMapper.toResponse(savedPayment)
+            );
+
             notificationService.sendPaymentFailed(loan.getBorrower(), savedPayment);
         }
 
         return paymentMapper.toResponse(savedPayment);
     }
+
 }

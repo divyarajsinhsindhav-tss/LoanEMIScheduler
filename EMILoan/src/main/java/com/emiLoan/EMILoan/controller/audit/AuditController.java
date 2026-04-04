@@ -65,7 +65,7 @@ public class AuditController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAllAuditLogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -81,27 +81,27 @@ public class AuditController {
         ));
     }
 
-    @GetMapping("/officer/{officerId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAuditLogsByOfficer(
-            @PathVariable UUID officerId,
+    @GetMapping("/actor/{actorId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAuditLogsByActor(
+            @PathVariable UUID actorId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             HttpServletRequest request
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<AuditLogResponse> auditLogs = auditService.getAuditLogsByOfficer(officerId, pageable);
+        Page<AuditLogResponse> auditLogs = auditService.getAuditLogsByActor(actorId, pageable);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
-                "Audit logs retrieved successfully for officer ID: " + officerId,
+                "Audit logs retrieved successfully for user ID: " + actorId,
                 request.getRequestURI(),
                 auditLogs
         ));
     }
 
     @GetMapping("/action/{action}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAuditLogsByAction(
             @PathVariable AuditAction action,
             @RequestParam(defaultValue = "0") int page,

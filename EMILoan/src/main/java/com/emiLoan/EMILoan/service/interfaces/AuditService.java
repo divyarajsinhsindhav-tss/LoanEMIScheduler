@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public interface AuditService {
 
-    void logOfficerAction(User officer, AuditAction action, AuditEntityType entityType, UUID entityId);
+    Page<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId, Pageable pageable);
 
     void logSystemAction(AuditAction action, AuditEntityType entityType, UUID entityId);
 
@@ -27,9 +27,10 @@ public interface AuditService {
 
     Page<AuditLogResponse> getAllAuditLogs(int page, int size);
 
-    Page<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId, Pageable pageable);
-
-    Page<AuditLogResponse> getAuditLogsByOfficer(UUID officerId, Pageable pageable);
-
     Page<AuditLogResponse> getAuditLogsByAction(AuditAction action, Pageable pageable);
+
+    Page<AuditLogResponse> getAuditLogsByActor(UUID actorId, Pageable pageable);
+
+    void logAction(User actor, AuditAction action, AuditEntityType entityType,
+                   UUID entityId, String description, Object oldState, Object newState);
 }

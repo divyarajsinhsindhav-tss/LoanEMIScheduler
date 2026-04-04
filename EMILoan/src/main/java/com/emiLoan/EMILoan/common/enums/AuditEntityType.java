@@ -4,5 +4,6 @@ public enum AuditEntityType {
     LOAN,
     APPLICATION,
     EMI_SCHEDULE,
-    USER
+    USER,
+    PAYMENT
 }

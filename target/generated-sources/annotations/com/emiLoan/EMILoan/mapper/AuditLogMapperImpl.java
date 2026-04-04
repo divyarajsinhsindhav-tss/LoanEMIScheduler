@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-04-03T05:38:25+0530",
+    date = "2026-04-04T11:16:37+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -23,7 +23,10 @@ public class AuditLogMapperImpl implements AuditLogMapper {
 
         AuditLogResponse.AuditLogResponseBuilder auditLogResponse = AuditLogResponse.builder();
 
-        auditLogResponse.officer( mapOfficerDetails( auditLog.getOfficer() ) );
+        auditLogResponse.actor( mapUserDetails( auditLog.getActor() ) );
+        auditLogResponse.description( auditLog.getDescription() );
+        auditLogResponse.oldValue( auditLog.getOldValue() );
+        auditLogResponse.newValue( auditLog.getNewValue() );
         auditLogResponse.auditId( auditLog.getAuditId() );
         auditLogResponse.action( auditLog.getAction() );
         auditLogResponse.entityType( auditLog.getEntityType() );

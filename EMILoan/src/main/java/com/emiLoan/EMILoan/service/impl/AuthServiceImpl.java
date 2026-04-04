@@ -9,7 +9,6 @@ import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoginRequest;
 import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
-import com.emiLoan.EMILoan.dto.user.response.UserShortResponse;
 import com.emiLoan.EMILoan.entity.*;
 import com.emiLoan.EMILoan.exceptions.AuthanticationException;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
@@ -51,6 +50,14 @@ public class AuthServiceImpl implements AuthService {
 
     private final NotificationService notificationService;
     private final AuditService auditService;
+
+    private User getAuthenticatedActor() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
+            return userRepository.findByEmail(auth.getName()).orElse(null);
+        }
+        return null;
+    }
 
     @Override
     public AuthResponse login(LoginRequest request) {
@@ -111,8 +118,13 @@ public class AuthServiceImpl implements AuthService {
                 .existingLoanCount(0)
                 .build();
         borrowerProfileRepository.save(profile);
+
         notificationService.sendWelcomeEmail(savedUser);
-        auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId());
+
+        UserResponse newState = userMapper.toResponse(savedUser);
+        auditService.logAction(savedUser, AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId(),
+                "Borrower self-registered", null,newState);
+
         log.info("User {} has been created", savedUser.getUserCode());
         return userMapper.toRegistrationResponse(savedUser);
     }
@@ -151,7 +163,11 @@ public class AuthServiceImpl implements AuthService {
         employeeProfileRepository.save(profile);
 
         notificationService.sendWelcomeEmail(savedUser);
-        auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId());
+
+        User currentAdmin = getAuthenticatedActor();
+        UserResponse newState = userMapper.toResponse(savedUser);
+        auditService.logAction(currentAdmin, AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId(),
+                "Loan Officer registered by Admin", null, newState);
 
         return userMapper.toRegistrationResponse(savedUser);
     }
@@ -171,7 +187,6 @@ public class AuthServiceImpl implements AuthService {
                 });
     }
 
-
     @Override
     @Transactional
     public void deleteUser(String email) {
@@ -184,6 +199,8 @@ public class AuthServiceImpl implements AuthService {
 
         log.warn("Soft deleting user account: {}", email);
 
+        UserResponse oldState = userMapper.toResponse(user);
+
         user.setIsActive(false);
         userRepository.save(user);
 
@@ -194,7 +211,12 @@ public class AuthServiceImpl implements AuthService {
             });
         }
 
-        auditService.logSystemAction(AuditAction.DELETE, AuditEntityType.USER, user.getUserId());
+        UserResponse newState = userMapper.toResponse(user);
+
+        User currentAdmin = getAuthenticatedActor();
+        auditService.logAction(currentAdmin, AuditAction.DELETE, AuditEntityType.USER, user.getUserId(),
+                "User account soft-deleted (Deactivated)", oldState, newState);
+
         log.info("User {} successfully soft-deleted (deactivated)", email);
     }
 
@@ -220,6 +242,9 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessRuleException("This account is already active. Please use the standard login page.");
         }
 
+        // Snapshot before changes
+        UserResponse oldState = userMapper.toResponse(user);
+
         user.setIsActive(true);
         userRepository.save(user);
 
@@ -230,7 +255,11 @@ public class AuthServiceImpl implements AuthService {
             });
         }
 
-        auditService.logSystemAction(AuditAction.UPDATE, AuditEntityType.USER, user.getUserId());
+        UserResponse newState = userMapper.toResponse(user);
+
+        auditService.logAction(user, AuditAction.UPDATE, AuditEntityType.USER, user.getUserId(),
+                "User recovered their deleted account", oldState, newState);
+
         log.info("User {} account successfully recovered", user.getEmail());
 
         Authentication authentication = authenticationManager.authenticate(
@@ -245,5 +274,4 @@ public class AuthServiceImpl implements AuthService {
                 .user(userMapper.toShort(user))
                 .build();
     }
-
 }

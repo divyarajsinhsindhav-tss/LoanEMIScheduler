@@ -14,7 +14,7 @@ public interface EmiService {
 
     Page<EmiScheduleResponse> getSchedule(String loanCode, String requesterEmail,Pageable pageable);
 
-    BigDecimal getForeclosureQuote(String loanCode, String requesterEmail, Pageable pageable) ;
+    BigDecimal getForeclosureQuote(String loanCode, String requesterEmail) ;
 
     void generateAndSaveSchedule(Loan loan,Pageable pageable);
 }

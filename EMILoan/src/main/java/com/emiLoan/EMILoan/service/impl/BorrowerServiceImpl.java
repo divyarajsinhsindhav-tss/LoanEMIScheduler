@@ -1,14 +1,19 @@
 package com.emiLoan.EMILoan.service.impl;
 
+import com.emiLoan.EMILoan.common.enums.AuditAction;
+import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.enums.LoanStatus;
 import com.emiLoan.EMILoan.dto.user.response.BorrowerDashboardResponse;
 import com.emiLoan.EMILoan.dto.user.response.BorrowerResponse;
 import com.emiLoan.EMILoan.entity.BorrowerProfile;
+import com.emiLoan.EMILoan.entity.User;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
 import com.emiLoan.EMILoan.mapper.BorrowerProfileMapper;
 import com.emiLoan.EMILoan.repository.BorrowerProfileRepository;
 import com.emiLoan.EMILoan.repository.EmiScheduleRepository;
 import com.emiLoan.EMILoan.repository.LoanRepository;
+import com.emiLoan.EMILoan.repository.UserRepository;
+import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import com.emiLoan.EMILoan.service.interfaces.BorrowerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +32,10 @@ public class BorrowerServiceImpl implements BorrowerService {
 
     private final BorrowerProfileRepository borrowerProfileRepository;
     private final BorrowerProfileMapper borrowerProfileMapper;
-
     private final LoanRepository loanRepository;
     private final EmiScheduleRepository emiScheduleRepository;
+    private final UserRepository userRepository;
+    private final AuditService auditService;
 
     @Override
     @Transactional(readOnly = true)
@@ -49,13 +55,21 @@ public class BorrowerServiceImpl implements BorrowerService {
         String email = getCurrentUserEmail();
         BorrowerProfile profile = fetchProfileByEmail(email);
 
+        BorrowerResponse oldState = borrowerProfileMapper.toResponse(profile);
+
         log.info("Updating income for borrower {} from {} to {}", email, profile.getMonthlyIncome(), newMonthlyIncome);
         profile.setMonthlyIncome(newMonthlyIncome);
 
         BorrowerProfile savedProfile = borrowerProfileRepository.save(profile);
-        return borrowerProfileMapper.toResponse(savedProfile);
-    }
 
+        BorrowerResponse newState = borrowerProfileMapper.toResponse(savedProfile);
+
+        User currentUser = userRepository.findByEmail(email).orElse(null);
+        auditService.logAction(currentUser, AuditAction.UPDATE, AuditEntityType.USER, profile.getUser().getUserId(),
+                "Borrower updated their monthly income", oldState, newState);
+
+        return newState;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -73,16 +87,15 @@ public class BorrowerServiceImpl implements BorrowerService {
                 .build();
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public BorrowerResponse getProfileByUserCode(String userCode) {
+        // NOTE: Ensure your Controller restricts this endpoint to @PreAuthorize("hasAnyRole('ADMIN', 'LOAN_OFFICER')")
         BorrowerProfile profile = borrowerProfileRepository.findByUser_UserCode(userCode)
                 .orElseThrow(() -> new BusinessRuleException("Borrower not found with code: " + userCode));
 
         return borrowerProfileMapper.toResponse(profile);
     }
-
 
     private String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

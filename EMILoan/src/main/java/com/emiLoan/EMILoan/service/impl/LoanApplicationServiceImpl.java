@@ -78,6 +78,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
 
         BorrowerProfile profile = borrowerProfileRepository.findByUser_EmailWithUser(email)
                 .orElseThrow(() -> new BusinessRuleException("Borrower profile not found for email: " + email));
+
         Long activeLoanCount = loanRepository.countActiveLoans(profile.getUser().getUserId(), LoanStatus.ACTIVE);
         Long pendingAppCount = applicationRepository.countByBorrower_UserIdAndStatus(
                 profile.getUser().getUserId(), ApplicationStatus.PENDING);
@@ -110,19 +111,40 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         entityManager.refresh(savedApplication);
 
         log.info("New Loan Application {} created for borrower {}", savedApplication.getApplicationId(), email);
+
+        LoanApplicationSubmitResponse responseDto = applicationMapper.toSubmitResponse(savedApplication);
+
         try {
             if (savedApplication.getStatus() == ApplicationStatus.REJECTED) {
                 notificationService.sendLoanRejected(profile.getUser(), savedApplication);
-                auditService.logSystemAction(AuditAction.REJECTED, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
+
+                auditService.logAction(
+                        profile.getUser(),
+                        AuditAction.REJECTED,
+                        AuditEntityType.APPLICATION,
+                        savedApplication.getApplicationId(),
+                        "Application auto-rejected based on Risk Strategy / DTI",
+                        null,
+                        responseDto
+                );
             } else {
                 notificationService.sendApplicationSubmitted(profile.getUser(), savedApplication);
-                auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
+
+                auditService.logAction(
+                        profile.getUser(),
+                        AuditAction.CREATE,
+                        AuditEntityType.APPLICATION,
+                        savedApplication.getApplicationId(),
+                        "Borrower successfully submitted a new loan application",
+                        null,
+                        responseDto
+                );
             }
         } catch (Exception e) {
             log.error("Failed to send notification or audit for app {}: {}", savedApplication.getApplicationId(), e.getMessage());
         }
 
-        return applicationMapper.toSubmitResponse(savedApplication);
+        return responseDto;
     }
 
     @Override
@@ -194,12 +216,24 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
             );
         }
 
+        LoanApplicationWithdrawResponse oldState = applicationMapper.toWithdrawResponse(application);
+
         application.setStatus(ApplicationStatus.WITHDRAWN);
         LoanApplication savedApplication = applicationRepository.save(application);
 
+        LoanApplicationWithdrawResponse newState = applicationMapper.toWithdrawResponse(savedApplication);
+
         log.info("Application {} was withdrawn by borrower {}", applicationCode, email);
 
-        auditService.logSystemAction(AuditAction.UPDATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
+        auditService.logAction(
+                application.getBorrower(),
+                AuditAction.UPDATE,
+                AuditEntityType.APPLICATION,
+                savedApplication.getApplicationId(),
+                "Borrower voluntarily withdrew their pending loan application",
+                oldState,
+                newState
+        );
 
         try {
             notificationService.sendApplicationWithdrawn(savedApplication.getBorrower(), savedApplication);
@@ -207,7 +241,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
             log.error("Failed to send withdrawal notification for app {}: {}", savedApplication.getApplicationId(), e.getMessage());
         }
 
-        return applicationMapper.toWithdrawResponse(savedApplication);
+        return newState;
     }
 
 }

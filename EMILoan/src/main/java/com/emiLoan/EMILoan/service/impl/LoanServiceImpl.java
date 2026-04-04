@@ -15,6 +15,7 @@ import com.emiLoan.EMILoan.entity.StrategyAudit;
 import com.emiLoan.EMILoan.entity.User;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
 import com.emiLoan.EMILoan.mapper.AuditLogMapper;
+import com.emiLoan.EMILoan.mapper.LoanApplicationMapper;
 import com.emiLoan.EMILoan.mapper.LoanMapper;
 import com.emiLoan.EMILoan.repository.EmiScheduleRepository;
 import com.emiLoan.EMILoan.repository.LoanApplicationRepository;
@@ -31,8 +32,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,11 +56,13 @@ public class LoanServiceImpl implements LoanService {
     private final EmiService emiServicePort;
     private final LoanMapper loanMapper;
 
+
     private final NotificationService notificationService;
     private final AuditService auditService;
     private final EntityManager entityManager;
 
     private final AuditLogMapper auditLogMapper;
+    private final LoanApplicationMapper loanApplicationMapper;
 
     @Override
     @Transactional
@@ -88,6 +93,8 @@ public class LoanServiceImpl implements LoanService {
             throw new BusinessRuleException("Access Denied: You cannot review your own loan application.");
         }
 
+        Object oldState = loanApplicationMapper.toResponse(application);
+
         String suggested = application.getSuggestedStrategy();
 
         application.setStatus(request.getStatus());
@@ -104,10 +111,24 @@ public class LoanServiceImpl implements LoanService {
             application.setOfficerStrategy(suggested);
         }
 
-        applicationRepository.save(application);
+        LoanApplication savedApplication = applicationRepository.save(application);
+
+        Object newState = loanApplicationMapper.toResponse(savedApplication);
 
         AuditAction action = (request.getStatus() == ApplicationStatus.APPROVED) ? AuditAction.APPROVED : AuditAction.REJECTED;
-        auditService.logOfficerAction(officer, action, AuditEntityType.APPLICATION, application.getApplicationId());
+        String auditDescription = (request.getStatus() == ApplicationStatus.APPROVED)
+                ? "Loan Officer approved the application and assigned an interest rate."
+                : "Loan Officer rejected the application.";
+
+        auditService.logAction(
+                officer,
+                action,
+                AuditEntityType.APPLICATION,
+                savedApplication.getApplicationId(),
+                auditDescription,
+                oldState,
+                newState
+        );
 
         boolean isOverridden = !suggested.equals(application.getOfficerStrategy());
         auditService.logStrategyDecision(application, suggested, application.getOfficerStrategy(), isOverridden, officer);
@@ -162,12 +183,23 @@ public class LoanServiceImpl implements LoanService {
 
         emiServicePort.generateAndSaveSchedule(savedLoan,Pageable.unpaged());
 
+        LoanResponse responseDto = loanMapper.toResponse(savedLoan);
+
+        auditService.logAction(
+                application.getReviewedBy(),
+                AuditAction.CREATE,
+                AuditEntityType.LOAN,
+                savedLoan.getLoanId(),
+                "Loan account officially generated and activated following application approval",
+                null,
+                responseDto
+        );
+
         log.info("Successfully generated Loan {} (Code: {}) for application {}",
                 savedLoan.getLoanId(), savedLoan.getLoanCode(), application.getApplicationId());
 
-        return loanMapper.toResponse(savedLoan);
+        return responseDto;
     }
-
 
     @Override
     @Transactional(readOnly = true)
@@ -227,15 +259,38 @@ public class LoanServiceImpl implements LoanService {
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan not found"));
 
-        loanMapper.updateEntityFromStatusRequest(request, loan);
+        LoanResponse oldState = loanMapper.toResponse(loan);
 
+        loanMapper.updateEntityFromStatusRequest(request, loan);
         Loan updatedLoan = loanRepository.save(loan);
 
-        auditService.logSystemAction(AuditAction.UPDATE, AuditEntityType.LOAN, loan.getLoanId());
+        LoanResponse newState = loanMapper.toResponse(updatedLoan);
 
-        log.info("Loan {} status updated to {}", loan.getLoanCode(), updatedLoan.getLoanStatus());
+        User currentActor = getAuthenticatedActor();
 
-        return loanMapper.toResponse(updatedLoan);
+        auditService.logAction(
+                currentActor,
+                AuditAction.UPDATE,
+                AuditEntityType.LOAN,
+                updatedLoan.getLoanId(),
+                "Staff manually updated loan status to " + updatedLoan.getLoanStatus(),
+                oldState,
+                newState
+        );
+
+        log.info("Loan {} status updated to {} by user {}",
+                loan.getLoanCode(), updatedLoan.getLoanStatus(),
+                currentActor != null ? currentActor.getEmail() : "SYSTEM");
+
+        return newState;
+    }
+
+    private User getAuthenticatedActor() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
+            return userRepository.findByEmail(auth.getName()).orElse(null);
+        }
+        return null;
     }
 
     @Override
