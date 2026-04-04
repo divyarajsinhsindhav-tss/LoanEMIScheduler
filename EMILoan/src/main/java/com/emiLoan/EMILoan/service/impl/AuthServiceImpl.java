@@ -9,6 +9,7 @@ import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoginRequest;
 import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
+import com.emiLoan.EMILoan.dto.user.response.UserShortResponse;
 import com.emiLoan.EMILoan.entity.*;
 import com.emiLoan.EMILoan.exceptions.AuthanticationException;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
@@ -75,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
         return AuthResponse.builder()
                 .accessToken(token)
                 .tokenType("Bearer")
-                .user(userMapper.toResponse(user))
+                .user(userMapper.toShort(user))
                 .build();
     }
 
@@ -241,7 +242,7 @@ public class AuthServiceImpl implements AuthService {
         return AuthResponse.builder()
                 .accessToken(token)
                 .tokenType("Bearer")
-                .user(userMapper.toResponse(user))
+                .user(userMapper.toShort(user))
                 .build();
     }
 

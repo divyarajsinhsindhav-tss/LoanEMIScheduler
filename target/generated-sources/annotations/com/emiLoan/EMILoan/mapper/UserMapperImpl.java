@@ -5,6 +5,7 @@ import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.UserRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
+import com.emiLoan.EMILoan.dto.user.response.UserShortResponse;
 import com.emiLoan.EMILoan.entity.PersonIdentity;
 import com.emiLoan.EMILoan.entity.User;
 import javax.annotation.processing.Generated;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-04-03T06:38:17+0530",
+    date = "2026-04-04T09:30:53+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -111,6 +112,23 @@ public class UserMapperImpl implements UserMapper {
         registrationResponse.role( user.getRole() != null ? user.getRole().getRoleName().name() : "BORROWER" );
 
         return registrationResponse.build();
+    }
+
+    @Override
+    public UserShortResponse toShort(User user) {
+        if ( user == null ) {
+            return null;
+        }
+
+        UserShortResponse.UserShortResponseBuilder userShortResponse = UserShortResponse.builder();
+
+        userShortResponse.userCode( user.getUserCode() );
+        userShortResponse.firstName( user.getFirstName() );
+        userShortResponse.lastName( user.getLastName() );
+
+        userShortResponse.role( user.getRole() != null ? user.getRole().getRoleName().name() : null );
+
+        return userShortResponse.build();
     }
 
     private String userPersonPersonCode(User user) {

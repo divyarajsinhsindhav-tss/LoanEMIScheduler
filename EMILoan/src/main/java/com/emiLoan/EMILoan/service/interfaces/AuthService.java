@@ -7,6 +7,7 @@ import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoginRequest;
 import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
+import com.emiLoan.EMILoan.dto.user.response.UserShortResponse;
 
 public interface AuthService {
 

@@ -21,9 +21,5 @@ public interface BorrowerProfileRepository extends JpaRepository<BorrowerProfile
     @Query("SELECT b FROM BorrowerProfile b JOIN FETCH b.user WHERE b.user.email = :email")
     Optional<BorrowerProfile> findByUser_EmailWithUser(@Param("email") String email);
 
-    @Modifying
-    @Transactional
-    void deleteByUser(User user);
-
     Optional<BorrowerProfile> findByUser_UserCode(String userCode);
 }

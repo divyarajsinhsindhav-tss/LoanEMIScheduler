@@ -1,433 +1,69 @@
-2026-04-03 04:08:47 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - Login request: odk1572@gmail.com
-2026-04-03 04:09:08 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - Login request: odk1572@gmail.com
-2026-04-03 04:09:58 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - Register request: new@gmail.com
-2026-04-03 04:09:58 INFO  [http-nio-8080-exec-7] c.e.E.service.impl.AuthServiceImpl - User USR000005 has been created
-2026-04-03 04:09:58 INFO  [task-34] c.e.E.service.impl.AuditServiceImpl - System Audit Logged: Automated process performed CREATE on USER ID: 68838d88-c308-4131-bc60-9eeb683e7160
-2026-04-03 04:10:16 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - Login request: new@gmail.com
-2026-04-03 04:24:22 INFO  [http-nio-8080-exec-7] c.e.E.s.impl.BorrowerServiceImpl - Updating income for borrower new@gmail.com from 50000.00 to 50000
-2026-04-03 05:38:59 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 05:38:59 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 05:38:59 INFO  [scheduling-1] c.e.E.scheduler.OverdueEmiScheduler - >>>> Starting Daily Overdue Detection Job for: 2026-04-03
-2026-04-03 05:38:59 INFO  [scheduling-1] c.e.E.scheduler.OverdueEmiScheduler - No new overdue EMIs detected today.
-2026-04-03 05:38:59 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 05:38:59 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 05:38:59 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 05:39:05 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 26456 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 05:39:05 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 05:39:07 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 05:39:07 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 187 ms. Found 12 JPA repository interfaces.
-2026-04-03 05:39:08 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 05:39:08 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 05:39:08 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 05:39:08 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 05:39:08 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 3245 ms
-2026-04-03 05:39:09 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 05:39:09 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4a04ca74
-2026-04-03 05:39:09 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 05:39:09 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 05:39:10 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.066s)
-2026-04-03 05:39:10 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 05:39:10 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 05:39:11 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 05:39:13 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 05:39:13 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 05:39:14 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 05:39:17 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 05:39:17 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 05:39:17 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 13.693 seconds (process running for 15.285)
-2026-04-03 05:41:33 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-04-03 05:41:33 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-04-03 05:41:34 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 138 ms
-2026-04-03 05:47:24 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 05:47:24 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 05:47:24 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 05:47:24 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 05:47:24 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 05:47:37 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 25840 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 05:47:37 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 05:47:40 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 05:47:40 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 156 ms. Found 12 JPA repository interfaces.
-2026-04-03 05:47:41 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 05:47:41 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 05:47:41 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 05:47:41 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 05:47:42 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 4734 ms
-2026-04-03 05:47:42 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 05:47:43 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@59313495
-2026-04-03 05:47:43 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 05:47:43 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 05:47:43 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.050s)
-2026-04-03 05:47:43 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 05:47:43 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 05:47:45 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 05:47:47 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 05:47:47 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 05:47:49 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 05:47:52 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 05:47:52 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 05:47:52 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 16.405 seconds (process running for 17.49)
-2026-04-03 05:48:00 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 05:48:00 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 05:48:00 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 05:48:00 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 05:48:00 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 05:48:10 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 24948 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 05:48:10 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 05:48:14 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 05:48:15 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 360 ms. Found 12 JPA repository interfaces.
-2026-04-03 05:48:16 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 05:48:16 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 05:48:16 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 05:48:16 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 05:48:17 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 6370 ms
-2026-04-03 05:48:17 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 05:48:18 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1d637673
-2026-04-03 05:48:18 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 05:48:18 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 05:48:18 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.103s)
-2026-04-03 05:48:19 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 05:48:19 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 05:48:23 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 05:48:26 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 05:48:26 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 05:48:32 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 05:48:35 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 05:48:35 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 05:48:35 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 25.727 seconds (process running for 27.231)
-2026-04-03 05:51:12 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-04-03 05:51:12 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-04-03 05:51:12 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Completed initialization in 149 ms
-2026-04-03 05:51:14 INFO  [http-nio-8080-exec-2] c.e.E.s.i.LoanApplicationServiceImpl - New Loan Application ebe5a071-9ad3-41c9-990c-3348b673165e created for borrower new@gmail.com
-2026-04-03 05:51:14 INFO  [task-2] c.e.E.service.impl.AuditServiceImpl - System Audit Logged: Automated process performed CREATE on APPLICATION ID: ebe5a071-9ad3-41c9-990c-3348b673165e
-2026-04-03 05:51:22 INFO  [task-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to new@gmail.com
-2026-04-03 05:52:22 INFO  [http-nio-8080-exec-5] c.e.E.s.i.LoanApplicationServiceImpl - New Loan Application 6e331c23-6258-4cca-aac6-04659d4f64ae created for borrower new@gmail.com
-2026-04-03 05:52:22 INFO  [task-4] c.e.E.service.impl.AuditServiceImpl - System Audit Logged: Automated process performed CREATE on APPLICATION ID: 6e331c23-6258-4cca-aac6-04659d4f64ae
-2026-04-03 05:52:37 INFO  [task-3] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to new@gmail.com
-2026-04-03 05:52:50 INFO  [http-nio-8080-exec-7] c.e.E.s.i.LoanApplicationServiceImpl - New Loan Application 50134f7a-4a64-4aad-807a-bd409d591f74 created for borrower new@gmail.com
-2026-04-03 05:52:50 INFO  [task-6] c.e.E.service.impl.AuditServiceImpl - System Audit Logged: Automated process performed CREATE on APPLICATION ID: 50134f7a-4a64-4aad-807a-bd409d591f74
-2026-04-03 05:52:56 INFO  [task-5] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to new@gmail.com
-2026-04-03 06:07:55 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 06:07:55 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 06:07:55 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 06:07:55 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 06:07:55 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 06:08:09 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 16048 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 06:08:09 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 06:08:10 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 06:08:10 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 124 ms. Found 12 JPA repository interfaces.
-2026-04-03 06:08:11 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 06:08:11 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 06:08:11 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 06:08:11 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 06:08:11 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2671 ms
-2026-04-03 06:08:12 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 06:08:12 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@636dbfe7
-2026-04-03 06:08:12 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 06:08:12 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 06:08:12 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.055s)
-2026-04-03 06:08:13 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 06:08:13 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 06:08:14 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 06:08:16 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 06:08:16 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 06:08:17 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 06:08:19 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 06:08:19 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 06:08:19 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 11.698 seconds (process running for 12.64)
-2026-04-03 06:34:37 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 06:34:37 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 06:34:37 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 06:34:37 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 06:34:37 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 06:38:23 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 620 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 06:38:23 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 06:38:25 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 06:38:25 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 177 ms. Found 12 JPA repository interfaces.
-2026-04-03 06:38:26 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 06:38:26 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 06:38:26 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 06:38:26 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 06:38:26 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2856 ms
-2026-04-03 06:38:26 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 06:38:27 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4a04ca74
-2026-04-03 06:38:27 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 06:38:27 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 06:38:27 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.113s)
-2026-04-03 06:38:27 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 06:38:27 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 06:38:30 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 06:38:34 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 06:38:35 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 06:38:38 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 06:38:41 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 06:38:41 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 06:38:41 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 19.205 seconds (process running for 20.204)
-2026-04-03 06:40:13 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-04-03 06:40:13 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-04-03 06:40:13 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 102 ms
-2026-04-03 06:40:14 INFO  [http-nio-8080-exec-1] c.e.E.controller.auth.AuthController - Register request: neww@gmail.com
-2026-04-03 06:40:26 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - Register request: neww@gmail.com
-2026-04-03 06:40:33 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - Register request: neww@gmail.com
-2026-04-03 06:40:33 INFO  [http-nio-8080-exec-7] c.e.E.service.impl.AuthServiceImpl - User USR000006 has been created
-2026-04-03 06:40:33 INFO  [task-2] c.e.E.service.impl.AuditServiceImpl - System Audit Logged: Automated process performed CREATE on USER ID: 459a7e2a-e619-446f-93d4-83f13b9911c2
-2026-04-03 06:40:41 INFO  [task-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to neww@gmail.com
-2026-04-03 06:43:49 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 06:43:49 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 06:43:49 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 06:43:49 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 06:43:49 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 07:54:58 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 23376 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 07:54:58 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 07:55:06 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 07:55:07 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 378 ms. Found 12 JPA repository interfaces.
-2026-04-03 07:55:10 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 07:55:10 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 11646 ms
-2026-04-03 07:55:11 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 07:55:25 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 14776 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 07:55:25 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 07:55:33 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 07:55:34 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 465 ms. Found 12 JPA repository interfaces.
-2026-04-03 07:55:38 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 07:55:38 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 07:55:38 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 07:55:38 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 07:55:39 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 13894 ms
-2026-04-03 07:55:40 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 07:55:41 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@58182b96
-2026-04-03 07:55:41 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 07:55:41 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 07:55:41 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.153s)
-2026-04-03 07:55:41 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 07:55:41 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 07:55:45 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 07:55:53 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 07:55:53 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 07:55:54 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 07:55:57 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 07:55:57 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 07:55:57 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 35.894 seconds (process running for 40.488)
-2026-04-03 07:55:59 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-04-03 07:55:59 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-04-03 07:55:59 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
-2026-04-03 09:08:49 INFO  [scheduling-1] c.e.E.s.PaymentReminderScheduler - >>>> Starting Daily Payment Reminder Job for due date: 2026-04-06
-2026-04-03 09:09:45 INFO  [scheduling-1] c.e.E.s.PaymentReminderScheduler - No upcoming payments found for reminder today.
-2026-04-03 09:14:48 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 09:14:48 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 09:14:48 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 09:14:48 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 09:14:48 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 09:14:59 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 22960 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 09:14:59 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 09:15:01 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 09:15:02 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 162 ms. Found 12 JPA repository interfaces.
-2026-04-03 09:15:03 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 09:15:03 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 09:15:03 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 09:15:03 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 09:15:03 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 3391 ms
-2026-04-03 09:15:03 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 09:15:04 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@443af394
-2026-04-03 09:15:04 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 09:15:04 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 09:15:04 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
-2026-04-03 09:15:04 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.036s)
-2026-04-03 09:15:04 INFO  [main] org.flywaydb.core.Flyway - All configured schemas are empty; baseline operation skipped. A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended.
-2026-04-03 09:15:04 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
-2026-04-03 09:15:04 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
-2026-04-03 09:15:04 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - initial schema"
-2026-04-03 09:15:05 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - Add Partial Payment Support"
-2026-04-03 09:15:05 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - Add New LoanApplication Status"
-2026-04-03 09:15:05 INFO  [main] o.f.core.internal.command.DbMigrate - Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:00.474s)
-2026-04-03 09:15:06 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 09:15:09 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 09:15:10 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 09:15:12 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 09:15:16 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 09:15:16 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 09:15:16 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 18.24 seconds (process running for 20.536)
-2026-04-03 09:15:17 INFO  [main] c.e.EMILoan.config.DataInitializer - Initialized first admin user: admin@loan.com with code: USR000001
-2026-04-03 09:15:35 INFO  [http-nio-8080-exec-5] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-04-03 09:15:35 INFO  [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-04-03 09:15:35 INFO  [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet - Completed initialization in 5 ms
-2026-04-03 09:15:35 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - Login request: admin@loan.com
-2026-04-03 09:15:36 INFO  [http-nio-8080-exec-5] c.e.E.service.impl.AuthServiceImpl - Staff Login detected: admin@loan.com
-2026-04-03 09:15:42 INFO  [task-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to admin@loan.com
-2026-04-03 09:18:09 INFO  [task-3] c.e.E.service.impl.AuditServiceImpl - System Audit Logged: Automated process performed CREATE on USER ID: f1c2197d-5dec-4fde-9dc8-ad3d9a31b808
-2026-04-03 09:18:14 INFO  [task-2] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to 22ce259.om.kariya@vvpedulink.ac.in
-2026-04-03 09:20:01 INFO  [task-5] c.e.E.service.impl.AuditServiceImpl - System Audit Logged: Automated process performed CREATE on USER ID: 1ad92ecc-436c-4383-997a-b8cc22ce9a01
-2026-04-03 09:20:05 INFO  [task-4] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to om.kariya@gmail.com
-2026-04-03 09:22:10 INFO  [http-nio-8080-exec-9] c.e.E.s.impl.EmployeeServiceImpl - Updated salary for employee USR000003
-2026-04-03 09:22:10 INFO  [http-nio-8080-exec-9] c.e.E.s.impl.EmployeeServiceImpl - Updated active status for employee USR000003 to true
-2026-04-03 09:38:55 INFO  [http-nio-8080-exec-10] c.e.E.controller.auth.AuthController - Login request: admin@loan.com
-2026-04-03 09:38:55 INFO  [http-nio-8080-exec-10] c.e.E.service.impl.AuthServiceImpl - Staff Login detected: admin@loan.com
-2026-04-03 09:39:00 INFO  [task-6] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to admin@loan.com
-2026-04-03 09:39:29 INFO  [http-nio-8080-exec-1] c.e.E.controller.auth.AuthController - Register request: odk1572@gmail.com
-2026-04-03 09:39:29 INFO  [http-nio-8080-exec-1] c.e.E.service.impl.AuthServiceImpl - User USR000004 has been created
-2026-04-03 09:39:29 INFO  [task-8] c.e.E.service.impl.AuditServiceImpl - System Audit Logged: Automated process performed CREATE on USER ID: 54edc933-cfa9-4915-9604-83e9f9e8ed81
-2026-04-03 09:39:33 INFO  [task-7] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
-2026-04-03 09:39:50 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - Login request: odk1572@gmail.com
-2026-04-03 09:39:54 INFO  [task-9] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
-2026-04-03 09:41:25 INFO  [http-nio-8080-exec-6] c.e.E.s.i.LoanApplicationServiceImpl - New Loan Application 41f25ad2-42d8-4962-9eb0-bcb477c8cf32 created for borrower odk1572@gmail.com
-2026-04-03 09:41:25 INFO  [task-11] c.e.E.service.impl.AuditServiceImpl - System Audit Logged: Automated process performed CREATE on APPLICATION ID: 41f25ad2-42d8-4962-9eb0-bcb477c8cf32
-2026-04-03 09:41:29 INFO  [task-10] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
-2026-04-03 09:42:09 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - Login request: 22ce259.om.kariya@vvpedulink.ac.in
-2026-04-03 09:42:09 INFO  [http-nio-8080-exec-8] c.e.E.service.impl.AuthServiceImpl - Staff Login detected: 22ce259.om.kariya@vvpedulink.ac.in
-2026-04-03 09:42:13 INFO  [task-12] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to 22ce259.om.kariya@vvpedulink.ac.in
-2026-04-03 09:44:01 INFO  [task-13] c.e.E.service.impl.AuditServiceImpl - Audit Logged: 22ce259.om.kariya@vvpedulink.ac.in performed APPROVED on APPLICATION ID: 41f25ad2-42d8-4962-9eb0-bcb477c8cf32
-2026-04-03 09:44:01 INFO  [http-nio-8080-exec-4] c.e.E.service.impl.EmiServiceImpl - Financial Event: Generated 5 installments for Loan LAN000001
-2026-04-03 09:44:01 INFO  [http-nio-8080-exec-4] c.e.E.service.impl.LoanServiceImpl - Successfully generated Loan 68cb5cbc-55a9-462e-99cc-92f5e5ed41cc (Code: LAN000001) for application 41f25ad2-42d8-4962-9eb0-bcb477c8cf32
-2026-04-03 09:44:05 INFO  [task-15] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
-2026-04-03 09:46:47 INFO  [http-nio-8080-exec-1] c.e.E.s.payment.CardPaymentStrategy - Initiating Payment Gateway Tokenization for Card...
-2026-04-03 09:46:47 INFO  [http-nio-8080-exec-1] c.e.E.s.payment.CardPaymentStrategy - Amount: ₹5000
-2026-04-03 09:46:47 INFO  [http-nio-8080-exec-1] c.e.E.s.payment.CardPaymentStrategy - Cardholder: John Doe
-2026-04-03 09:46:47 INFO  [http-nio-8080-exec-1] c.e.E.s.payment.CardPaymentStrategy - Card Number: **** **** **** 3456
-2026-04-03 09:46:47 INFO  [http-nio-8080-exec-1] c.e.E.s.payment.CardPaymentStrategy - Simulating Visa/Mastercard Network Response... SUCCESS.
-2026-04-03 09:46:47 INFO  [http-nio-8080-exec-1] c.e.E.s.impl.PaymentServiceImpl - EMI #1 for Loan LAN000001 is PARTIALLY PAID. Remaining: ₹5020.83
-2026-04-03 09:46:47 INFO  [task-16] c.e.E.service.impl.AuditServiceImpl - Audit Logged: odk1572@gmail.com performed UPDATE on LOAN ID: 68cb5cbc-55a9-462e-99cc-92f5e5ed41cc
-2026-04-03 09:46:52 INFO  [task-17] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
-2026-04-03 09:47:37 INFO  [http-nio-8080-exec-5] c.e.E.s.payment.CardPaymentStrategy - Initiating Payment Gateway Tokenization for Card...
-2026-04-03 09:47:37 INFO  [http-nio-8080-exec-5] c.e.E.s.payment.CardPaymentStrategy - Amount: ₹5020.83
-2026-04-03 09:47:37 INFO  [http-nio-8080-exec-5] c.e.E.s.payment.CardPaymentStrategy - Cardholder: John Doe
-2026-04-03 09:47:37 INFO  [http-nio-8080-exec-5] c.e.E.s.payment.CardPaymentStrategy - Card Number: **** **** **** 3456
-2026-04-03 09:47:37 INFO  [http-nio-8080-exec-5] c.e.E.s.payment.CardPaymentStrategy - Simulating Visa/Mastercard Network Response... SUCCESS.
-2026-04-03 09:47:37 INFO  [http-nio-8080-exec-5] c.e.E.s.impl.PaymentServiceImpl - EMI #1 for Loan LAN000001 is now FULLY PAID.
-2026-04-03 09:47:37 INFO  [task-18] c.e.E.service.impl.AuditServiceImpl - Audit Logged: odk1572@gmail.com performed UPDATE on LOAN ID: 68cb5cbc-55a9-462e-99cc-92f5e5ed41cc
-2026-04-03 09:47:41 INFO  [task-19] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
-2026-04-03 09:49:08 INFO  [http-nio-8080-exec-9] c.e.E.s.payment.CardPaymentStrategy - Initiating Payment Gateway Tokenization for Card...
-2026-04-03 09:49:08 INFO  [http-nio-8080-exec-9] c.e.E.s.payment.CardPaymentStrategy - Amount: ₹4500
-2026-04-03 09:49:08 INFO  [http-nio-8080-exec-9] c.e.E.s.payment.CardPaymentStrategy - Cardholder: John Doe
-2026-04-03 09:49:08 INFO  [http-nio-8080-exec-9] c.e.E.s.payment.CardPaymentStrategy - Card Number: **** **** **** 3456
-2026-04-03 09:49:08 INFO  [http-nio-8080-exec-9] c.e.E.s.payment.CardPaymentStrategy - Simulating Visa/Mastercard Network Response... SUCCESS.
-2026-04-03 09:49:08 INFO  [http-nio-8080-exec-9] c.e.E.s.impl.PaymentServiceImpl - EMI #2 for Loan LAN000001 is PARTIALLY PAID. Remaining: ₹5520.83
-2026-04-03 09:49:08 INFO  [task-20] c.e.E.service.impl.AuditServiceImpl - Audit Logged: odk1572@gmail.com performed UPDATE on LOAN ID: 68cb5cbc-55a9-462e-99cc-92f5e5ed41cc
-2026-04-03 09:49:12 INFO  [task-21] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
-2026-04-03 09:50:41 INFO  [http-nio-8080-exec-3] c.e.E.s.payment.CardPaymentStrategy - Initiating Payment Gateway Tokenization for Card...
-2026-04-03 09:50:41 INFO  [http-nio-8080-exec-3] c.e.E.s.payment.CardPaymentStrategy - Amount: ₹35583.32
-2026-04-03 09:50:41 INFO  [http-nio-8080-exec-3] c.e.E.s.payment.CardPaymentStrategy - Cardholder: John Doe
-2026-04-03 09:50:41 INFO  [http-nio-8080-exec-3] c.e.E.s.payment.CardPaymentStrategy - Card Number: **** **** **** 3456
-2026-04-03 09:50:41 INFO  [http-nio-8080-exec-3] c.e.E.s.payment.CardPaymentStrategy - Simulating Visa/Mastercard Network Response... SUCCESS.
-2026-04-03 09:50:41 INFO  [http-nio-8080-exec-3] c.e.E.s.impl.PaymentServiceImpl - Foreclosure payment of ₹35583.32 successful for Loan LAN000001
-2026-04-03 09:50:41 INFO  [task-22] c.e.E.service.impl.AuditServiceImpl - Audit Logged: odk1572@gmail.com performed UPDATE on LOAN ID: 68cb5cbc-55a9-462e-99cc-92f5e5ed41cc
-2026-04-03 09:50:41 INFO  [http-nio-8080-exec-3] c.e.E.s.impl.PaymentServiceImpl - Waived and deleted 3 future EMI records for foreclosed loan.
-2026-04-03 09:50:41 INFO  [http-nio-8080-exec-3] c.e.E.s.impl.PaymentServiceImpl - Loan LAN000001 successfully foreclosed and closed.
-2026-04-03 09:50:45 INFO  [task-23] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
-2026-04-03 09:50:45 INFO  [task-24] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
-2026-04-03 10:15:16 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 10:15:16 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 10:15:16 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 10:15:16 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 10:15:16 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 10:15:27 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 26032 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 10:15:27 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 10:15:28 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 10:15:28 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 120 ms. Found 12 JPA repository interfaces.
-2026-04-03 10:15:29 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 10:15:29 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 10:15:29 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 10:15:29 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 10:15:29 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2342 ms
-2026-04-03 10:15:30 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 10:15:30 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@443af394
-2026-04-03 10:15:30 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 10:15:30 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 10:15:30 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.064s)
-2026-04-03 10:15:31 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 10:15:31 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 10:15:32 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 10:15:34 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 10:15:34 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 10:15:35 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 10:15:37 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 10:15:37 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 10:15:37 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 10.54 seconds (process running for 11.574)
-2026-04-03 10:15:53 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-04-03 10:15:53 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-04-03 10:15:53 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2026-04-03 10:21:15 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 10:21:15 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 10:21:15 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 10:21:15 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 10:21:15 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 10:21:26 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 3124 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 10:21:26 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 10:21:27 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 10:21:28 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 142 ms. Found 12 JPA repository interfaces.
-2026-04-03 10:21:28 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 10:21:28 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 10:21:28 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 10:21:28 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 10:21:28 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2314 ms
-2026-04-03 10:21:29 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 10:21:29 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@18b40fe6
-2026-04-03 10:21:29 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 10:21:29 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 10:21:29 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.036s)
-2026-04-03 10:21:30 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 10:21:30 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 10:21:31 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 10:21:33 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 10:21:33 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 10:21:34 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 10:21:38 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 10:21:38 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 10:21:38 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 12.677 seconds (process running for 13.733)
-2026-04-03 10:24:16 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2026-04-03 10:24:17 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
-2026-04-03 10:24:17 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 10:24:17 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2026-04-03 10:24:17 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2026-04-03 10:24:25 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 23692 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 10:24:25 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 10:24:28 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 10:24:28 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 153 ms. Found 12 JPA repository interfaces.
-2026-04-03 10:24:29 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 10:24:29 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 10:24:29 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 10:24:29 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 10:24:30 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 4031 ms
-2026-04-03 10:24:30 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 10:24:31 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@734f8317
-2026-04-03 10:24:31 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 10:24:31 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 10:24:31 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.074s)
-2026-04-03 10:24:31 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 10:24:31 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 10:24:33 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 10:24:38 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 10:24:38 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 10:24:42 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 10:24:47 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 10:24:47 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 10:24:47 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 23.157 seconds (process running for 25.221)
-2026-04-03 10:24:51 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-04-03 10:24:51 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-04-03 10:24:51 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
-2026-04-03 10:34:44 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 22356 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
-2026-04-03 10:34:44 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
-2026-04-03 10:34:46 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-04-03 10:34:46 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 107 ms. Found 12 JPA repository interfaces.
-2026-04-03 10:34:47 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
-2026-04-03 10:34:47 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
-2026-04-03 10:34:47 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
-2026-04-03 10:34:47 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
-2026-04-03 10:34:47 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2931 ms
-2026-04-03 10:34:47 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2026-04-03 10:34:48 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@26f75d9c
-2026-04-03 10:34:48 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2026-04-03 10:34:48 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
-2026-04-03 10:34:48 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.038s)
-2026-04-03 10:34:48 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
-2026-04-03 10:34:48 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
-2026-04-03 10:34:50 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-04-03 10:34:52 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-04-03 10:34:52 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-04-03 10:34:53 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-04-03 10:34:58 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
-2026-04-03 10:34:58 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
-2026-04-03 10:34:58 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 14.797 seconds (process running for 17.301)
-2026-04-03 10:36:30 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-04-03 10:36:30 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2026-04-03 10:36:31 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 133 ms
-2026-04-03 10:36:49 INFO  [http-nio-8080-exec-4] c.e.E.controller.auth.AuthController - Register request: odk1572@gmail.com
-2026-04-03 10:37:09 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - Login request: odk1572@gmail.com
-2026-04-03 10:37:18 INFO  [task-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
+2026-04-04 09:30:40 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-04-04 09:30:40 INFO  [scheduling-1] c.e.E.scheduler.OverdueEmiScheduler - >>>> Starting Daily Overdue Detection Job for: 2026-04-04
+2026-04-04 09:30:40 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-04-04 09:30:40 INFO  [scheduling-1] c.e.E.scheduler.OverdueEmiScheduler - No new overdue EMIs detected today.
+2026-04-04 09:30:41 INFO  [scheduling-1] c.e.E.s.PaymentReminderScheduler - >>>> Starting Daily Payment Reminder Job for due date: 2026-04-07
+2026-04-04 09:30:41 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-04 09:30:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-04-04 09:30:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-04-04 09:31:00 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 2652 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
+2026-04-04 09:31:00 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-04 09:31:02 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-04 09:31:03 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 123 ms. Found 12 JPA repository interfaces.
+2026-04-04 09:31:03 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-04-04 09:31:03 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-04-04 09:31:03 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-04-04 09:31:03 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-04-04 09:31:03 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2934 ms
+2026-04-04 09:31:04 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-04-04 09:31:04 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2ffb0d10
+2026-04-04 09:31:04 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-04-04 09:31:04 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
+2026-04-04 09:31:04 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.072s)
+2026-04-04 09:31:05 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
+2026-04-04 09:31:05 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2026-04-04 09:31:07 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-04 09:31:09 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-04 09:31:10 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-04 09:31:11 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-04 09:31:12 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-04-04 09:31:13 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-04-04 09:31:13 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 13.572 seconds (process running for 15.891)
+2026-04-04 09:31:38 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-04 09:31:38 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-04-04 09:31:38 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Completed initialization in 29 ms
+2026-04-04 09:31:38 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - Login request: odk1572@gmail.com
+2026-04-04 09:31:46 INFO  [task-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com
+2026-04-04 09:32:27 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-04-04 09:32:27 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-04-04 09:32:28 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-04 09:32:28 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-04-04 09:32:28 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-04-04 09:33:00 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 3812 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
+2026-04-04 09:33:00 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-04 09:33:07 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-04 09:33:08 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 325 ms. Found 12 JPA repository interfaces.
+2026-04-04 09:33:11 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-04-04 09:33:11 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-04-04 09:33:11 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-04-04 09:33:11 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-04-04 09:33:13 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 12508 ms
+2026-04-04 09:33:14 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-04-04 09:33:15 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@393ae7a0
+2026-04-04 09:33:15 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-04-04 09:33:15 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
+2026-04-04 09:33:15 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.122s)
+2026-04-04 09:33:15 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 3
+2026-04-04 09:33:15 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2026-04-04 09:33:20 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-04 09:33:26 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-04 09:33:26 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-04 09:33:28 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-04 09:33:32 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-04-04 09:33:32 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-04-04 09:33:32 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 34.237 seconds (process running for 36.374)
+2026-04-04 09:33:39 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-04 09:33:39 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-04-04 09:33:39 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2026-04-04 09:33:39 INFO  [http-nio-8080-exec-1] c.e.E.controller.auth.AuthController - Login request: odk1572@gmail.com
+2026-04-04 09:33:48 INFO  [task-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk1572@gmail.com

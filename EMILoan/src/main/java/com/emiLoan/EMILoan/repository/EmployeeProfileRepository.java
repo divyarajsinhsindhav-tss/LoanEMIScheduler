@@ -14,9 +14,5 @@ import java.util.UUID;
 public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile, UUID> {
     Optional<EmployeeProfile> findByUser_Email(String email);
 
-    @Modifying
-    @Transactional
-    void deleteByUser(User user);
-
     Optional<EmployeeProfile> findByUser_UserCode(String userCode);
 }
