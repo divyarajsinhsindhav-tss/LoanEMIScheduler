@@ -1,0 +1,1 @@
+DROP TRIGGER IF EXISTS no_delete_notifications ON notifications;

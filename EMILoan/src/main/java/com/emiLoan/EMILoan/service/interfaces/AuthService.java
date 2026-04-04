@@ -26,4 +26,6 @@ public interface AuthService {
 
     AuthResponse verifyLoginOtp(String email, String otpCode);
 
+    RegistrationResponse verifyRegistrationOtp(String email, String otpCode);
+
 }

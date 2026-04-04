@@ -22,10 +22,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     boolean existsByPerson_PanHashAndRole_RoleName(String panHash, RoleName roleName);
 
-//    @Modifying
-//    @Transactional
-//    @Query(value = "DELETE FROM users WHERE is_active = false " +
-//            "AND is_deleted = false " +
-//            "AND created_at < (NOW() - INTERVAL '5 minutes')", nativeQuery = true)
-//    void hardDeleteUnverifiedAccounts();
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM users WHERE is_active = false " +
+            "AND is_deleted = false " +
+            "AND created_at < :cutoff", nativeQuery = true)
+    void hardDeleteUnverifiedAccounts(@Param("cutoff") LocalDateTime cutoff);
+
 }
