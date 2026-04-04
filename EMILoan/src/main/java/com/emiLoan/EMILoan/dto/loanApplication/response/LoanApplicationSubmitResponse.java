@@ -2,6 +2,7 @@ package com.emiLoan.EMILoan.dto.loanApplication.response;
 
 
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoanApplicationSubmitResponse {
 
     private String applicationCode;

@@ -258,3 +258,5 @@ Caused by: org.postgresql.util.PSQLException: ERROR: relation "users" does not e
 	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java)
 	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:271)
 	... 146 common frames omitted
+2026-04-04 16:03:30 ERROR [http-nio-8080-exec-2] c.e.E.e.GlobalExceptionHandler - ApplicationException: ErrorResponse(status=422, error=Unprocessable Entity, message=Email already exists, path=/api/v1/auth/register/borrower, timestamp=2026-04-04T10:33:30.509823700Z, fieldErrors={code=BUSINESS_RULE_VIOLATION}, details=null)
+2026-04-04 16:03:37 ERROR [http-nio-8080-exec-3] c.e.E.e.GlobalExceptionHandler - ApplicationException: ErrorResponse(status=422, error=Unprocessable Entity, message=Registration failed: A borrower account with this PAN card is already registered., path=/api/v1/auth/register/borrower, timestamp=2026-04-04T10:33:37.011650800Z, fieldErrors={code=BUSINESS_RULE_VIOLATION}, details=null)
