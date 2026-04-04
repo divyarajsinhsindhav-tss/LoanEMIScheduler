@@ -28,4 +28,5 @@ public final class AppConstants {
     public static final String ALGORITHM = "SHA-256";
     public static final BigDecimal LOAN_REQUEST_AMOUNT_THRESHOLD = new BigDecimal("3000000.00");
     public static final int LONG_TERM_TENURES_DTI = 24;
+    public static final int OTP_EXPIRY_MINUTES = 5;
 }

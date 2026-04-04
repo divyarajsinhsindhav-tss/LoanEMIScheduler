@@ -8,5 +8,6 @@ public enum AuditAction {
     DELETE,
     STRATEGY_OVERRIDE,
     UPDATE,
-    PAYMENT_FAILED
+    PAYMENT_FAILED,
+    LOGIN
 }

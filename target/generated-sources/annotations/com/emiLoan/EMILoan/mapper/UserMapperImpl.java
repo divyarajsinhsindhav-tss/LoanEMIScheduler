@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-04-04T11:16:37+0530",
+    date = "2026-04-04T13:17:27+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.10 (Amazon.com Inc.)"
 )
 @Component
@@ -103,11 +103,12 @@ public class UserMapperImpl implements UserMapper {
 
         RegistrationResponse.RegistrationResponseBuilder registrationResponse = RegistrationResponse.builder();
 
+        if ( user.getIsActive() != null ) {
+            registrationResponse.verified( user.getIsActive() );
+        }
         registrationResponse.userId( user.getUserId() );
         registrationResponse.userCode( user.getUserCode() );
-        registrationResponse.firstName( user.getFirstName() );
         registrationResponse.email( user.getEmail() );
-        registrationResponse.isActive( user.getIsActive() );
 
         registrationResponse.role( user.getRole() != null ? user.getRole().getRoleName().name() : "BORROWER" );
 

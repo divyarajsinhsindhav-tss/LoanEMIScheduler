@@ -1,21 +1,23 @@
 package com.emiLoan.EMILoan.dto.user;
 
-import com.emiLoan.EMILoan.common.constants.AppConstants;
-import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserShortResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-import static com.emiLoan.EMILoan.common.constants.AppConstants.BEARER_PREFIX;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthResponse {
+
+    private String message;
+    private String email;
+
     private String accessToken;
-    private String tokenType = BEARER_PREFIX;
+    private String tokenType;
     private UserShortResponse user;
 }

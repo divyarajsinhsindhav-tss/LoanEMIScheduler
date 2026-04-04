@@ -50,6 +50,8 @@ public interface UserMapper {
     UserResponse toResponse(User user);
 
     @Mapping(target = "role", expression = "java(user.getRole() != null ? user.getRole().getRoleName().name() : \"BORROWER\")")
+    @Mapping(target = "message", ignore = true)
+    @Mapping(target = "verified", source = "isActive")
     RegistrationResponse toRegistrationResponse(User user);
 
     @Mapping(target = "role", expression = "java(user.getRole() != null ? user.getRole().getRoleName().name() : null)")

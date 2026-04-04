@@ -224,4 +224,34 @@ public class NotificationServiceImpl implements NotificationService {
                 "Payment Failed - Action Required for Loan " + payment.getLoan().getLoanCode(),
                 "payment-failed", props);
     }
+
+    @Override
+    @Transactional
+    @Async
+    public void sendRegistrationOtp(String email, String firstName, String otp) {
+        Map<String, Object> props = new HashMap<>();
+        props.put("name", firstName);
+        props.put("otp", otp);
+        props.put("expiry", "5 minutes");
+        props.put("purpose", "Creating your EMI Loan Account");
+
+        User tempUser = User.builder().email(email).firstName(firstName).build();
+
+        sendEmail(tempUser, null, null, "Verify Your Email - OTP: " + otp,
+                "otp-email", props);
+    }
+
+    @Override
+    @Transactional
+    @Async
+    public void sendLoginOtp(User user, String otp) {
+        Map<String, Object> props = new HashMap<>();
+        props.put("name", user.getFirstName());
+        props.put("otp", otp);
+        props.put("expiry", "5 minutes");
+        props.put("purpose", "Logging into your account");
+
+        sendEmail(user, null, null, "Your Login OTP: " + otp,
+                "otp-email", props);
+    }
 }

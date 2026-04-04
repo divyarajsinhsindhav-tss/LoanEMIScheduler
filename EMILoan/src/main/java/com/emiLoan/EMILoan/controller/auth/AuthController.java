@@ -4,6 +4,7 @@ import com.emiLoan.EMILoan.common.response.ApiResponse;
 import com.emiLoan.EMILoan.dto.user.AuthResponse;
 import com.emiLoan.EMILoan.dto.user.request.BorrowerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoginRequest;
+import com.emiLoan.EMILoan.dto.user.request.VerifyOtpRequest;
 import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.service.interfaces.AuthService;
@@ -31,11 +32,12 @@ public class AuthController {
             @Valid @RequestBody LoginRequest request,
             HttpServletRequest httpServletRequest
     ) {
-        log.info("Login request: {}", request.getEmail());
+        log.info("Login attempt for email: {}", request.getEmail());
         AuthResponse response = authService.login(request);
+
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
-                "Login successful",
+                response.getMessage(),
                 httpServletRequest.getRequestURI(),
                 response
         ));
@@ -46,15 +48,33 @@ public class AuthController {
             @Valid @RequestBody BorrowerRegistrationRequest request,
             HttpServletRequest httpServletRequest
     ) {
-        log.info("Register request: {}", request.getEmail());
+        log.info("New borrower registration request for email: {}", request.getEmail());
+
         RegistrationResponse response = authService.registerBorrower(request);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of(
                         HttpStatus.CREATED,
-                        "Borrower registered successfully",
+                        "Registration successful! Your account is now active. Please log in.",
                         httpServletRequest.getRequestURI(),
                         response
                 ));
+    }
+
+    @PostMapping("/verify-login")
+    public ResponseEntity<ApiResponse<AuthResponse>> verifyLogin(
+            @Valid @RequestBody VerifyOtpRequest request,
+            HttpServletRequest httpServletRequest
+    ) {
+        log.info("Verifying login OTP for: {}", request.getEmail());
+        AuthResponse response = authService.verifyLoginOtp(request.getEmail(), request.getOtpCode());
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "2FA Verification successful. Welcome back!",
+                httpServletRequest.getRequestURI(),
+                response
+        ));
     }
 
     @GetMapping("/me")

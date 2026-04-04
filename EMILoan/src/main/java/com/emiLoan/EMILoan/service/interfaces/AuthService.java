@@ -23,4 +23,7 @@ public interface AuthService {
     AuthResponse recoverAccount(LoginRequest request);
 
     RegistrationResponse registerLoanOfficer(LoanOfficerRegistrationRequest request);
+
+    AuthResponse verifyLoginOtp(String email, String otpCode);
+
 }

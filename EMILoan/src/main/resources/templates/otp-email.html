@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        .header {
+            background-color: #1a237e; /* Deep Bank Blue */
+            color: #ffffff;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+        .content {
+            padding: 40px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .content h2 {
+            color: #1a237e;
+            margin-top: 0;
+        }
+        .otp-container {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        .otp-code {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: 8px;
+            color: #1a237e;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .expiry-text {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 10px;
+        }
+        .footer {
+            background-color: #f1f3f5;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+        .warning {
+            font-size: 13px;
+            color: #e53e3e;
+            background-color: #fff5f5;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>EMI LOAN SYSTEM</h1>
+    </div>
+
+    <div class="content">
+        <h2>Verification Required</h2>
+        <p>Hi <strong th:text="${name}">User</strong>,</p>
+        <p>You are one step away from <span th:text="${purpose}">accessing your account</span>. Please use the following One-Time Password (OTP) to verify your identity:</p>
+
+        <div class="otp-container">
+            <div class="otp-code" th:text="${otp}">123456</div>
+            <div class="expiry-text">Valid for <span th:text="${expiry}">5 minutes</span></div>
+        </div>
+
+        <div class="warning">
+            <strong>Security Note:</strong> Never share this code with anyone, including our staff. We will never ask for your OTP over the phone or email.
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 EMI Loan System. All rights reserved.</p>
+        <p>If you did not request this code, please secure your account immediately.</p>
+    </div>
+</div>
+</body>
+</html>

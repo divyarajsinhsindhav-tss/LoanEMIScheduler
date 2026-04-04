@@ -14,6 +14,7 @@ import com.emiLoan.EMILoan.exceptions.AuthanticationException;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
 import com.emiLoan.EMILoan.mapper.UserMapper;
 import com.emiLoan.EMILoan.repository.*;
+import com.emiLoan.EMILoan.security.CustomUserDetails;
 import com.emiLoan.EMILoan.security.JwtTokenProvider;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import com.emiLoan.EMILoan.service.interfaces.AuthService;
@@ -25,10 +26,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.emiLoan.EMILoan.common.enums.OtpPurpose;
+import com.emiLoan.EMILoan.service.interfaces.OtpService;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -50,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final NotificationService notificationService;
     private final AuditService auditService;
+    private final OtpService otpService;
 
     private User getAuthenticatedActor() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -64,28 +73,24 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AuthanticationException("Email or password incorrect"));
 
-        Authentication authentication = authenticationManager.authenticate(
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtTokenProvider.generateToken(authentication);
+        String otp = otpService.generateAndSaveOtp(user.getEmail(), OtpPurpose.LOGIN);
+        notificationService.sendLoginOtp(user, otp);
 
-        notificationService.sendLoginNotification(user);
-
-        if (user.getRole().getRoleName() == RoleName.LOAN_OFFICER || user.getRole().getRoleName() == RoleName.ADMIN) {
-            log.info("Staff Login detected: {}", user.getEmail());
-        }
+        log.info("2FA Challenge initiated for user: {}", user.getEmail());
 
         return AuthResponse.builder()
-                .accessToken(token)
-                .tokenType("Bearer")
-                .user(userMapper.toShort(user))
+                .message("OTP sent to your registered email. Please verify to complete login.")
+                .email(user.getEmail())
                 .build();
     }
+
 
     @Override
     @Transactional
@@ -107,7 +112,9 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(role);
         user.setPerson(person);
+
         user.setIsActive(true);
+        user.setDeleted(false);
 
         User savedUser = userRepository.saveAndFlush(user);
         entityManager.refresh(savedUser);
@@ -121,12 +128,51 @@ public class AuthServiceImpl implements AuthService {
 
         notificationService.sendWelcomeEmail(savedUser);
 
-        UserResponse newState = userMapper.toResponse(savedUser);
         auditService.logAction(savedUser, AuditAction.CREATE, AuditEntityType.USER, savedUser.getUserId(),
-                "Borrower self-registered", null,newState);
+                "Borrower self-registered and account activated immediately", null, userMapper.toResponse(savedUser));
 
-        log.info("User {} has been created", savedUser.getUserCode());
-        return userMapper.toRegistrationResponse(savedUser);
+        log.info("User {} has been created and activated", savedUser.getUserCode());
+
+        RegistrationResponse response = userMapper.toRegistrationResponse(savedUser);
+        response.setMessage("Registration successful! You can now log in to your account.");
+        response.setVerified(true);
+
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public AuthResponse verifyLoginOtp(String email, String otpCode) {
+        otpService.verifyOtp(email, otpCode, OtpPurpose.LOGIN);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AuthanticationException("User not found after OTP verification"));
+
+        String roleName = user.getRole().getRoleName().name();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleName);
+
+        CustomUserDetails userDetails = CustomUserDetails.build(user);
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                List.of(authority)
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        notificationService.sendLoginNotification(user);
+
+        auditService.logAction(user, AuditAction.LOGIN, AuditEntityType.USER,
+                user.getUserId(), "User successfully completed 2FA login", null, null);
+
+        return AuthResponse.builder()
+                .accessToken(token)
+                .tokenType("Bearer")
+                .user(userMapper.toShort(user))
+                .build();
     }
 
     @Override
@@ -172,6 +218,7 @@ public class AuthServiceImpl implements AuthService {
         return userMapper.toRegistrationResponse(savedUser);
     }
 
+
     private PersonIdentity getOrCreatePersonIdentity(String pan) {
         String panHash = panHashingUtil.hash(pan);
         return personIdentityRepository.findByPanHash(panHash)
@@ -193,7 +240,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessRuleException("User not found with email: " + email));
 
-        if (!user.getIsActive()) {
+        if (user.isDeleted()) {
             throw new BusinessRuleException("Account is already deleted.");
         }
 
@@ -202,6 +249,14 @@ public class AuthServiceImpl implements AuthService {
         UserResponse oldState = userMapper.toResponse(user);
 
         user.setIsActive(false);
+        user.setDeleted(true);
+        user.setDeletedAt(LocalDateTime.now());
+
+        User currentAdmin = getAuthenticatedActor();
+        if (currentAdmin != null) {
+            user.setDeletedBy(currentAdmin.getUserId());
+        }
+
         userRepository.save(user);
 
         if (user.getRole().getRoleName() == RoleName.LOAN_OFFICER || user.getRole().getRoleName() == RoleName.ADMIN) {
@@ -213,7 +268,6 @@ public class AuthServiceImpl implements AuthService {
 
         UserResponse newState = userMapper.toResponse(user);
 
-        User currentAdmin = getAuthenticatedActor();
         auditService.logAction(currentAdmin, AuditAction.DELETE, AuditEntityType.USER, user.getUserId(),
                 "User account soft-deleted (Deactivated)", oldState, newState);
 
@@ -238,14 +292,17 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthanticationException("Email or password incorrect");
         }
 
-        if (user.getIsActive()) {
+        if (user.getIsActive() && !user.isDeleted()) {
             throw new BusinessRuleException("This account is already active. Please use the standard login page.");
         }
 
-        // Snapshot before changes
         UserResponse oldState = userMapper.toResponse(user);
 
         user.setIsActive(true);
+        user.setDeleted(false);
+        user.setDeletedAt(null);
+        user.setDeletedBy(null);
+
         userRepository.save(user);
 
         if (user.getRole().getRoleName() == RoleName.LOAN_OFFICER || user.getRole().getRoleName() == RoleName.ADMIN) {
@@ -260,7 +317,7 @@ public class AuthServiceImpl implements AuthService {
         auditService.logAction(user, AuditAction.UPDATE, AuditEntityType.USER, user.getUserId(),
                 "User recovered their deleted account", oldState, newState);
 
-        log.info("User {} account successfully recovered", user.getEmail());
+        log.info("User {} account successfully recovered and reactivated", user.getEmail());
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
