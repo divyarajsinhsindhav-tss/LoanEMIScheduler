@@ -3,9 +3,9 @@ package com.emiLoan.EMILoan.engine;
 import com.emiLoan.EMILoan.common.enums.EmiStatus;
 import com.emiLoan.EMILoan.entity.EmiSchedule;
 import com.emiLoan.EMILoan.entity.Loan;
-import com.emiLoan.EMILoan.strategy.EmiCalculationStrategy;
-import com.emiLoan.EMILoan.strategy.EmiRowData;
-import com.emiLoan.EMILoan.strategy.EmiStrategyFactory;
+import com.emiLoan.EMILoan.strategy.EMI.EmiCalculationStrategy;
+import com.emiLoan.EMILoan.strategy.EMI.EmiRowData;
+import com.emiLoan.EMILoan.strategy.EMI.EmiStrategyFactory;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,6 @@ class AmortizationEngineTest {
         loan.setStrategy("STANDARD");
     }
 
-    // Success
     @Test
     void buildSchedule_shouldGenerateScheduleSuccessfully() {
 
@@ -86,14 +85,12 @@ class AmortizationEngineTest {
         assertEquals(EmiStatus.PENDING, first.getStatus());
     }
 
-    // NULL LOAN
     @Test
     void buildSchedule_shouldThrowException_whenLoanIsNull() {
         assertThrows(IllegalArgumentException.class, () ->
                 engine.buildSchedule(null));
     }
 
-    // VERIFY STRATEGY CALL
     @Test
     void buildSchedule_shouldCallStrategyWithCorrectParams() {
 

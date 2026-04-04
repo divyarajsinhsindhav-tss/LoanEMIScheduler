@@ -68,12 +68,12 @@ class DtiCalculationEngineTest {
     // MAX CAP APPLIED
     @Test
     void calculate_shouldCapAtMaxDti() {
-        BigDecimal emi = new BigDecimal("90000");
+        BigDecimal emi = new BigDecimal("1000000");
         BigDecimal income = new BigDecimal("100000");
 
         BigDecimal result = engine.calculate(emi, income);
 
-        assertEquals(MAX_DB_DTI, result);
+        assertEquals(new BigDecimal("999.99"), result);
     }
 
     // ROUNDING CHECK

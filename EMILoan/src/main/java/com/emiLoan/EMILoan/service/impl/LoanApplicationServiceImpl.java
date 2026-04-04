@@ -1,6 +1,6 @@
 package com.emiLoan.EMILoan.service.impl;
 
-import com.emiLoan.EMILoan.common.constants.AppConstants;
+import static com.emiLoan.EMILoan.common.constants.AppConstants.*;
 import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
 import com.emiLoan.EMILoan.common.enums.AuditAction;
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
@@ -9,6 +9,8 @@ import com.emiLoan.EMILoan.common.enums.LoanStatus;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
+import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationSubmitResponse;
+import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationWithdrawResponse;
 import com.emiLoan.EMILoan.engine.DtiCalculationEngine;
 import com.emiLoan.EMILoan.engine.StrategySelectionEngine;
 import com.emiLoan.EMILoan.entity.*;
@@ -53,19 +55,40 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     private final EntityManager entityManager;
 
     private final NotificationService notificationService;
-    private final AuditService auditService; // Added AuditService
+    private final AuditService auditService;
+
 
     @Override
     @Transactional
-    public LoanApplicationResponse apply(LoanApplicationRequest request, String email) {
+    public LoanApplicationSubmitResponse apply(LoanApplicationRequest request, String email) {
+
+        if (request.getRequestedAmount().compareTo(LOAN_REQUEST_AMOUNT_THRESHOLD) > 0) {
+            throw new BusinessRuleException(
+                    "Application rejected: Requested amount of ₹" + request.getRequestedAmount() +
+                            " exceeds the maximum permissible threshold of ₹" + LOAN_REQUEST_AMOUNT_THRESHOLD
+            );
+        }
+
+        if (request.getTenureMonths() > LONG_TERM_TENURE_THRESHOLD) {
+            throw new BusinessRuleException(
+                    "Application rejected: Requested tenure of " + request.getTenureMonths() +
+                            " months exceeds the maximum permissible threshold of " + LONG_TERM_TENURE_THRESHOLD + " months."
+            );
+        }
+
         BorrowerProfile profile = borrowerProfileRepository.findByUser_EmailWithUser(email)
                 .orElseThrow(() -> new BusinessRuleException("Borrower profile not found for email: " + email));
 
-
         Long activeLoanCount = loanRepository.countActiveLoans(profile.getUser().getUserId(), LoanStatus.ACTIVE);
-        if (activeLoanCount >= AppConstants.MAX_ACTIVE_LOANS) {
+        Long pendingAppCount = applicationRepository.countByBorrower_UserIdAndStatus(
+                profile.getUser().getUserId(), ApplicationStatus.PENDING);
+
+        if ((activeLoanCount + pendingAppCount) >= MAX_ACTIVE_LOANS) {
             throw new BusinessRuleException(
-                    "Borrower cannot have more than " + AppConstants.MAX_ACTIVE_LOANS + " active loans at a time.");
+                    "Application rejected: You currently have " + activeLoanCount + " active loan(s) and " +
+                            pendingAppCount + " pending application(s). Processing this would exceed your maximum limit of " +
+                            MAX_ACTIVE_LOANS + " concurrent loans."
+            );
         }
 
         BigDecimal dtiRatio = dtiEngine.calculate(request.getExistingEmi(), profile.getMonthlyIncome());
@@ -77,7 +100,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         application.setSuggestedStrategy(suggestedStrategy);
         application.setExistingEmi(request.getExistingEmi());
 
-        if (AppConstants.STRATEGY_REJECTED.equalsIgnoreCase(suggestedStrategy)) {
+        if (STRATEGY_REJECTED.equalsIgnoreCase(suggestedStrategy)) {
             application.setStatus(ApplicationStatus.REJECTED);
         } else {
             application.setStatus(ApplicationStatus.PENDING);
@@ -86,22 +109,42 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         LoanApplication savedApplication = applicationRepository.save(application);
         entityManager.flush();
         entityManager.refresh(savedApplication);
+
         log.info("New Loan Application {} created for borrower {}", savedApplication.getApplicationId(), email);
+
+        LoanApplicationSubmitResponse responseDto = applicationMapper.toSubmitResponse(savedApplication);
 
         try {
             if (savedApplication.getStatus() == ApplicationStatus.REJECTED) {
                 notificationService.sendLoanRejected(profile.getUser(), savedApplication);
-                auditService.logSystemAction(AuditAction.REJECTED, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
+
+                auditService.logAction(
+                        profile.getUser(),
+                        AuditAction.REJECTED,
+                        AuditEntityType.APPLICATION,
+                        savedApplication.getApplicationId(),
+                        "Application auto-rejected based on Risk Strategy / DTI",
+                        null,
+                        responseDto
+                );
             } else {
                 notificationService.sendApplicationSubmitted(profile.getUser(), savedApplication);
-                auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.APPLICATION, savedApplication.getApplicationId());
+
+                auditService.logAction(
+                        profile.getUser(),
+                        AuditAction.CREATE,
+                        AuditEntityType.APPLICATION,
+                        savedApplication.getApplicationId(),
+                        "Borrower successfully submitted a new loan application",
+                        null,
+                        responseDto
+                );
             }
         } catch (Exception e) {
-            log.error("Failed to send notification or audit for app {}: {}", savedApplication.getApplicationId(),
-                    e.getMessage());
+            log.error("Failed to send notification or audit for app {}: {}", savedApplication.getApplicationId(), e.getMessage());
         }
 
-        return applicationMapper.toResponse(savedApplication);
+        return responseDto;
     }
 
     @Override
@@ -159,4 +202,46 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
                 .panLast2(profile.getUser().getPerson().getPanLast2())
                 .build();
     }
+
+    @Override
+    @Transactional
+    public LoanApplicationWithdrawResponse withdrawApplication(String applicationCode, String email) {
+        LoanApplication application = applicationRepository
+                .findByBorrowerEmailAndApplicationCode(email, applicationCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Application", applicationCode));
+
+        if (application.getStatus() != ApplicationStatus.PENDING) {
+            throw new BusinessRuleException(
+                    "Cannot withdraw application. It is currently in '" + application.getStatus() + "' state."
+            );
+        }
+
+        LoanApplicationWithdrawResponse oldState = applicationMapper.toWithdrawResponse(application);
+
+        application.setStatus(ApplicationStatus.WITHDRAWN);
+        LoanApplication savedApplication = applicationRepository.save(application);
+
+        LoanApplicationWithdrawResponse newState = applicationMapper.toWithdrawResponse(savedApplication);
+
+        log.info("Application {} was withdrawn by borrower {}", applicationCode, email);
+
+        auditService.logAction(
+                application.getBorrower(),
+                AuditAction.UPDATE,
+                AuditEntityType.APPLICATION,
+                savedApplication.getApplicationId(),
+                "Borrower voluntarily withdrew their pending loan application",
+                oldState,
+                newState
+        );
+
+        try {
+            notificationService.sendApplicationWithdrawn(savedApplication.getBorrower(), savedApplication);
+        } catch (Exception e) {
+            log.error("Failed to send withdrawal notification for app {}: {}", savedApplication.getApplicationId(), e.getMessage());
+        }
+
+        return newState;
+    }
+
 }

@@ -1,7 +1,6 @@
 package com.emiLoan.EMILoan.mapper;
 
 import com.emiLoan.EMILoan.dto.notification.NotificationResponse;
-import com.emiLoan.EMILoan.dto.notification.NotificationSummaryResponse;
 import com.emiLoan.EMILoan.entity.EmiSchedule;
 import com.emiLoan.EMILoan.entity.Loan;
 import com.emiLoan.EMILoan.entity.Notification;

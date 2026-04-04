@@ -3,16 +3,18 @@ package com.emiLoan.EMILoan.service.interfaces;
 
 import com.emiLoan.EMILoan.dto.emiSchedule.response.EmiScheduleResponse;
 import com.emiLoan.EMILoan.entity.Loan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import java.math.BigDecimal;
 
 public interface EmiService {
 
-    List<EmiScheduleResponse> getSchedule(String loanCode, String email);
+    EmiScheduleResponse getNextUpcomingEmi(String loanCode, String requesterEmail);
 
-    void generateAndSaveSchedule(Loan loan);
+    Page<EmiScheduleResponse> getSchedule(String loanCode, String requesterEmail,Pageable pageable);
 
-    void processOverdueEmis(LocalDate currentDate);
+    BigDecimal getForeclosureQuote(String loanCode, String requesterEmail) ;
+
+    void generateAndSaveSchedule(Loan loan,Pageable pageable);
 }

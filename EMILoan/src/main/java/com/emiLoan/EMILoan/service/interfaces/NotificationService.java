@@ -1,10 +1,7 @@
 package com.emiLoan.EMILoan.service.interfaces;
 
 
-import com.emiLoan.EMILoan.entity.EmiSchedule;
-import com.emiLoan.EMILoan.entity.Loan;
-import com.emiLoan.EMILoan.entity.LoanApplication;
-import com.emiLoan.EMILoan.entity.User;
+import com.emiLoan.EMILoan.entity.*;
 
 public interface NotificationService {
 
@@ -17,7 +14,20 @@ public interface NotificationService {
     void sendPaymentReminder(User user, EmiSchedule emi);
 
     void sendOverdueAlert(User user, EmiSchedule emi);
+
     void sendWelcomeEmail(User user);
+
     void sendLoanClosed(User user, Loan loan);
+
     void sendLoginNotification(User user);
+
+    void sendPaymentConfirmation(User user, Payment payment);
+
+    void sendPaymentFailed(User user, Payment payment);
+
+    void sendApplicationWithdrawn(User user, LoanApplication application);
+
+    void sendRegistrationOtp(String email, String firstName, String otp);
+
+    void sendLoginOtp(User user, String otp);
 }

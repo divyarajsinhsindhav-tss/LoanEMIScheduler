@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.emiLoan.EMILoan.common.constants.AppConstants.ANNUAL_STEP_UP_RATE;
+import static com.emiLoan.EMILoan.common.constants.AppConstants.*;
 
 @Component("STEP_UP")
 public class StepUpEmiStrategy implements EmiCalculationStrategy {
@@ -19,7 +19,7 @@ public class StepUpEmiStrategy implements EmiCalculationStrategy {
     public List<EmiRowData> generateSchedule(BigDecimal principal, BigDecimal annualRate, int months, LocalDate startDate) {
         List<EmiRowData> schedule = new ArrayList<>(months);
 
-        BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(1200), 10, RoundingMode.HALF_UP);
+        BigDecimal monthlyRate = annualRate.divide(DIVISOR_1200, INTERNAL_PRECISION, RoundingMode.HALF_UP);
 
         BigDecimal initialEmi = calculateInitialEmi(principal, monthlyRate, months);
 
@@ -30,16 +30,16 @@ public class StepUpEmiStrategy implements EmiCalculationStrategy {
             LocalDate dueDate = startDate.plusMonths(i);
 
             if (i > 1 && (i - 1) % 12 == 0) {
-                currentEmi = currentEmi.multiply(ANNUAL_STEP_UP_RATE).setScale(2, RoundingMode.HALF_UP);
+                currentEmi = currentEmi.multiply(ANNUAL_STEP_UP_RATE).setScale(CURRENCY_PRECISION, RoundingMode.HALF_UP);
             }
 
-            BigDecimal interestComponent = remainingBalance.multiply(monthlyRate).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal interestComponent = remainingBalance.multiply(monthlyRate).setScale(CURRENCY_PRECISION, RoundingMode.HALF_UP);
             BigDecimal principalComponent = currentEmi.subtract(interestComponent);
 
             if (i == months) {
                 principalComponent = remainingBalance;
                 currentEmi = principalComponent.add(interestComponent);
-                remainingBalance = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+                remainingBalance = BigDecimal.ZERO.setScale(CURRENCY_PRECISION, RoundingMode.HALF_UP);
             } else {
                 remainingBalance = remainingBalance.subtract(principalComponent);
             }
@@ -59,7 +59,7 @@ public class StepUpEmiStrategy implements EmiCalculationStrategy {
 
     @Override
     public String getStrategyName() {
-        return "STEP_UP";
+        return STRATEGY_STEP_UP;
     }
 
     private BigDecimal calculateInitialEmi(BigDecimal principal, BigDecimal monthlyRate, int months) {
@@ -69,7 +69,7 @@ public class StepUpEmiStrategy implements EmiCalculationStrategy {
         BigDecimal mid = BigDecimal.ZERO;
 
         for (int i = 0; i < 100; i++) {
-            mid = low.add(high).divide(BigDecimal.valueOf(2), 10, RoundingMode.HALF_UP);
+            mid = low.add(high).divide(BigDecimal.valueOf(2), INTERNAL_PRECISION, RoundingMode.HALF_UP);
 
             BigDecimal balance = simulateLoan(principal, monthlyRate, months, mid);
 
@@ -80,7 +80,7 @@ public class StepUpEmiStrategy implements EmiCalculationStrategy {
             }
         }
 
-        return mid.setScale(2, RoundingMode.HALF_UP);
+        return mid.setScale(CURRENCY_PRECISION, RoundingMode.HALF_UP);
     }
 
     private BigDecimal simulateLoan(BigDecimal principal, BigDecimal monthlyRate, int months, BigDecimal initialEmi) {
@@ -89,9 +89,9 @@ public class StepUpEmiStrategy implements EmiCalculationStrategy {
 
         for (int i = 1; i <= months; i++) {
             if (i > 1 && (i - 1) % 12 == 0) {
-                currentEmi = currentEmi.multiply(ANNUAL_STEP_UP_RATE).setScale(2, RoundingMode.HALF_UP);
+                currentEmi = currentEmi.multiply(ANNUAL_STEP_UP_RATE).setScale(CURRENCY_PRECISION, RoundingMode.HALF_UP);
             }
-            BigDecimal interest = balance.multiply(monthlyRate).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal interest = balance.multiply(monthlyRate).setScale(CURRENCY_PRECISION, RoundingMode.HALF_UP);
             BigDecimal principalComp = currentEmi.subtract(interest);
             balance = balance.subtract(principalComp);
         }

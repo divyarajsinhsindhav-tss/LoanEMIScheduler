@@ -15,13 +15,15 @@ import com.emiLoan.EMILoan.repository.StrategyAuditRepository;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -37,38 +39,32 @@ public class AuditServiceImpl implements AuditService {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async
-    public void logOfficerAction(User officer, AuditAction action, AuditEntityType entityType, UUID entityId) {
+    public void logAction(User actor, AuditAction action, AuditEntityType entityType,
+                          UUID entityId, String description, Object oldState, Object newState) {
+
         AuditLog auditLog = AuditLog.builder()
-                .officer(officer)
+                .actor(actor)
                 .action(action)
                 .entityType(entityType)
                 .entityId(entityId)
+                .description(description)
+                .oldValue(oldState)
+                .newValue(newState)
                 .actionTime(LocalDateTime.now())
                 .build();
 
         auditLogRepository.save(auditLog);
 
-        String officerEmail = (officer != null) ? officer.getEmail() : "SYSTEM";
-        log.info("Audit Logged: {} performed {} on {} ID: {}",
-                officerEmail, action, entityType, entityId);
+        String actorEmail = (actor != null) ? actor.getEmail() : "SYSTEM";
+        log.info("Audit Logged: [{}] - {} performed {} on {} (ID: {})",
+                actorEmail, description, action, entityType, entityId);
     }
-
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async
     public void logSystemAction(AuditAction action, AuditEntityType entityType, UUID entityId) {
-        AuditLog auditLog = AuditLog.builder()
-                .officer(null)
-                .action(action)
-                .entityType(entityType)
-                .entityId(entityId)
-                .actionTime(LocalDateTime.now())
-                .build();
-
-        auditLogRepository.save(auditLog);
-        log.info("System Audit Logged: Automated process performed {} on {} ID: {}",
-                action, entityType, entityId);
+        this.logAction(null, action, entityType, entityId, "Automated system action", null, null);
     }
 
     @Override
@@ -94,23 +90,40 @@ public class AuditServiceImpl implements AuditService {
         }
     }
 
-
     @Override
     @Transactional(readOnly = true)
-    public List<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId) {
-        return auditLogMapper.toResponseList(auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType,entityId));
+    public Page<AuditLogResponse> getEntityAuditHistory(AuditEntityType entityType, UUID entityId, Pageable pageable) {
+        Page<AuditLog> auditLogResponsePage = auditLogRepository.findByEntityTypeAndEntityIdOrderByActionTimeDesc(entityType, entityId, pageable);
+        return auditLogResponsePage.map(auditLogMapper::toResponse);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<StrategyAuditResponse> getRecentStrategyOverrides() {
-        return strategyAuditMapper.toResponseList(strategyAuditRepository.findByOverriddenTrueOrderByChangedAtDesc());
+    public Page<AuditLogResponse> getAuditLogsByActor(UUID actorId, Pageable pageable) {
+        return auditLogRepository.findByActorUserIdOrderByActionTimeDesc(actorId, pageable)
+                .map(auditLogMapper::toResponse);
     }
-
 
     @Override
     @Transactional(readOnly = true)
-    public List<AuditLogResponse> getAllAuditLogs(){
-        return auditLogMapper.toResponseList(auditLogRepository.findAll());
+    public Page<StrategyAuditResponse> getRecentStrategyOverrides(Pageable pageable) {
+        Page<StrategyAudit> auditPage = strategyAuditRepository.findByOverriddenTrueOrderByChangedAtDesc(pageable);
+        return auditPage.map(strategyAuditMapper::toResponse);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AuditLogResponse> getAllAuditLogs(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AuditLog> logs = auditLogRepository.findAll(pageable);
+        return logs.map(auditLogMapper::toResponse);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<AuditLogResponse> getAuditLogsByAction(AuditAction action, Pageable pageable) {
+        Page<AuditLog> logs = auditLogRepository.findByActionOrderByActionTimeDesc(action, pageable);
+        return logs.map(auditLogMapper::toResponse);
+    }
+
 }

@@ -5,14 +5,25 @@ import com.emiLoan.EMILoan.dto.user.AuthResponse;
 import com.emiLoan.EMILoan.dto.user.request.BorrowerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoanOfficerRegistrationRequest;
 import com.emiLoan.EMILoan.dto.user.request.LoginRequest;
+import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
 import com.emiLoan.EMILoan.dto.user.response.UserResponse;
+import com.emiLoan.EMILoan.dto.user.response.UserShortResponse;
 
 public interface AuthService {
 
 
     AuthResponse login(LoginRequest request);
 
-    UserResponse registerBorrower(BorrowerRegistrationRequest request);
+    RegistrationResponse registerBorrower(BorrowerRegistrationRequest request);
 
-    UserResponse registerLoanOfficer(LoanOfficerRegistrationRequest request);
+    void deleteUser(String email);
+
+    UserResponse getCurrentUser(String email);
+
+    AuthResponse recoverAccount(LoginRequest request);
+
+    RegistrationResponse registerLoanOfficer(LoanOfficerRegistrationRequest request);
+
+    AuthResponse verifyLoginOtp(String email, String otpCode);
+
 }

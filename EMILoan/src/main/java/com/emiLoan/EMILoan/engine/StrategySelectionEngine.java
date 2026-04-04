@@ -19,7 +19,7 @@ public class StrategySelectionEngine {
             return STRATEGY_FLAT_RATE;
         }
         else if (dtiRatio.compareTo(HIGH_RISK_THRESHOLD) <= 0) {
-            if (tenureMonths < LONG_TERM_TENURE_THRESHOLD) {
+            if (tenureMonths < LONG_TERM_TENURES_DTI) {
                 return STRATEGY_REDUCING_BALANCE;
             } else {
                 return STRATEGY_STEP_UP;

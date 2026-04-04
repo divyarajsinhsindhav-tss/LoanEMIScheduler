@@ -8,13 +8,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 
+import static com.emiLoan.EMILoan.common.constants.AppConstants.ALGORITHM;
+
 @Component
 public class PANHashingUtil {
 
     @Value("${app.pepper:emi-loan-default-pepper-2024}")
     private String pepper;
-
-    private static final String ALGORITHM = "SHA-256";
 
     public String hash(String plainPAN) {
         try {
@@ -30,10 +30,6 @@ public class PANHashingUtil {
         }
     }
 
-    public boolean verify(String plainPAN, String storedHash) {
-        if (plainPAN == null || storedHash == null) return false;
-        return hash(plainPAN).equals(storedHash);
-    }
 
     public String mask(String first3, String last2) {
         return first3 + "*****" + last2;

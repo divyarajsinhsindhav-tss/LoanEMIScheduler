@@ -7,12 +7,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.emiLoan.EMILoan.common.constants.AppConstants.*;
+
 @Component("REDUCING_BALANCE")
 public class ReducingBalanceStrategy implements EmiCalculationStrategy {
-
-    private static final BigDecimal DIVISOR_1200 = BigDecimal.valueOf(1200);
-    private static final int INTERNAL_PRECISION = 10;
-    private static final int CURRENCY_PRECISION = 2;
 
     @Override
     public List<EmiRowData> generateSchedule(
@@ -27,7 +25,7 @@ public class ReducingBalanceStrategy implements EmiCalculationStrategy {
             return generateZeroInterestSchedule(principal, months, startDate, schedule);
         }
 
-        final BigDecimal monthlyRate = annualRate.divide(DIVISOR_1200, INTERNAL_PRECISION, RoundingMode.HALF_UP);
+        final BigDecimal monthlyRate = annualRate.divide(DIVISOR_1200,INTERNAL_PRECISION, RoundingMode.HALF_UP);
         final BigDecimal onePlusR = BigDecimal.ONE.add(monthlyRate);
         final BigDecimal compoundFactor = onePlusR.pow(months);
 
@@ -70,7 +68,7 @@ public class ReducingBalanceStrategy implements EmiCalculationStrategy {
 
     @Override
     public String getStrategyName() {
-        return "REDUCING_BALANCE";
+        return STRATEGY_REDUCING_BALANCE;
     }
 
     private List<EmiRowData> generateZeroInterestSchedule(

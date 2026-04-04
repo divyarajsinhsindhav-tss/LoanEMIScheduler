@@ -1,14 +1,21 @@
 package com.emiLoan.EMILoan.mapper;
 
+import com.emiLoan.EMILoan.common.enums.ApplicationStatus;
 import com.emiLoan.EMILoan.dto.loanApplication.request.LoanApplicationRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.request.OfficerDecisionRequest;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationDetailsResponse;
 import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationResponse;
+import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationSubmitResponse;
+import com.emiLoan.EMILoan.dto.loanApplication.response.LoanApplicationWithdrawResponse;
 import com.emiLoan.EMILoan.entity.LoanApplication;
 import com.emiLoan.EMILoan.entity.User;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(
+        componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        imports = { com.emiLoan.EMILoan.common.enums.ApplicationStatus.class }
+)
 public interface LoanApplicationMapper {
 
     @Mapping(target = "applicationId", ignore = true)
@@ -26,12 +33,11 @@ public interface LoanApplicationMapper {
 
     LoanApplicationDetailsResponse toDetailsResponse(LoanApplication application);
 
-    @Mapping(target = "applicationId", ignore = true)
-    @Mapping(target = "borrower", ignore = true)
-    @Mapping(target = "appliedAt", ignore = true)
-    @Mapping(target = "officerStrategy", source = "officerStrategy")
-    @Mapping(target = "status", source = "status")
-    void updateEntityFromDecision(OfficerDecisionRequest request, @MappingTarget LoanApplication application);
+    @Mapping(target = "message", expression = "java(application.getStatus() == ApplicationStatus.REJECTED ? \"We're sorry, your application did not meet our current lending criteria.\" : \"Your application has been received and is under review.\")")
+    LoanApplicationSubmitResponse toSubmitResponse(LoanApplication application);
+
+    @Mapping(target = "message", constant = "Your loan application has been successfully withdrawn.")
+    LoanApplicationWithdrawResponse toWithdrawResponse(LoanApplication application);
 
     @Named("mapFullName")
     default String mapFullName(User user) {

@@ -24,8 +24,8 @@ public class AuditLog {
     private UUID auditId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "officer_id")
-    private User officer;
+    @JoinColumn(name = "actor_id")
+    private User actor;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "action", length = 50)
@@ -35,9 +35,20 @@ public class AuditLog {
     @Column(name = "entity_type", length = 50)
     private AuditEntityType entityType;
 
+    @Column(name = "description", length = 500)
+    private String description;
+
     @JdbcTypeCode(SqlTypes.UUID)
     @Column(name = "entity_id")
     private UUID entityId;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "old_value", columnDefinition = "jsonb")
+    private Object oldValue;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "new_value", columnDefinition = "jsonb")
+    private Object newValue;
 
     @Column(name = "action_time", updatable = false)
     private LocalDateTime actionTime;

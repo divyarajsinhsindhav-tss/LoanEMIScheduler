@@ -58,8 +58,12 @@ public class EmiSchedule {
     @Column(name = "amount_paid", precision = 12, scale = 2)
     private BigDecimal amountPaid = BigDecimal.ZERO;
 
-    public BigDecimal getRemainingBalance() {
+    public BigDecimal getRemainingEmiDue() {
+        BigDecimal totalEmi = this.principalComponent.add(this.interestComponent);
         BigDecimal paid = this.amountPaid != null ? this.amountPaid : BigDecimal.ZERO;
-        return this.totalEmi.subtract(paid);
+
+        BigDecimal due = totalEmi.subtract(paid);
+
+        return due.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : due;
     }
 }

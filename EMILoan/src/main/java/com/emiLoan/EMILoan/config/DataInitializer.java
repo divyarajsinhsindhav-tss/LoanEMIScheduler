@@ -54,7 +54,6 @@ public class DataInitializer implements CommandLineRunner {
             Role adminRole = roleRepository.findByRoleName(RoleName.ADMIN)
                     .orElseThrow(() -> new RuntimeException("ADMIN role not found after initialization"));
 
-            // Create a default person identity for the admin
             String dummyPan = "ADMIN1234P";
             String panHash = panHashingUtil.hash(dummyPan);
             

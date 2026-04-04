@@ -2,6 +2,7 @@ package com.emiLoan.EMILoan.dto.payment;
 
 import com.emiLoan.EMILoan.common.enums.PaymentMode;
 import com.emiLoan.EMILoan.common.enums.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PaymentResponse {
     private UUID paymentId;
 

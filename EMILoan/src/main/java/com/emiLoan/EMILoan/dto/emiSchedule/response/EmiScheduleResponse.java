@@ -1,6 +1,7 @@
 package com.emiLoan.EMILoan.dto.emiSchedule.response;
 
 import com.emiLoan.EMILoan.common.enums.EmiStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EmiScheduleResponse {
     private UUID emiId;
     private Integer installmentNo;
@@ -26,4 +28,7 @@ public class EmiScheduleResponse {
 
     private EmiStatus status;
     private LocalDate paidDate;
+
+    private BigDecimal amountPaid;
+    private BigDecimal amountDue;
 }

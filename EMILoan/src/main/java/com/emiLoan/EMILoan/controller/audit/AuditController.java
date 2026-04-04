@@ -1,40 +1,41 @@
 package com.emiLoan.EMILoan.controller.audit;
 
-
+import com.emiLoan.EMILoan.common.enums.AuditAction;
 import com.emiLoan.EMILoan.common.enums.AuditEntityType;
 import com.emiLoan.EMILoan.common.response.ApiResponse;
 import com.emiLoan.EMILoan.dto.auditLogs.AuditLogResponse;
 import com.emiLoan.EMILoan.dto.strategyAudit.StrategyAuditResponse;
-import com.emiLoan.EMILoan.entity.AuditLog;
-import com.emiLoan.EMILoan.entity.StrategyAudit;
 import com.emiLoan.EMILoan.service.interfaces.AuditService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/audit")
-@PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
-
 public class AuditController {
 
     private final AuditService auditService;
 
-
     @GetMapping("/entity/{entityType}/{entityId}")
-    public ResponseEntity<ApiResponse<List<AuditLogResponse>>> getEntityAuditHistory(
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getEntityAuditHistory(
             @PathVariable AuditEntityType entityType,
             @PathVariable UUID entityId,
-            HttpServletRequest request
+            HttpServletRequest request,
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "3") Integer pageSize
     ) {
-        List<AuditLogResponse> auditLogs = auditService.getEntityAuditHistory(entityType, entityId);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<AuditLogResponse> auditLogs = auditService.getEntityAuditHistory(entityType, entityId, pageable);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -44,12 +45,16 @@ public class AuditController {
         ));
     }
 
-
     @GetMapping("/strategy-overrides")
-    public ResponseEntity<ApiResponse<List<StrategyAuditResponse>>> getStrategyOverrides(
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    public ResponseEntity<ApiResponse<Page<StrategyAuditResponse>>> getStrategyOverrides(
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize,
             HttpServletRequest request
     ) {
-        List<StrategyAuditResponse> overrides = auditService.getRecentStrategyOverrides();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<StrategyAuditResponse> overrides = auditService.getRecentStrategyOverrides(pageable);
 
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -59,13 +64,56 @@ public class AuditController {
         ));
     }
 
-
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<List<AuditLogResponse>>> getAllAuditLogs(HttpServletRequest request){
-        List<AuditLogResponse> auditLogs = auditService.getAllAuditLogs();
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAllAuditLogs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest request
+    ) {
+        Page<AuditLogResponse> auditLogs = auditService.getAllAuditLogs(page, size);
+
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
-                "All AuditLogs retrieved successfully",
+                "Master audit log retrieved successfully",
+                request.getRequestURI(),
+                auditLogs
+        ));
+    }
+
+    @GetMapping("/actor/{actorId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAuditLogsByActor(
+            @PathVariable UUID actorId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest request
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AuditLogResponse> auditLogs = auditService.getAuditLogsByActor(actorId, pageable);
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Audit logs retrieved successfully for user ID: " + actorId,
+                request.getRequestURI(),
+                auditLogs
+        ));
+    }
+
+    @GetMapping("/action/{action}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAuditLogsByAction(
+            @PathVariable AuditAction action,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest request
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AuditLogResponse> auditLogs = auditService.getAuditLogsByAction(action, pageable);
+
+        return ResponseEntity.ok(ApiResponse.of(
+                HttpStatus.OK,
+                "Audit logs retrieved successfully for action: " + action,
                 request.getRequestURI(),
                 auditLogs
         ));

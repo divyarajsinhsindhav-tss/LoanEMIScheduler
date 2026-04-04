@@ -11,10 +11,4 @@ import java.util.List;
 import java.util.UUID;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
-    List<Notification> findByUserOrderBySentAtDesc(User user);
-    List<Notification> findByEmailOrderBySentAtDesc(String email);
-    List<Notification> findByStatus(NotificationStatus status);
-    List<Notification> findByLoan_LoanId(UUID loanId);
-    List<Notification> findByEmiSchedule_EmiId(UUID emiId);
-    long countByUserAndStatus(User user, NotificationStatus status);
 }

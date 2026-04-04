@@ -18,9 +18,6 @@ import java.util.UUID;
 @Repository
 public interface LoanApplicationRepository extends JpaRepository<LoanApplication, UUID> {
 
-    @Query("SELECT COUNT(l) FROM LoanApplication l WHERE l.borrower.userId = :userId AND l.status = :status")
-    Long countActiveApplications(@Param("userId") UUID userId, @Param("status") ApplicationStatus status);
-
     Optional<LoanApplication> findByBorrowerEmailAndApplicationCode(String email, String applicationCode);
 
     Page<LoanApplication> findByBorrowerEmailAndStatus(String email, ApplicationStatus status, Pageable pageable);
@@ -32,7 +29,8 @@ public interface LoanApplicationRepository extends JpaRepository<LoanApplication
 
     Optional<LoanApplication> findByApplicationCode(String applicationCode);
 
-    List<LoanApplication> findByReviewedBy(User officer);
+    Long countByStatus(ApplicationStatus status);
 
-    boolean existsByBorrowerAndStatus(User borrower, ApplicationStatus status);
+    Long countByBorrower_UserIdAndStatus(UUID userId, ApplicationStatus status);
+
 }

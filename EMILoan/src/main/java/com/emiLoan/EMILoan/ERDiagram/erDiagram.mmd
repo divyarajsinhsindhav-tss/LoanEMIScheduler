@@ -1,144 +1,170 @@
 erDiagram
-    ROLES ||--o{ USERS : "assigned_to"
-    PERSON_IDENTITY ||--o{ USERS : "identifies"
-    USERS ||--|| BORROWER_PROFILE : "has_profile"
-    USERS ||--|| EMPLOYEE_PROFILE : "has_profile"
-    USERS ||--o{ LOAN_APPLICATIONS : "applies_for"
-    USERS ||--o{ LOAN_APPLICATIONS : "reviews"
-    USERS ||--o{ LOANS : "borrows"
-    USERS ||--o{ AUDIT_LOGS : "performs_action"
-    USERS ||--o{ USERS : "soft_deleted_by"
 
-    LOAN_APPLICATIONS ||--|| LOANS : "converts_to"
-    LOAN_APPLICATIONS ||--o{ STRATEGY_AUDIT : "tracked_in"
+  roles {
+    UUID role_id PK
+    VARCHAR role_name UK
+    VARCHAR description
+    TIMESTAMPTZ created_at
+  }
 
-    LOANS ||--o{ EMI_SCHEDULE : "has_schedule"
-    LOANS ||--o{ PAYMENTS : "receives"
+  person_identity {
+    UUID person_id PK
+    VARCHAR person_code UK
+    VARCHAR pan_hash UK
+    VARCHAR pan_first3
+    VARCHAR pan_last2
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
 
-    EMI_SCHEDULE ||--o{ PAYMENTS : "satisfied_by"
+  users {
+    UUID user_id PK
+    VARCHAR user_code UK
+    UUID person_id FK
+    UUID role_id FK
+    VARCHAR first_name
+    VARCHAR last_name
+    VARCHAR email UK
+    VARCHAR phone
+    VARCHAR password
+    BOOLEAN is_active
+    BOOLEAN is_deleted
+    TIMESTAMPTZ deleted_at
+    UUID deleted_by
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
 
-    NOTIFICATIONS }o--|| USERS : "sent_to"
-    NOTIFICATIONS }o--|| LOANS : "regarding_loan"
-    NOTIFICATIONS }o--|| EMI_SCHEDULE : "regarding_emi"
+  borrower_profile {
+    UUID borrower_id PK
+    VARCHAR borrower_code UK
+    UUID user_id FK
+    NUMERIC monthly_income
+    INT existing_loan_count
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
 
-    ROLES {
-        uuid role_id PK
-        varchar role_name
-        varchar description
-        timestamp created_at
-    }
+  employee_profile {
+    UUID employee_id PK
+    VARCHAR employee_code UK
+    UUID user_id FK
+    DATE joining_date
+    NUMERIC salary
+    BOOLEAN is_active
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
 
-    PERSON_IDENTITY {
-        uuid person_id PK
-        varchar person_code
-        varchar pan_hash
-        varchar pan_first3
-        varchar pan_last2
-        timestamp created_at
-        timestamp updated_at
-    }
+  loan_applications {
+    UUID application_id PK
+    VARCHAR application_code UK
+    UUID user_id FK
+    NUMERIC requested_amount
+    NUMERIC interest_rate
+    INT tenure_months
+    NUMERIC existing_emi
+    NUMERIC dti_ratio
+    VARCHAR suggested_strategy
+    VARCHAR officer_strategy
+    VARCHAR status
+    TIMESTAMPTZ applied_at
+    UUID reviewed_by FK
+    TIMESTAMPTZ reviewed_at
+    BOOLEAN is_deleted
+    TIMESTAMPTZ deleted_at
+    UUID deleted_by
+  }
 
-    USERS {
-        uuid user_id PK
-        varchar user_code
-        uuid person_id FK
-        uuid role_id FK
-        varchar first_name
-        varchar email
-        varchar phone
-        boolean is_active
-        boolean is_deleted
-        uuid deleted_by FK
-    }
+  loans {
+    UUID loan_id PK
+    VARCHAR loan_code UK
+    UUID application_id FK
+    UUID user_id FK
+    NUMERIC principal_amount
+    NUMERIC interest_rate
+    INT tenure_months
+    VARCHAR strategy
+    NUMERIC emi_amount
+    DATE start_date
+    DATE end_date
+    VARCHAR loan_status
+    TIMESTAMPTZ created_at
+  }
 
-    BORROWER_PROFILE {
-        uuid borrower_id PK
-        varchar borrower_code
-        uuid user_id FK
-        numeric monthly_income
-        int existing_loan_count
-    }
+  emi_schedule {
+    UUID emi_id PK
+    UUID loan_id FK
+    INT installment_no
+    DATE due_date
+    NUMERIC principal_component
+    NUMERIC interest_component
+    NUMERIC total_emi
+    NUMERIC remaining_balance
+    NUMERIC amount_paid
+    VARCHAR status
+    DATE paid_date
+  }
 
-    EMPLOYEE_PROFILE {
-        uuid employee_id PK
-        varchar employee_code
-        uuid user_id FK
-        date joining_date
-        numeric salary
-        boolean is_active
-    }
+  payments {
+    UUID payment_id PK
+    UUID emi_id FK
+    UUID loan_id FK
+    NUMERIC amount_paid
+    TIMESTAMPTZ payment_date
+    VARCHAR payment_mode
+    VARCHAR status
+    JSONB payment_metadata
+  }
 
-    LOAN_APPLICATIONS {
-        uuid application_id PK
-        varchar application_code
-        uuid user_id FK
-        numeric requested_amount
-        numeric interest_rate
-        int tenure_months
-        varchar suggested_strategy
-        varchar status
-        uuid reviewed_by FK
-    }
+  notifications {
+    UUID notification_id PK
+    UUID user_id FK
+    UUID loan_id FK
+    UUID emi_id FK
+    VARCHAR email
+    VARCHAR subject
+    TEXT message
+    TIMESTAMPTZ sent_at
+    VARCHAR status
+    BOOLEAN is_deleted
+    TIMESTAMPTZ deleted_at
+    UUID deleted_by
+  }
 
-    LOANS {
-        uuid loan_id PK
-        varchar loan_code
-        uuid application_id FK
-        uuid user_id FK
-        numeric principal_amount
-        numeric interest_rate
-        int tenure_months
-        varchar strategy
-        numeric emi_amount
-        date start_date
-        varchar loan_status
-    }
+  audit_logs {
+    UUID audit_id PK
+    UUID officer_id FK
+    VARCHAR action
+    VARCHAR entity_type
+    UUID entity_id
+    TIMESTAMPTZ action_time
+  }
 
-    EMI_SCHEDULE {
-        uuid emi_id PK
-        uuid loan_id FK
-        int installment_no
-        date due_date
-        numeric total_emi
-        numeric remaining_balance
-        varchar status
-    }
+  strategy_audit {
+    UUID id PK
+    UUID application_id FK
+    VARCHAR system_strategy
+    VARCHAR officer_strategy
+    BOOLEAN overridden
+    UUID changed_by FK
+    TIMESTAMPTZ changed_at
+  }
 
-    PAYMENTS {
-        uuid payment_id PK
-        uuid emi_id FK
-        uuid loan_id FK
-        numeric amount_paid
-        timestamp payment_date
-        varchar payment_mode
-        varchar status
-    }
-
-    NOTIFICATIONS {
-        uuid notification_id PK
-        uuid user_id FK
-        uuid loan_id FK
-        uuid emi_id FK
-        varchar email
-        varchar subject
-        timestamp sent_at
-        varchar status
-    }
-
-    STRATEGY_AUDIT {
-        uuid id PK
-        uuid application_id FK
-        varchar system_strategy
-        varchar officer_strategy
-        boolean overridden
-        uuid changed_by FK
-    }
-
-    AUDIT_LOGS {
-        uuid audit_id PK
-        uuid officer_id FK
-        varchar action
-        varchar entity_type
-        uuid entity_id
-        timestamp action_time
-    }
+  roles               ||--o{ users              : "role_id"
+  person_identity     ||--o{ users              : "person_id"
+  users               ||--o| borrower_profile   : "user_id"
+  users               ||--o| employee_profile   : "user_id"
+  users               ||--o{ loan_applications  : "user_id (applicant)"
+  users               ||--o{ loan_applications  : "reviewed_by (officer)"
+  users               ||--o{ loans              : "user_id"
+  users               ||--o{ notifications      : "user_id"
+  users               ||--o{ audit_logs         : "officer_id"
+  users               ||--o{ strategy_audit     : "changed_by"
+  loan_applications   ||--o| loans              : "application_id"
+  loan_applications   ||--o{ strategy_audit     : "application_id"
+  loans               ||--o{ emi_schedule       : "loan_id"
+  loans               ||--o{ payments           : "loan_id"
+  loans               ||--o{ notifications      : "loan_id"
+  emi_schedule        ||--o{ payments           : "emi_id"
+  emi_schedule        ||--o{ notifications      : "emi_id"

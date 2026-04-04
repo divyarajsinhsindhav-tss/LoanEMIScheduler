@@ -19,12 +19,15 @@ import com.emiLoan.EMILoan.service.interfaces.EmiService;
 import com.emiLoan.EMILoan.service.interfaces.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -43,30 +46,21 @@ public class EmiServiceImpl implements EmiService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmiScheduleResponse> getSchedule(String loanCode, String requesterEmail) {
+    public Page<EmiScheduleResponse> getSchedule(String loanCode, String requesterEmail, Pageable pageable) {
         Loan loan = loanRepository.findByLoanCode(loanCode)
                 .orElseThrow(() -> new BusinessRuleException("Loan record not found for ID: " + loanCode));
 
-        User requester = userRepository.findByEmail(requesterEmail)
-                .orElseThrow(() -> new BusinessRuleException("Authenticated user session invalid."));
+        validateAccess(loan, requesterEmail);
 
-        boolean isOwner = loan.getBorrower().getEmail().equalsIgnoreCase(requesterEmail);
-        boolean isStaff = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
-                requester.getRole().getRoleName() == RoleName.ADMIN;
-
-        if (!isOwner && !isStaff) {
-            log.warn("Security Alert: Unauthorized access attempt to Loan {} by {}", loanCode, requesterEmail);
-            throw new BusinessRuleException("Access Denied: You do not have permission to view this schedule.");
-        }
-
-        List<EmiSchedule> scheduleList = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan);
-        return emiScheduleMapper.toResponseList(scheduleList);
+        Page<EmiSchedule> schedulePage = emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan, pageable);
+        return schedulePage.map(emiScheduleMapper::toResponse);
     }
+
 
     @Override
     @Transactional
-    public void generateAndSaveSchedule(Loan loan) {
-        if (!emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan).isEmpty()) {
+    public void generateAndSaveSchedule(Loan loan,Pageable pageable) {
+        if (!emiScheduleRepository.findByLoanOrderByInstallmentNoAsc(loan,pageable).isEmpty()) {
             log.warn("Schedule skipped: Loan {} already has an active EMI schedule.", loan.getLoanCode());
             return;
         }
@@ -84,37 +78,68 @@ public class EmiServiceImpl implements EmiService {
         loanRepository.save(loan);
 
         log.info("Financial Event: Generated {} installments for Loan {}", schedules.size(), loan.getLoanCode());
+
+        auditService.logSystemAction(AuditAction.CREATE, AuditEntityType.EMI_SCHEDULE, loan.getLoanId());
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public EmiScheduleResponse getNextUpcomingEmi(String loanCode, String requesterEmail) {
+        Loan loan = loanRepository.findByLoanCode(loanCode)
+                .orElseThrow(() -> new BusinessRuleException("Loan record not found"));
+
+        validateAccess(loan, requesterEmail);
+
+        EmiSchedule nextEmi = emiScheduleRepository
+                .findFirstByLoanAndStatusInOrderByInstallmentNoAsc(
+                        loan,
+                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID)
+                )
+                .orElseThrow(() -> new BusinessRuleException("No pending EMIs found. The loan might be fully paid."));
+
+        return emiScheduleMapper.toResponse(nextEmi);
     }
 
     @Override
-    @Transactional
-    public void processOverdueEmis(LocalDate currentDate) {
-        log.info("Batch Job Started: Identifying overdue installments for {}", currentDate);
+    @Transactional(readOnly = true)
+    public BigDecimal getForeclosureQuote(String loanCode, String requesterEmail) {
 
-        List<EmiSchedule> overdueList = emiScheduleRepository.findByDueDateBeforeAndStatus(currentDate, EmiStatus.PENDING);
+        Loan loan = loanRepository.findByLoanCode(loanCode)
+                .orElseThrow(() -> new BusinessRuleException("Loan record not found"));
 
-        if (overdueList.isEmpty()) {
-            log.info("Batch Job Finished: No overdue installments found.");
-            return;
+        validateAccess(loan, requesterEmail);
+        List<EmiSchedule> unpaidEmis = emiScheduleRepository
+                .findAllByLoanAndStatusInOrderByInstallmentNoAsc(
+                        loan,
+                        List.of(EmiStatus.PENDING, EmiStatus.OVERDUE, EmiStatus.PARTIALLY_PAID),
+                        Pageable.unpaged()
+                ).getContent();
+
+        if (unpaidEmis.isEmpty()) {
+            return BigDecimal.ZERO;
         }
 
-        int updatedCount = emiScheduleRepository.updateStatusToOverdueForPastDue(currentDate);
+        EmiSchedule currentEmi = unpaidEmis.get(0);
 
-        for (EmiSchedule emi : overdueList) {
-            try {
-                notificationService.sendOverdueAlert(emi.getLoan().getBorrower(), emi);
+        BigDecimal remainingPrincipal = currentEmi.getRemainingBalance().add(currentEmi.getPrincipalComponent());
+        BigDecimal currentMonthInterest = currentEmi.getInterestComponent();
+        BigDecimal amountAlreadyPaidThisMonth = currentEmi.getAmountPaid() != null ? currentEmi.getAmountPaid() : BigDecimal.ZERO;
 
-                auditService.logSystemAction(
-                        AuditAction.UPDATE,
-                        AuditEntityType.EMI_SCHEDULE,
-                        emi.getEmiId()
-                );
+        BigDecimal foreclosureAmount = remainingPrincipal.add(currentMonthInterest).subtract(amountAlreadyPaidThisMonth);
 
-            } catch (Exception e) {
-                log.error("Batch Job Warning: Failed to notify/audit for EMI {}: {}", emi.getEmiId(), e.getMessage());
-            }
+        return foreclosureAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : foreclosureAmount;
+    }
+
+    private void validateAccess(Loan loan, String requesterEmail) {
+        User requester = userRepository.findByEmail(requesterEmail)
+                .orElseThrow(() -> new BusinessRuleException("Authenticated user session invalid."));
+
+        boolean isOwner = loan.getBorrower().getEmail().equalsIgnoreCase(requesterEmail);
+        boolean isStaff = requester.getRole().getRoleName() == RoleName.LOAN_OFFICER ||
+                requester.getRole().getRoleName() == RoleName.ADMIN;
+
+        if (!isOwner && !isStaff) {
+            log.warn("Security Alert: Unauthorized access attempt to Loan {} by {}", loan.getLoanCode(), requesterEmail);
+            throw new BusinessRuleException("Access Denied: You do not have permission to view this loan data.");
         }
-
-        log.info("Batch Job Finished: {} records marked as OVERDUE and processed.", updatedCount);
     }
 }

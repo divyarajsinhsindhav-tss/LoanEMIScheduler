@@ -13,21 +13,32 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AuditLogMapper {
 
-    @Mapping(target = "officerId", source = "officer.userId")
-    @Mapping(target = "officerEmail", source = "officer.email")
-    @Mapping(target = "officerName", source = "officer", qualifiedByName = "mapFullName")
-    @Mapping(target = "actionTime", source = "actionTime")
+    @Mapping(source = "actor", target = "actor", qualifiedByName = "mapUserDetails")
+    @Mapping(source = "description", target = "description")
+    @Mapping(source = "oldValue", target = "oldValue")
+    @Mapping(source = "newValue", target = "newValue")
     AuditLogResponse toResponse(AuditLog auditLog);
 
     List<AuditLogResponse> toResponseList(List<AuditLog> auditLogs);
 
-    @Named("mapFullName")
-    default String mapFullName(User officer) {
-        if (officer == null) return "SYSTEM";
+    @Named("mapUserDetails")
+    default AuditLogResponse.UserDetails mapUserDetails(User user) {
+        if (user == null) {
+            return AuditLogResponse.UserDetails.builder()
+                    .name("SYSTEM")
+                    .role("SYSTEM_PROCESS")
+                    .build();
+        }
 
-        String first = officer.getFirstName() != null ? officer.getFirstName() : "";
-        String last = officer.getLastName() != null ? officer.getLastName() : "";
+        String first = user.getFirstName() != null ? user.getFirstName() : "";
+        String last = user.getLastName() != null ? user.getLastName() : "";
+        String fullName = (first + " " + last).trim();
 
-        return (first + " " + last).trim();
+        return AuditLogResponse.UserDetails.builder()
+                .userId(user.getUserId())
+                .name(fullName.isEmpty() ? "UNKNOWN" : fullName)
+                .email(user.getEmail())
+                .role(user.getRole() != null ? user.getRole().getRoleName().name() : "USER")
+                .build();
     }
 }
