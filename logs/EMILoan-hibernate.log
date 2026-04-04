@@ -7107,3 +7107,219 @@
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
 2026-04-04 11:54:41 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-04 11:56:04 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-04 11:56:08 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-04 11:56:08 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-04 11:56:09 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-04 11:56:09 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-04 11:56:10 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-04 11:56:12 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-04 11:56:16 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-04 11:56:16 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-04 11:56:16 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-04 11:56:16 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-04 11:56:45 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-04 11:56:45 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-04 11:56:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        al1_0.audit_id,
+        al1_0.action,
+        al1_0.action_time,
+        al1_0.actor_id,
+        al1_0.description,
+        al1_0.entity_id,
+        al1_0.entity_type,
+        al1_0.new_value,
+        al1_0.old_value 
+    from
+        audit_logs al1_0 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+2026-04-04 11:56:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-04 11:56:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-04 11:56:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
