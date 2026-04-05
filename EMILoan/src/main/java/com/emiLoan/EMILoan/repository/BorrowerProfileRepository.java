@@ -23,12 +23,4 @@ public interface BorrowerProfileRepository extends JpaRepository<BorrowerProfile
     Optional<BorrowerProfile> findByUser_EmailWithUser(@Param("email") String email);
 
     Optional<BorrowerProfile> findByUser_UserCode(String userCode);
-
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM borrower_profile WHERE user_id IN (" +
-            "SELECT user_id FROM users WHERE is_active = false " +
-            "AND is_deleted = false " +
-            "AND created_at < :cutoff)", nativeQuery = true)
-    void deleteProfilesForUnverifiedUsers(@Param("cutoff") LocalDateTime cutoff);
 }

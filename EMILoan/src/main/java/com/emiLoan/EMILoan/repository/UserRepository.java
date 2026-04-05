@@ -28,5 +28,4 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             "AND is_deleted = false " +
             "AND created_at < :cutoff", nativeQuery = true)
     void hardDeleteUnverifiedAccounts(@Param("cutoff") LocalDateTime cutoff);
-
 }

@@ -18,13 +18,4 @@ public interface EmployeeProfileRepository extends JpaRepository<EmployeeProfile
     Optional<EmployeeProfile> findByUser_Email(String email);
 
     Optional<EmployeeProfile> findByUser_UserCode(String userCode);
-
-    @Modifying
-    @Transactional
-    @Query(value = "DELETE FROM employee_profile WHERE user_id IN " +
-            "(SELECT user_id FROM users WHERE is_active = false " +
-            "AND is_deleted = false " +
-            "AND created_at < :cutoff)",
-            nativeQuery = true)
-    void deleteEmployeeProfilesForUnverifiedUsers(@Param("cutoff") LocalDateTime cutoff);
 }

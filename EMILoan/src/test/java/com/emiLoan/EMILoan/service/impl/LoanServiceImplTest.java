@@ -7,6 +7,7 @@ import com.emiLoan.EMILoan.dto.loanApplication.request.OfficerDecisionRequest;
 import com.emiLoan.EMILoan.entity.*;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
 import com.emiLoan.EMILoan.mapper.AuditLogMapper;
+import com.emiLoan.EMILoan.mapper.LoanApplicationMapper;
 import com.emiLoan.EMILoan.mapper.LoanMapper;
 import com.emiLoan.EMILoan.repository.*;
 import com.emiLoan.EMILoan.service.interfaces.*;
@@ -42,6 +43,7 @@ class LoanServiceImplTest {
     @Mock private AuditService auditService;
     @Mock private EntityManager entityManager;
     @Mock private AuditLogMapper auditLogMapper;
+    @Mock private LoanApplicationMapper loanApplicationMapper;
 
     private User officer;
     private LoanApplication application;
@@ -93,6 +95,9 @@ class LoanServiceImplTest {
         when(applicationRepository.findByApplicationCode("APP123"))
                 .thenReturn(Optional.of(application));
 
+        when(applicationRepository.save(any(LoanApplication.class)))
+                .thenReturn(application);
+
         when(loanRepository.findByApplicationId(any()))
                 .thenReturn(Optional.empty());
 
@@ -120,6 +125,9 @@ class LoanServiceImplTest {
 
         when(applicationRepository.findByApplicationCode(any()))
                 .thenReturn(Optional.of(application));
+
+        when(applicationRepository.save(any(LoanApplication.class)))
+                .thenReturn(application);
 
         LoanResponse result =
                 loanService.processDecision("APP123", request, "officer@test.com");
