@@ -23,7 +23,7 @@ public class PaymentReminderScheduler {
     private final NotificationService notificationService;
 
 
-    @Scheduled(cron = "${app.scheduler.reminder-cron:0 0 9 * * ?}")
+    @Scheduled(cron = "0 0 9 * * ?")
     public void sendReminders() {
         LocalDate today = LocalDate.now();
         LocalDate targetDate = today.plusDays(REMINDER_DAYS_BEFORE);

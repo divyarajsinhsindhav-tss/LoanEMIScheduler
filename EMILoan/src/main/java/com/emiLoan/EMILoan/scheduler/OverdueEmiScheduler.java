@@ -24,7 +24,7 @@ public class OverdueEmiScheduler {
     private final NotificationService notificationService;
 
 
-    @Scheduled(cron = "${app.scheduler.overdue-cron:0 0 1 * * ?}")
+    @Scheduled(cron = "0 0 1 * * ?")
     @Transactional
     public void checkAndMarkOverdue() {
         LocalDate today = LocalDate.now();

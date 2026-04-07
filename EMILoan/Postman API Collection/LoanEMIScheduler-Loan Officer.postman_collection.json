@@ -12,12 +12,26 @@
       "item": [
         {
           "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set(\"officer_token\", jsonData.data.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"22ce259.om.kariya@vvpedulink.ac.in\",\r\n    \"password\": \"Password123\"\r\n}",
+              "raw": "{\r\n    \"email\": \"{{officer_email}}\",\r\n    \"password\": \"{{officer_password}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -25,15 +39,11 @@
               }
             },
             "url": {
-              "raw": "http://localhost:8080/api/v1/auth/login",
-              "protocol": "http",
+              "raw": "{{base_url}}/auth/login",
               "host": [
-                "localhost"
+                "{{base_url}}"
               ],
-              "port": "8080",
               "path": [
-                "api",
-                "v1",
                 "auth",
                 "login"
               ]
@@ -582,7 +592,43 @@
   ],
   "variable": [
     {
+      "key": "base_url",
+      "value": "http://localhost:8080/api/v1"
+    },
+    {
       "key": "officer_token",
+      "value": ""
+    },
+    {
+      "key": "admin_email",
+      "value": "admin@loan.com"
+    },
+    {
+      "key": "admin_password",
+      "value": "Password123"
+    },
+    {
+      "key": "borrower_email",
+      "value": "divyrajsinh3315@gmail.com"
+    },
+    {
+      "key": "borrower_password",
+      "value": "Password123"
+    },
+    {
+      "key": "officer_email",
+      "value": "officer1@example.com"
+    },
+    {
+      "key": "officer_password",
+      "value": "password123"
+    },
+    {
+      "key": "loan_code",
+      "value": ""
+    },
+    {
+      "key": "app_code",
       "value": ""
     }
   ]
