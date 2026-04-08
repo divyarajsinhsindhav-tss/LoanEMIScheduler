@@ -21,6 +21,7 @@ public class PaymentResponse {
     private UUID paymentId;
 
     private String loanCode;
+    private String emiCode;
     private Integer installmentNo;
 
     private BigDecimal amountPaid;

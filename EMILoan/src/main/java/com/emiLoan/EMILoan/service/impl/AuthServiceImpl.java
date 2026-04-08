@@ -12,6 +12,7 @@ import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.entity.*;
 import com.emiLoan.EMILoan.exceptions.AuthanticationException;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
+import com.emiLoan.EMILoan.exceptions.ResourceNotFoundException;
 import com.emiLoan.EMILoan.mapper.UserMapper;
 import com.emiLoan.EMILoan.repository.*;
 import com.emiLoan.EMILoan.security.CustomUserDetails;
@@ -274,7 +275,8 @@ public class AuthServiceImpl implements AuthService {
 
         PersonIdentity person = getOrCreatePersonIdentity(request.getPan());
         Role role = roleRepository.findByRoleName(RoleName.LOAN_OFFICER)
-                .orElseThrow(() -> new BusinessRuleException("Default role not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Role", RoleName.LOAN_OFFICER));
+
 
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -323,7 +325,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void deleteUser(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessRuleException("User not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User", email));
 
         if (user.isDeleted()) {
             throw new BusinessRuleException("Account is already deleted.");
@@ -363,14 +365,14 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(readOnly = true)
     public UserResponse getCurrentUser(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessRuleException("User session invalid"));
+                .orElseThrow(() -> new AuthanticationException("User session invalid"));
         return userMapper.toResponse(user);
     }
 
     @Override
     @Transactional
     public AuthResponse recoverAccount(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmailIncludingDeleted(request.getEmail())
                 .orElseThrow(() -> new AuthanticationException("Email or password incorrect"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {

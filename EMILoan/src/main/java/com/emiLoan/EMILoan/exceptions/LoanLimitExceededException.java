@@ -11,7 +11,7 @@ public class LoanLimitExceededException extends ApplicationException {
         super(DEFAULT_MESSAGE, "LOAN_LIMIT_EXCEEDED", HttpStatus.BAD_REQUEST);
     }
 
-    public LoanLimitExceededException(int currentActiveLoans) {
+    public LoanLimitExceededException(Long currentActiveLoans) {
         super(String.format("%s. Current active loans: %d", DEFAULT_MESSAGE, currentActiveLoans),
                 "LOAN_LIMIT_EXCEEDED",
                 HttpStatus.BAD_REQUEST);

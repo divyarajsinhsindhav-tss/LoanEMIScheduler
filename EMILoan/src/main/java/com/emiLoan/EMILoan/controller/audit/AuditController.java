@@ -26,7 +26,7 @@ public class AuditController {
     private final AuditService auditService;
 
     @GetMapping("/entity/{entityType}/{entityId}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getEntityAuditHistory(
             @PathVariable AuditEntityType entityType,
             @PathVariable UUID entityId,
@@ -46,7 +46,7 @@ public class AuditController {
     }
 
     @GetMapping("/strategy-overrides")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<Page<StrategyAuditResponse>>> getStrategyOverrides(
             @RequestParam(defaultValue = "0") Integer pageNumber,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -65,7 +65,7 @@ public class AuditController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getAllAuditLogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,

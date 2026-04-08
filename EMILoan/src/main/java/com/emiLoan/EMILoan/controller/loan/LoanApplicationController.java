@@ -27,7 +27,7 @@ public class LoanApplicationController {
     private final LoanApplicationService loanApplicationService;
 
     @PostMapping("/apply")
-    @PreAuthorize("hasAuthority('BORROWER')")
+    @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<LoanApplicationSubmitResponse>> apply(
             @RequestBody @Valid LoanApplicationRequest request,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -45,7 +45,7 @@ public class LoanApplicationController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<LoanApplicationDetailsResponse>>> getApplications(
             @RequestParam(defaultValue = "0") Integer pageNumber,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -82,7 +82,7 @@ public class LoanApplicationController {
     }
 
     @GetMapping("/{applicationCode}/details")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<LoanApplicationDetailsResponse>> getApplicationDetails(
             @PathVariable String applicationCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -99,7 +99,7 @@ public class LoanApplicationController {
     }
 
     @PatchMapping("/{applicationCode}/withdraw")
-    @PreAuthorize("hasAuthority('BORROWER')")
+    @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<LoanApplicationWithdrawResponse>> withdrawApplication(
             @PathVariable String applicationCode,
             @AuthenticationPrincipal UserDetails userDetails,

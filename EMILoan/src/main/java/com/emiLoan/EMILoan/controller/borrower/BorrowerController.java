@@ -25,7 +25,7 @@ public class BorrowerController {
     private final BorrowerService borrowerService;
 
     @GetMapping("/profile")
-    @PreAuthorize("hasAuthority('BORROWER')")
+    @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<BorrowerResponse>> getProfile(HttpServletRequest httpServletRequest) {
         BorrowerResponse response = borrowerService.getProfile();
         return ResponseEntity.ok(ApiResponse.of(
@@ -36,7 +36,7 @@ public class BorrowerController {
     }
 
     @PatchMapping("/profile/income")
-    @PreAuthorize("hasAuthority('BORROWER')")
+    @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<BorrowerResponse>> updateIncome(
             @RequestParam
             @NotNull(message = "Income cannot be null")
@@ -53,7 +53,7 @@ public class BorrowerController {
     }
 
     @GetMapping("/dashboard")
-    @PreAuthorize("hasAuthority('BORROWER')")
+    @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<BorrowerDashboardResponse>> getDashboardStats(HttpServletRequest httpServletRequest) {
         BorrowerDashboardResponse response = borrowerService.getDashboardStats();
         return ResponseEntity.ok(ApiResponse.of(
@@ -63,8 +63,8 @@ public class BorrowerController {
                 response));
     }
 
-    @GetMapping("/profile/{userCode}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'LOAN_OFFICER')")
+    @GetMapping("/admin/profile/{userCode}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<BorrowerResponse>> getProfileByUserCode(
             @PathVariable String userCode,
             HttpServletRequest httpServletRequest

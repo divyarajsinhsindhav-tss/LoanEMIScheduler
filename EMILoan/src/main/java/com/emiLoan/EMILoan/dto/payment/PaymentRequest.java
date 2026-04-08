@@ -4,6 +4,7 @@ import com.emiLoan.EMILoan.common.enums.PaymentMode;
 import com.emiLoan.EMILoan.dto.payment.details.PaymentMethodDetails;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -13,8 +14,8 @@ import java.util.UUID;
 @Data
 public class PaymentRequest {
 
-    @NotNull(message = "EMI ID is required")
-    private UUID emiId;
+    @NotBlank(message = "EMI Code is required")
+    private String emiCode;
 
     @NotNull(message = "Payment amount is required")
     @DecimalMin(value = "1.00", message = "Minimum payment amount is ₹1.00")

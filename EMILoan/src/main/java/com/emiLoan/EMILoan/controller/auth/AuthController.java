@@ -110,7 +110,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/delete")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> deleteAccount(
             @RequestParam String email,
             HttpServletRequest request
@@ -125,7 +125,7 @@ public class AuthController {
     }
 
     @PostMapping("/recover")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<AuthResponse>> recoverAccount(
             @Valid @RequestBody LoginRequest request,
             HttpServletRequest httpServletRequest

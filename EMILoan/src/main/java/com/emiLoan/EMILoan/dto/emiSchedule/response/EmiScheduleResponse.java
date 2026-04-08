@@ -20,6 +20,7 @@ public class EmiScheduleResponse {
     private UUID emiId;
     private Integer installmentNo;
     private LocalDate dueDate;
+    private String emiCode;
 
     private BigDecimal principalComponent;
     private BigDecimal interestComponent;

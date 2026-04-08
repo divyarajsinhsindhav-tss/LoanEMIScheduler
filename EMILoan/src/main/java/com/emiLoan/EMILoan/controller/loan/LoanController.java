@@ -38,7 +38,7 @@ public class LoanController {
 
 
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('BORROWER')")
+    @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<Page<LoanResponse>>> getMyLoans(
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest httpServletRequest,
@@ -57,7 +57,7 @@ public class LoanController {
     }
 
     @GetMapping("/{loanCode}")
-    @PreAuthorize("hasAnyAuthority('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<LoanResponse>> getLoanDetails(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -74,7 +74,7 @@ public class LoanController {
     }
 
     @GetMapping("/{loanCode}/summary")
-    @PreAuthorize("hasAuthority('BORROWER')")
+    @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<LoanSummaryResponse>> getLoanSummary(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -92,7 +92,7 @@ public class LoanController {
 
 
     @GetMapping("/{loanCode}/schedule")
-    @PreAuthorize("hasAnyAuthority('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<EmiScheduleResponse>>> getSchedule(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -112,7 +112,7 @@ public class LoanController {
     }
 
     @GetMapping("/{loanCode}/schedule/next")
-    @PreAuthorize("hasAuthority('BORROWER')")
+    @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<EmiScheduleResponse>> getNextUpcomingEmi(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -129,7 +129,7 @@ public class LoanController {
     }
 
     @GetMapping("/{loanCode}/foreclosure-quote")
-    @PreAuthorize("hasAuthority('BORROWER')")
+    @PreAuthorize("hasRole('BORROWER')")
     public ResponseEntity<ApiResponse<BigDecimal>> getForeclosureQuote(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -147,7 +147,7 @@ public class LoanController {
 
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<LoanResponse>>> getAllLoans(
             @RequestParam(defaultValue = "0") Integer pageNumber,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -166,7 +166,7 @@ public class LoanController {
     }
 
     @PutMapping("/applications/{applicationCode}/decision")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER')")
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<LoanResponse>> processDecision(
             @PathVariable String applicationCode,
             @RequestBody @Valid OfficerDecisionRequest request,
@@ -184,7 +184,7 @@ public class LoanController {
     }
 
     @PatchMapping("/{loanCode}/status")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER')")
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<LoanResponse>> updateLoanStatus(
             @PathVariable String loanCode,
             @RequestBody @Valid LoanStatusUpdateRequest request,
@@ -202,7 +202,7 @@ public class LoanController {
 
 
     @GetMapping("/{loanCode}/audit-history")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<AuditLogResponse>>> getLoanAuditHistory(
             @PathVariable String loanCode,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -222,7 +222,7 @@ public class LoanController {
     }
 
     @GetMapping("/strategy-overrides")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<StrategyAuditResponse>>> getStrategyOverrides(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(defaultValue = "0") int page,
