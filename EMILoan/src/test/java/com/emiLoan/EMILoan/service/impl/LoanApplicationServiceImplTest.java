@@ -14,6 +14,7 @@ import com.emiLoan.EMILoan.entity.BorrowerProfile;
 import com.emiLoan.EMILoan.entity.LoanApplication;
 import com.emiLoan.EMILoan.entity.User;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
+import com.emiLoan.EMILoan.exceptions.LoanLimitExceededException;
 import com.emiLoan.EMILoan.mapper.LoanApplicationMapper;
 import com.emiLoan.EMILoan.repository.BorrowerProfileRepository;
 import com.emiLoan.EMILoan.repository.LoanApplicationRepository;
@@ -166,6 +167,6 @@ class LoanApplicationServiceImplTest {
         when(loanRepository.countActiveLoans(userId, LoanStatus.ACTIVE)).thenReturn(1L);
         when(applicationRepository.countByBorrower_UserIdAndStatus(userId, ApplicationStatus.PENDING)).thenReturn(2L);
 
-        assertThrows(BusinessRuleException.class, () -> loanApplicationService.apply(request, email));
+        assertThrows(LoanLimitExceededException.class, () -> loanApplicationService.apply(request, email));
     }
 }

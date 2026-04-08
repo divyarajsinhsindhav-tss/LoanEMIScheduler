@@ -495,3 +495,5 @@ Caused by: org.postgresql.util.PSQLException: ERROR: insert or update on table "
 	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
 	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:181)
 	... 34 common frames omitted
+2026-04-08 19:36:55 ERROR [http-nio-8080-exec-5] c.e.E.e.GlobalExceptionHandler - ApplicationException: ErrorResponse(status=422, error=Unprocessable Entity, message=Access Denied: You do not have permission to view this loan data., path=/api/v1/loans/LAN000003/schedule, timestamp=2026-04-08T14:06:55.036905100Z, fieldErrors={code=BUSINESS_RULE_VIOLATION}, details=null)
+2026-04-08 19:37:37 ERROR [http-nio-8080-exec-7] c.e.E.e.GlobalExceptionHandler - ApplicationException: ErrorResponse(status=422, error=Unprocessable Entity, message=No OTP found for this email., path=/api/v1/auth/verify-login, timestamp=2026-04-08T14:07:37.443271200Z, fieldErrors={code=BUSINESS_RULE_VIOLATION}, details=null)
