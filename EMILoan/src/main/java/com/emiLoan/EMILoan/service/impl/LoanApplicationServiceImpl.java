@@ -15,6 +15,7 @@ import com.emiLoan.EMILoan.engine.DtiCalculationEngine;
 import com.emiLoan.EMILoan.engine.StrategySelectionEngine;
 import com.emiLoan.EMILoan.entity.*;
 import com.emiLoan.EMILoan.exceptions.BusinessRuleException;
+import com.emiLoan.EMILoan.exceptions.LoanLimitExceededException;
 import com.emiLoan.EMILoan.exceptions.ResourceNotFoundException;
 import com.emiLoan.EMILoan.mapper.BorrowerProfileMapper;
 import com.emiLoan.EMILoan.mapper.LoanApplicationMapper;
@@ -84,10 +85,8 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
                 profile.getUser().getUserId(), ApplicationStatus.PENDING);
 
         if ((activeLoanCount + pendingAppCount) >= MAX_ACTIVE_LOANS) {
-            throw new BusinessRuleException(
-                    "Application rejected: You currently have " + activeLoanCount + " active loan(s) and " +
-                            pendingAppCount + " pending application(s). Processing this would exceed your maximum limit of " +
-                            MAX_ACTIVE_LOANS + " concurrent loans."
+            throw new LoanLimitExceededException(
+                    activeLoanCount+pendingAppCount
             );
         }
 

@@ -67,11 +67,13 @@ public class EmiServiceImpl implements EmiService {
 
         List<EmiSchedule> schedules = amortizationEngine.buildSchedule(loan);
 
+
         if (schedules == null || schedules.isEmpty()) {
             throw new BusinessRuleException("Critical Engine Failure: Could not generate schedule for " + loan.getLoanCode());
         }
 
-        emiScheduleRepository.saveAll(schedules);
+        //emiScheduleRepository.saveAll(schedules);
+        emiScheduleRepository.saveAllAndFlush(schedules);
 
         BigDecimal baseEmi = schedules.get(0).getTotalEmi();
         loan.setEmiAmount(baseEmi);

@@ -38,7 +38,7 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Async
+    @Async("auditTaskExecutor")
     public void logAction(User actor, AuditAction action, AuditEntityType entityType,
                           UUID entityId, String description, Object oldState, Object newState) {
 
@@ -69,7 +69,7 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Async
+    @Async("auditTaskExecutor")
     public void logStrategyDecision(LoanApplication application, String systemSuggested,
                                     String officerChose, boolean overridden, User officer) {
 

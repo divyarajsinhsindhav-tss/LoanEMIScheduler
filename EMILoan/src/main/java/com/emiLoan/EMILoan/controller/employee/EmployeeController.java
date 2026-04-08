@@ -6,7 +6,6 @@ import com.emiLoan.EMILoan.dto.user.request.UpdateEmployeeRequest;
 import com.emiLoan.EMILoan.dto.user.response.EmployeeDashboardResponse;
 import com.emiLoan.EMILoan.dto.user.response.LoanOfficerResponse;
 import com.emiLoan.EMILoan.dto.user.response.RegistrationResponse;
-import com.emiLoan.EMILoan.dto.user.response.UserResponse;
 import com.emiLoan.EMILoan.service.interfaces.AuthService;
 import com.emiLoan.EMILoan.service.interfaces.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +27,7 @@ public class EmployeeController {
     private final AuthService authService;
 
     @GetMapping("/profile")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<LoanOfficerResponse>> getProfile(HttpServletRequest request) {
         LoanOfficerResponse response = employeeService.getProfile();
         return ResponseEntity.ok(ApiResponse.of(
@@ -38,8 +38,10 @@ public class EmployeeController {
     }
 
     @GetMapping("/dashboard")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
     public ResponseEntity<ApiResponse<EmployeeDashboardResponse>> getDashboardStats(HttpServletRequest request) {
+        System.out.println("Current User Authorities: " +
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         EmployeeDashboardResponse response = employeeService.getDashboardStats();
         return ResponseEntity.ok(ApiResponse.of(
                 HttpStatus.OK,
@@ -49,7 +51,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/admin/register/officer")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<RegistrationResponse>> registerLoanOfficer(
             @Valid @RequestBody LoanOfficerRegistrationRequest request,
             HttpServletRequest httpServletRequest
@@ -65,7 +67,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/admin/all")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<LoanOfficerResponse>>> getAllEmployees(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -80,7 +82,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/admin/{userCode}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<LoanOfficerResponse>> getEmployeeByCode(
             @PathVariable String userCode,
             HttpServletRequest request
@@ -94,7 +96,7 @@ public class EmployeeController {
     }
 
     @PatchMapping("/admin/{userCode}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<LoanOfficerResponse>> updateEmployeeDetails(
             @PathVariable String userCode,
             @Valid @RequestBody UpdateEmployeeRequest updateRequest,

@@ -35,6 +35,9 @@ public class EmiSchedule {
     @Column(name = "due_date", nullable = false)
     private LocalDate dueDate;
 
+    @Column(name = "emi_code", unique = true, insertable = false, updatable = false)
+    private String emiCode;
+
     @Column(name = "principal_component", nullable = false, precision = 12, scale = 2)
     private BigDecimal principalComponent;
 

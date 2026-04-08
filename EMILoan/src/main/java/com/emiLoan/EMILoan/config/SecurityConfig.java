@@ -1,6 +1,5 @@
 package com.emiLoan.EMILoan.config;
 
-
 import com.emiLoan.EMILoan.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +28,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(
                                 "/api/v1/auth/**",
                                 "/v3/api-docs/**",
@@ -36,9 +36,11 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
 
-                        .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/v1/officer/**").hasAuthority("LOAN_OFFICER")
-                        .requestMatchers("/api/v1/borrower/**").hasAuthority("BORROWER")
+                        .requestMatchers("/api/v1/borrower/admin/**").hasAnyRole("ADMIN", "LOAN_OFFICER")
+                        .requestMatchers("/api/v1/borrower/**").hasRole("BORROWER")
+
+                        .requestMatchers("/api/v1/employee/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/employee/**").hasAnyRole("LOAN_OFFICER", "ADMIN")
 
                         .anyRequest().authenticated()
                 )
@@ -48,7 +50,6 @@ public class SecurityConfig {
                 )
 
                 .authenticationProvider(authenticationProvider)
-
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

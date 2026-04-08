@@ -18,7 +18,7 @@ public interface StrategyAuditMapper {
     @Mapping(target = "changedByOfficerName", source = "changedBy", qualifiedByName = "mapFullName")
     StrategyAuditResponse toResponse(StrategyAudit strategyAudit);
 
-    List<StrategyAuditResponse> toResponseList(List<StrategyAudit> strategyAudits);
+ //   List<StrategyAuditResponse> toResponseList(List<StrategyAudit> strategyAudits);
 
 
     @Named("mapFullName")

@@ -56,8 +56,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentResponse makePayment(PaymentRequest request, String email) {
-        EmiSchedule emi = emiScheduleRepository.findById(request.getEmiId())
-                .orElseThrow(() -> new BusinessRuleException("EMI installment not found"));
+        EmiSchedule emi = emiScheduleRepository.findByEmiCode(request.getEmiCode())
+                .orElseThrow(() -> new BusinessRuleException("EMI installment not found with code: " + request.getEmiCode()));
 
         Loan loan = emi.getLoan();
         User borrower = loan.getBorrower();

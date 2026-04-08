@@ -30,7 +30,7 @@ public class PaymentController {
 
 
         @PostMapping("/pay")
-        @PreAuthorize("hasAuthority('BORROWER')")
+        @PreAuthorize("hasRole('BORROWER')")
         public ResponseEntity<ApiResponse<PaymentResponse>> makePayment(
                 @Valid @RequestBody PaymentRequest request,
                 @AuthenticationPrincipal UserDetails userDetails,
@@ -47,7 +47,7 @@ public class PaymentController {
         }
 
         @PostMapping("/foreclose")
-        @PreAuthorize("hasAuthority('BORROWER')")
+        @PreAuthorize("hasRole('BORROWER')")
         public ResponseEntity<ApiResponse<PaymentResponse>> forecloseLoan(
                 @Valid @RequestBody ForeclosureRequest request,
                 @AuthenticationPrincipal UserDetails userDetails,
@@ -65,7 +65,7 @@ public class PaymentController {
 
 
         @GetMapping("/history/my")
-        @PreAuthorize("hasAuthority('BORROWER')")
+        @PreAuthorize("hasRole('BORROWER')")
         public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getMyPaymentHistory(
                 @AuthenticationPrincipal UserDetails userDetails,
                 HttpServletRequest httpServletRequest,
@@ -84,7 +84,7 @@ public class PaymentController {
         }
 
         @GetMapping("/history/loan/{loanCode}")
-        @PreAuthorize("hasAnyAuthority('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
+        @PreAuthorize("hasAnyRole('BORROWER', 'LOAN_OFFICER', 'ADMIN')")
         public ResponseEntity<ApiResponse<PaymentHistoryResponse>> getLoanPaymentHistory(
                 @PathVariable String loanCode,
                 @AuthenticationPrincipal UserDetails userDetails,
@@ -101,7 +101,7 @@ public class PaymentController {
         }
 
         @GetMapping("/history/all")
-        @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+        @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN')")
         public ResponseEntity<ApiResponse<List<PaymentHistoryResponse>>> getAllPayments(
                 @AuthenticationPrincipal UserDetails userDetails,
                 HttpServletRequest httpServletRequest
