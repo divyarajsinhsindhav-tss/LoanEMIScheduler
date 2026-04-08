@@ -15,10 +15,8 @@ import java.util.UUID;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoanResponse {
-    private UUID loanId;
     private String loanCode;
 
-    private UUID applicationId;
     private String applicationCode;
 
     private UUID borrowerId;

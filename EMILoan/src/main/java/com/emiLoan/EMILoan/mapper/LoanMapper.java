@@ -10,7 +10,6 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LoanMapper {
 
-    @Mapping(target = "applicationId", source = "application.applicationId")
     @Mapping(target = "applicationCode", source = "application.applicationCode")
     @Mapping(target = "borrowerId", source = "borrower.userId")
     @Mapping(target = "borrowerName", source = "borrower", qualifiedByName = "mapFullName")

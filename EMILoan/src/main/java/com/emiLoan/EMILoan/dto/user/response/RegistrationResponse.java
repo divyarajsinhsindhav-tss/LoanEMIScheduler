@@ -14,7 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegistrationResponse {
-    private UUID userId;
     private String userCode;
     private String email;
     private String message;

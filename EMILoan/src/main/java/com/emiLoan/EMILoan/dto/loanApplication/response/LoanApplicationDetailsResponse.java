@@ -12,6 +12,4 @@ import lombok.Data;
 public class LoanApplicationDetailsResponse {
     private LoanApplicationResponse application;
     private BorrowerResponse borrowerProfile;
-    private String panFirst3;
-    private String panLast2;
 }

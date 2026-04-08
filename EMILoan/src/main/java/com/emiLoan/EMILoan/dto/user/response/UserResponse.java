@@ -16,7 +16,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
-    private UUID userId;
     private String userCode;
     private String personCode;
     private String firstName;

@@ -146,7 +146,7 @@ public class LoanServiceImpl implements LoanService {
 
             LoanResponse loanResponse = generateAndPersistLoan(application);
 
-            Loan savedLoan = loanRepository.findById(loanResponse.getLoanId())
+            Loan savedLoan = loanRepository.findByLoanCode(loanResponse.getLoanCode())
                     .orElseThrow(() -> new BusinessRuleException("Internal Error: Loan record not found after generation."));
 
             notificationService.sendLoanApproved(application.getBorrower(), savedLoan);

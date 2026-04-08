@@ -55,7 +55,7 @@ public class AmortizationEngine {
         }
 
         long executionTime = System.currentTimeMillis() - startTime;
-        log.debug("Generated {}-month schedule using {} strategy in {}ms",
+        log.info("Generated {}-month schedule using {} strategy in {}ms",
                 loan.getTenureMonths(), strategy.getStrategyName(), executionTime);
 
         return scheduleEntities;

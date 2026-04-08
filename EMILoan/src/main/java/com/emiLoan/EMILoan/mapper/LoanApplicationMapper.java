@@ -26,7 +26,6 @@ public interface LoanApplicationMapper {
     @Mapping(target = "dtiRatio", ignore = true)
     LoanApplication toEntity(LoanApplicationRequest request);
 
-    @Mapping(target = "borrowerId", source = "borrower.userId")
     @Mapping(target = "borrowerName", source = "borrower", qualifiedByName = "mapFullName")
     @Mapping(target = "reviewedByOfficerName", source = "reviewedBy", qualifiedByName = "mapFullName")
     LoanApplicationResponse toResponse(LoanApplication application);

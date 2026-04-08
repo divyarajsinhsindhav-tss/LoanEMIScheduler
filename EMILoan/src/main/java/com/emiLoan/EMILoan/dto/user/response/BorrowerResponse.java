@@ -15,7 +15,6 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BorrowerResponse {
     private UserResponse user;
-    private UUID borrowerId;
     private String borrowerCode;
     private BigDecimal monthlyIncome;
     private Integer existingLoanCount;

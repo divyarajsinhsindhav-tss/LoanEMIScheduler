@@ -198,8 +198,6 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         return LoanApplicationDetailsResponse.builder()
                 .application(applicationMapper.toResponse(application))
                 .borrowerProfile(borrowerProfileMapper.toResponse(profile))
-                .panFirst3(profile.getUser().getPerson().getPanFirst3())
-                .panLast2(profile.getUser().getPerson().getPanLast2())
                 .build();
     }
 

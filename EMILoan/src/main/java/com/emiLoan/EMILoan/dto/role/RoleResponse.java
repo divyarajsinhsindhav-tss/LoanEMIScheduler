@@ -14,7 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RoleResponse {
-    private UUID roleId;
     private RoleName roleName;
     private String description;
 }

@@ -16,7 +16,6 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface EmployeeProfileMapper {
 
-    @Mapping(target = "employeeId", ignore = true)
     @Mapping(target = "employeeCode", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

@@ -86,7 +86,6 @@ class LoanServiceImplTest {
                 .build();
 
         LoanResponse response = new LoanResponse();
-        response.setLoanId(loan.getLoanId());
         response.setLoanCode(loan.getLoanCode());
 
         when(userRepository.findByEmail("officer@test.com"))

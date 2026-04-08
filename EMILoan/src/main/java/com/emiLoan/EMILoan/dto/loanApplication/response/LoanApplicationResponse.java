@@ -17,10 +17,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoanApplicationResponse {
-    private UUID applicationId;
     private String applicationCode;
 
-    private UUID borrowerId;
     private String borrowerName;
 
     private BigDecimal requestedAmount;
