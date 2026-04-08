@@ -278,6 +278,20 @@
         },
         {
           "name": "recover deleted account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set(\"admin_token\", jsonData.data.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "auth": {
               "type": "bearer",
@@ -314,6 +328,102 @@
           "response": []
         },
         {
+          "name": "verify registration",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{borrower_email}}\",\r\n    \"otpCode\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/verify-registration",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "verify-registration"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verify login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.accessToken) {",
+                  "    pm.collectionVariables.set(\"admin_token\", jsonData.data.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{admin_email}}\",\r\n    \"otpCode\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/verify-login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "verify-login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get self employee profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/employee/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employee",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "get profile by usercode",
           "request": {
             "auth": {
@@ -329,12 +439,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/borrower/profile/{{USERCODE}}",
+              "raw": "{{base_url}}/borrower/admin/profile/{{USERCODE}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "borrower",
+                "admin",
                 "profile",
                 "{{USERCODE}}"
               ]
@@ -508,11 +619,11 @@
                 }
               ]
             },
-            "method": "POST",
+            "method": "PUT",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"status\": \"APPROVED\",\r\n    \"interestRate\": 0.5,\r\n    \"officerStrategy\": null,\r\n    \"remarks\": \"congrats\"\r\n}",
+              "raw": "{\r\n    \"status\": \"APPROVED\",\r\n    \"interestRate\": 10,\r\n    \"officerStrategy\": null,\r\n    \"remarks\": \"congrats\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -588,14 +699,42 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/loans/LAN000001/audit-history",
+              "raw": "{{base_url}}/loans/{{loan_code}}/audit-history",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "loans",
-                "LAN000001",
+                "{{loan_code}}",
                 "audit-history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get strategy overrides",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/loans/strategy-overrides",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "loans",
+                "strategy-overrides"
               ]
             }
           },
@@ -769,7 +908,7 @@
           "response": []
         },
         {
-          "name": "get audit logs by officer id",
+          "name": "get audit logs by actor id",
           "request": {
             "auth": {
               "type": "bearer",
@@ -784,14 +923,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/audit/officer/{{officer_id}}",
+              "raw": "{{base_url}}/audit/actor/{{actorId}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "audit",
-                "officer",
-                "{{officer_id}}"
+                "actor",
+                "{{actorId}}"
               ]
             }
           },

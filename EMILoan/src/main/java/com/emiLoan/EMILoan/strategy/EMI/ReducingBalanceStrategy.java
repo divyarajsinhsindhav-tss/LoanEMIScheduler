@@ -12,6 +12,28 @@ import static com.emiLoan.EMILoan.common.constants.AppConstants.*;
 @Component("REDUCING_BALANCE")
 public class ReducingBalanceStrategy implements EmiCalculationStrategy {
 
+    /**
+     * Generates a loan schedule using the Reducing Balance method.
+     * 
+     * MATH FORMULAS:
+     * 1. Monthly Interest Rate (r) = Annual Rate / 1200
+     * 2. EMI = [P * r * (1 + r)^n] / [(1 + r)^n - 1]
+     *    where:
+     *    P = Principal amount
+     *    r = Monthly interest rate
+     *    n = Loan tenure in months
+     * 3. Interest Component = Remaining Balance * r
+     * 4. Principal Component = EMI - Interest Component
+     *
+     * WORKFLOW:
+     * 1. Calculate the monthly interest rate (r).
+     * 2. Calculate the monthly EMI using the standard amortized formula.
+     * 3. For each month:
+     *    a. Calculate interest on the *current* outstanding balance.
+     *    b. Subtract interest from the EMI to get the principal repayment.
+     *    c. Reduce the outstanding balance by that principal amount.
+     * 4. Adjust the final month for any minor rounding differences.
+     */
     @Override
     public List<EmiRowData> generateSchedule(
             final BigDecimal principal,
@@ -21,11 +43,15 @@ public class ReducingBalanceStrategy implements EmiCalculationStrategy {
     ) {
         final List<EmiRowData> schedule = new ArrayList<>(months);
 
+        // Handle zero interest case
         if (annualRate.compareTo(BigDecimal.ZERO) == 0) {
             return generateZeroInterestSchedule(principal, months, startDate, schedule);
         }
 
+        // 1. Calculate Monthly Interest Rate (r)
         final BigDecimal monthlyRate = annualRate.divide(DIVISOR_1200,INTERNAL_PRECISION, RoundingMode.HALF_UP);
+        
+        // 2. Calculate EMI using formula: [P * r * (1+r)^n] / [((1+r)^n) - 1]
         final BigDecimal onePlusR = BigDecimal.ONE.add(monthlyRate);
         final BigDecimal compoundFactor = onePlusR.pow(months);
 
@@ -36,15 +62,18 @@ public class ReducingBalanceStrategy implements EmiCalculationStrategy {
 
         BigDecimal remainingBalance = principal;
 
+        // 3. Generate Monthly Rows
         for (int i = 1; i <= months; i++) {
             final LocalDate dueDate = startDate.plusMonths(i);
 
+            // Interest component is calculated on the reducing balance
             BigDecimal interestComponent = remainingBalance.multiply(monthlyRate)
                     .setScale(CURRENCY_PRECISION, RoundingMode.HALF_UP);
 
             BigDecimal principalComponent = standardEmi.subtract(interestComponent);
             BigDecimal currentEmi = standardEmi;
 
+            // Final month adjustment
             if (i == months) {
                 principalComponent = remainingBalance;
                 currentEmi = principalComponent.add(interestComponent);

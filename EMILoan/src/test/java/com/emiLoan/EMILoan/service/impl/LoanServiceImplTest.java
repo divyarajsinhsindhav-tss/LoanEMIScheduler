@@ -102,7 +102,7 @@ class LoanServiceImplTest {
 
         when(loanRepository.save(any(Loan.class))).thenReturn(loan);
 
-        when(loanRepository.findById(loan.getLoanId())).thenReturn(Optional.of(loan));
+        when(loanRepository.findByLoanCode(loan.getLoanCode())).thenReturn(Optional.of(loan));
 
         when(loanMapper.toResponse(any(Loan.class))).thenReturn(response);
         LoanResponse result = loanService.processDecision("APP123", request, "officer@test.com");

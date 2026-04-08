@@ -115,7 +115,7 @@ class LoanApplicationServiceImplTest {
         String email = "test@example.com";
 
         LoanApplicationRequest request = new LoanApplicationRequest();
-        request.setRequestedAmount(BigDecimal.valueOf(100000)); // ✅ FIXED
+        request.setRequestedAmount(BigDecimal.valueOf(100000));
         request.setExistingEmi(BigDecimal.valueOf(5000));
         request.setTenureMonths(12);
 
@@ -159,7 +159,7 @@ class LoanApplicationServiceImplTest {
         profile.setUser(user);
 
         LoanApplicationRequest request = new LoanApplicationRequest();
-        request.setRequestedAmount(BigDecimal.valueOf(100000)); // ✅ FIXED
+        request.setRequestedAmount(BigDecimal.valueOf(100000));
         request.setTenureMonths(12);
 
         when(borrowerProfileRepository.findByUser_EmailWithUser(email)).thenReturn(Optional.of(profile));
