@@ -1,4 +1,0 @@
-2026-04-07 09:01:06 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-07T03:26:06.972796900
-2026-04-07 09:01:09 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
-2026-04-07 09:01:11 INFO  [scheduling-1] c.e.E.scheduler.OverdueEmiScheduler - >>>> Starting Daily Overdue Detection Job for: 2026-04-07
-2026-04-07 09:01:20 INFO  [scheduling-1] c.e.E.scheduler.OverdueEmiScheduler - No new overdue EMIs detected today.
