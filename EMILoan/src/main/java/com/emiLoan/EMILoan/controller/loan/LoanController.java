@@ -166,7 +166,7 @@ public class LoanController {
     }
 
     @PutMapping("/applications/{applicationCode}/decision")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<LoanResponse>> processDecision(
             @PathVariable String applicationCode,
             @RequestBody @Valid OfficerDecisionRequest request,
@@ -184,7 +184,7 @@ public class LoanController {
     }
 
     @PatchMapping("/{loanCode}/status")
-    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('LOAN_OFFICER')")
     public ResponseEntity<ApiResponse<LoanResponse>> updateLoanStatus(
             @PathVariable String loanCode,
             @RequestBody @Valid LoanStatusUpdateRequest request,

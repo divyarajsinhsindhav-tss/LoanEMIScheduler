@@ -134,11 +134,22 @@ erDiagram
 
   audit_logs {
     UUID audit_id PK
-    UUID officer_id FK
+    UUID actor_id FK
     VARCHAR action
     VARCHAR entity_type
     UUID entity_id
+    VARCHAR description
+    JSONB old_value
+    JSONB new_value
     TIMESTAMPTZ action_time
+  }
+
+  otp_tokens {
+    UUID id PK
+    VARCHAR email
+    VARCHAR otp_code
+    VARCHAR purpose
+    TIMESTAMP expiry_time
   }
 
   strategy_audit {
@@ -159,7 +170,7 @@ erDiagram
   users               ||--o{ loan_applications  : "reviewed_by (officer)"
   users               ||--o{ loans              : "user_id"
   users               ||--o{ notifications      : "user_id"
-  users               ||--o{ audit_logs         : "officer_id"
+  users               ||--o{ audit_logs         : "actor_id"
   users               ||--o{ strategy_audit     : "changed_by"
   loan_applications   ||--o| loans              : "application_id"
   loan_applications   ||--o{ strategy_audit     : "application_id"
