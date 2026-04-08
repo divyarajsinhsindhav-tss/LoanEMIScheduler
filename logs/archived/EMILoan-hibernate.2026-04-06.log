@@ -1,0 +1,7112 @@
+2026-04-05 00:00:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:00:02 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        borrower_profile 
+    WHERE
+        user_id IN (SELECT
+            user_id FROM users 
+        WHERE
+            is_active = false 
+            AND is_deleted = false 
+            AND created_at < ?)
+2026-04-05 00:00:02 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        employee_profile 
+    WHERE
+        user_id IN (SELECT
+            user_id FROM users 
+        WHERE
+            is_active = false 
+            AND is_deleted = false 
+            AND created_at < ?)
+2026-04-05 00:00:02 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < (
+            NOW() - INTERVAL '5 minutes'
+        )
+2026-04-05 00:02:14 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-05 00:02:22 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-05 00:02:22 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-05 00:02:23 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-05 00:02:23 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05 00:02:23 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-05 00:02:26 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-05 00:02:30 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:02:30 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:02:30 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:02:30 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-05 00:02:30 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:02:30 DEBUG [main] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-05 00:02:31 DEBUG [main] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:02:31 DEBUG [main] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-05 00:02:31 DEBUG [main] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:02:31 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-05 00:02:53 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:02:53 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-05 00:02:53 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-05 00:02:53 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:02:53 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-05 00:02:53 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:02:53 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:02:53 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-05 00:02:54 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        borrower_profile
+        (created_at, existing_loan_count, monthly_income, updated_at, user_id, borrower_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:02:54 DEBUG [task-2] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:02:54 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-05 00:03:06 DEBUG [task-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:05:07 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:05:07 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-05 00:08:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:08:32 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:10:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:10:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-05 00:10:13 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:10:13 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-05 00:10:13 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-05 00:10:13 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:10:14 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:10:14 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-05 00:10:14 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    insert 
+    into
+        borrower_profile
+        (created_at, existing_loan_count, monthly_income, updated_at, user_id, borrower_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:10:14 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-05 00:10:14 DEBUG [task-4] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:10:26 DEBUG [task-3] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:11:15 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:11:29 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:11:31 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:12:08 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:12:13 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:12:22 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:12:30 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:12:35 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:13:38 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:14:09 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:14:48 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-05 00:15:02 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:17 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:20 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:22 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:23 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:24 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:25 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:26 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:28 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:29 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:30 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:31 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:32 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:33 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:34 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:36 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:37 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:41 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:43 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:45 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:47 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:49 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:50 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:51 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:52 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:53 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:54 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:55 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:56 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:57 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:15:59 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:00 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:01 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:03 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:06 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:09 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:10 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:12 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:13 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:14 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:15 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:16 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:18 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:19 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:21 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:22 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:22 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:24 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:16:25 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:17:33 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:19:53 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:20:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-05 00:23:20 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-05 00:23:31 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-05 00:23:32 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-05 00:23:34 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-05 00:23:34 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05 00:23:35 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-05 00:23:39 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-05 00:23:47 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:23:47 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:23:47 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:23:47 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-05 00:23:47 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:23:47 DEBUG [main] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-05 00:23:48 DEBUG [main] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:23:48 DEBUG [main] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-05 00:23:48 DEBUG [main] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:23:48 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-05 00:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-05 00:25:21 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-05 00:25:26 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-05 00:25:26 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-05 00:25:27 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-05 00:25:27 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05 00:25:27 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-05 00:25:30 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-05 00:25:38 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:25:38 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:25:38 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:25:38 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-05 00:26:07 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:26:08 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-05 00:26:08 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-05 00:26:08 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:26:09 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-05 00:26:09 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:26:09 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:26:09 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-05 00:26:09 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        borrower_profile
+        (created_at, existing_loan_count, monthly_income, updated_at, user_id, borrower_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:26:09 DEBUG [task-2] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:26:09 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-05 00:26:19 DEBUG [task-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:27:47 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:28:03 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:28:08 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:28:11 DEBUG [http-nio-8080-exec-8] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:30:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:30:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-05 00:33:16 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-05 00:33:25 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-05 00:33:26 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-05 00:33:28 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-05 00:33:28 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-05 00:33:28 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-05 00:33:30 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:33:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        borrower_profile
+        (created_at, existing_loan_count, monthly_income, updated_at, user_id, borrower_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:33:46 DEBUG [task-2] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:33:46 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-05 00:33:59 DEBUG [task-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:34:56 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:35:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:35:02 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-05 00:35:14 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-05 00:35:14 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-05 00:35:14 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-05 00:35:14 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-05 00:35:14 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:35:14 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-05 00:35:14 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    insert 
+    into
+        borrower_profile
+        (created_at, existing_loan_count, monthly_income, updated_at, user_id, borrower_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-05 00:35:14 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-05 00:35:14 DEBUG [task-4] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:35:29 DEBUG [task-3] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-05 00:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-05 00:45:03 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-05 00:45:03 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 10:38:53 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 10:38:59 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 10:39:00 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 10:39:01 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 10:39:01 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 10:39:01 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 10:39:04 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 10:39:13 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 10:39:13 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 10:39:13 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 10:39:13 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 10:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 10:40:13 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-06 10:40:13 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-06 10:40:26 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-06 10:40:26 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-06 10:40:26 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-06 10:40:26 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-06 10:40:26 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-06 10:40:26 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 10:40:27 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:40:27 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:40:27 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    insert 
+    into
+        borrower_profile
+        (created_at, existing_loan_count, monthly_income, updated_at, user_id, borrower_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-06 10:40:27 DEBUG [EmailSender-2] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:40:27 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 10:40:33 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:41:14 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        ot1_0.id,
+        ot1_0.email,
+        ot1_0.expiry_time,
+        ot1_0.otp_code,
+        ot1_0.purpose 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.email=? 
+        and ot1_0.purpose=? 
+    order by
+        ot1_0.expiry_time desc 
+    fetch
+        first ? rows only
+2026-04-06 10:41:14 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:41:14 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:41:14 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-06 10:41:14 DEBUG [EmailSender-4] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:41:14 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    update
+        users 
+    set
+        deleted_at=?,
+        deleted_by=?,
+        email=?,
+        first_name=?,
+        is_active=?,
+        is_deleted=?,
+        last_name=?,
+        password=?,
+        person_id=?,
+        phone=?,
+        role_id=?,
+        updated_at=? 
+    where
+        user_id=?
+2026-04-06 10:41:14 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens 
+    where
+        id=?
+2026-04-06 10:41:17 DEBUG [EmailSender-3] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:41:27 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:41:27 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:41:28 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:41:28 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 10:41:31 DEBUG [EmailSender-5] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:41:54 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        ot1_0.id,
+        ot1_0.email,
+        ot1_0.expiry_time,
+        ot1_0.otp_code,
+        ot1_0.purpose 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.email=? 
+        and ot1_0.purpose=? 
+    order by
+        ot1_0.expiry_time desc 
+    fetch
+        first ? rows only
+2026-04-06 10:41:54 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:41:54 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:41:54 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens 
+    where
+        id=?
+2026-04-06 10:41:54 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:41:58 DEBUG [EmailSender-2] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:42:42 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:42:42 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:42:42 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        bp1_0.borrower_id,
+        bp1_0.borrower_code,
+        bp1_0.created_at,
+        bp1_0.existing_loan_count,
+        bp1_0.monthly_income,
+        bp1_0.updated_at,
+        bp1_0.user_id,
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        borrower_profile bp1_0 
+    join
+        users u1_0 
+            on u1_0.user_id=bp1_0.user_id 
+            and (u1_0.is_deleted = false) 
+    where
+        u1_0.email=?
+2026-04-06 10:42:42 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:42:42 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        count(l1_0.loan_id) 
+    from
+        loans l1_0 
+    where
+        l1_0.user_id=? 
+        and l1_0.loan_status=?
+2026-04-06 10:42:42 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        count(la1_0.application_id) 
+    from
+        loan_applications la1_0 
+    where
+        (
+            la1_0.is_deleted = false
+        ) 
+        and la1_0.user_id=? 
+        and la1_0.status=?
+2026-04-06 10:42:42 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    insert 
+    into
+        loan_applications
+        (applied_at, user_id, deleted_at, deleted_by, dti_ratio, existing_emi, interest_rate, is_deleted, officer_strategy, requested_amount, reviewed_at, reviewed_by, status, suggested_strategy, tenure_months, application_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:42:42 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        la1_0.application_id,
+        la1_0.application_code,
+        la1_0.applied_at,
+        la1_0.user_id,
+        la1_0.deleted_at,
+        la1_0.deleted_by,
+        la1_0.dti_ratio,
+        la1_0.existing_emi,
+        la1_0.interest_rate,
+        la1_0.is_deleted,
+        la1_0.officer_strategy,
+        la1_0.requested_amount,
+        la1_0.reviewed_at,
+        la1_0.reviewed_by,
+        la1_0.status,
+        la1_0.suggested_strategy,
+        la1_0.tenure_months 
+    from
+        loan_applications la1_0 
+    where
+        la1_0.application_id=? 
+        and (
+            la1_0.is_deleted = false
+        )
+2026-04-06 10:42:42 DEBUG [EmailSender-3] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:42:46 DEBUG [EmailSender-4] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:43:39 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:43:39 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:43:39 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:43:40 DEBUG [http-nio-8080-exec-10] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 10:43:43 DEBUG [EmailSender-5] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:44:25 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        ot1_0.id,
+        ot1_0.email,
+        ot1_0.expiry_time,
+        ot1_0.otp_code,
+        ot1_0.purpose 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.email=? 
+        and ot1_0.purpose=? 
+    order by
+        ot1_0.expiry_time desc 
+    fetch
+        first ? rows only
+2026-04-06 10:44:25 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:44:25 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:44:25 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens 
+    where
+        id=?
+2026-04-06 10:44:25 DEBUG [EmailSender-2] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:44:28 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:45:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 10:45:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 10:45:06 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:45:06 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:45:06 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-06 10:45:06 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-06 10:45:06 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-06 10:45:06 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-06 10:45:06 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-06 10:45:06 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 10:45:07 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:45:07 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:45:07 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:45:07 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:45:07 DEBUG [EmailSender-4] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:45:07 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    insert 
+    into
+        employee_profile
+        (created_at, is_active, joining_date, salary, updated_at, user_id, employee_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:45:10 DEBUG [EmailSender-3] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:45:32 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:45:32 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:45:32 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:45:32 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 10:45:35 DEBUG [EmailSender-5] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:09 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        ot1_0.id,
+        ot1_0.email,
+        ot1_0.expiry_time,
+        ot1_0.otp_code,
+        ot1_0.purpose 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.email=? 
+        and ot1_0.purpose=? 
+    order by
+        ot1_0.expiry_time desc 
+    fetch
+        first ? rows only
+2026-04-06 10:46:09 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:46:09 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:46:09 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens 
+    where
+        id=?
+2026-04-06 10:46:09 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:12 DEBUG [EmailSender-2] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:37 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:46:37 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        la1_0.application_id,
+        la1_0.application_code,
+        la1_0.applied_at,
+        la1_0.user_id,
+        la1_0.deleted_at,
+        la1_0.deleted_by,
+        la1_0.dti_ratio,
+        la1_0.existing_emi,
+        la1_0.interest_rate,
+        la1_0.is_deleted,
+        la1_0.officer_strategy,
+        la1_0.requested_amount,
+        la1_0.reviewed_at,
+        la1_0.reviewed_by,
+        la1_0.status,
+        la1_0.suggested_strategy,
+        la1_0.tenure_months 
+    from
+        loan_applications la1_0 
+    where
+        (
+            la1_0.is_deleted = false
+        ) 
+        and la1_0.application_code=?
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:46:38 DEBUG [EmailSender-4] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        l1_0.loan_id,
+        l1_0.application_id,
+        l1_0.user_id,
+        l1_0.created_at,
+        l1_0.emi_amount,
+        l1_0.end_date,
+        l1_0.interest_rate,
+        l1_0.loan_code,
+        l1_0.loan_status,
+        l1_0.principal_amount,
+        l1_0.start_date,
+        l1_0.strategy,
+        l1_0.tenure_months 
+    from
+        loans l1_0 
+    where
+        l1_0.application_id=?
+2026-04-06 10:46:38 DEBUG [EmailSender-3] org.hibernate.SQL - 
+    insert 
+    into
+        strategy_audit
+        (application_id, changed_at, changed_by, officer_strategy, overridden, system_strategy, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    insert 
+    into
+        loans
+        (application_id, user_id, created_at, emi_amount, end_date, interest_rate, loan_status, principal_amount, start_date, strategy, tenure_months, loan_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    update
+        loan_applications 
+    set
+        user_id=?,
+        deleted_at=?,
+        deleted_by=?,
+        dti_ratio=?,
+        existing_emi=?,
+        interest_rate=?,
+        is_deleted=?,
+        officer_strategy=?,
+        requested_amount=?,
+        reviewed_at=?,
+        reviewed_by=?,
+        status=?,
+        suggested_strategy=?,
+        tenure_months=? 
+    where
+        application_id=?
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        l1_0.loan_id,
+        l1_0.application_id,
+        l1_0.user_id,
+        l1_0.created_at,
+        l1_0.emi_amount,
+        l1_0.end_date,
+        l1_0.interest_rate,
+        l1_0.loan_code,
+        l1_0.loan_status,
+        l1_0.principal_amount,
+        l1_0.start_date,
+        l1_0.strategy,
+        l1_0.tenure_months 
+    from
+        loans l1_0 
+    where
+        l1_0.loan_id=?
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    select
+        es1_0.emi_id,
+        es1_0.amount_paid,
+        es1_0.due_date,
+        es1_0.installment_no,
+        es1_0.interest_component,
+        es1_0.loan_id,
+        es1_0.paid_date,
+        es1_0.principal_component,
+        es1_0.remaining_balance,
+        es1_0.status,
+        es1_0.total_emi 
+    from
+        emi_schedule es1_0 
+    where
+        es1_0.loan_id=? 
+    order by
+        es1_0.installment_no
+2026-04-06 10:46:38 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [EmailSender-5] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    insert 
+    into
+        emi_schedule
+        (amount_paid, due_date, installment_no, interest_component, loan_id, paid_date, principal_component, remaining_balance, status, total_emi, emi_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    insert 
+    into
+        emi_schedule
+        (amount_paid, due_date, installment_no, interest_component, loan_id, paid_date, principal_component, remaining_balance, status, total_emi, emi_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    insert 
+    into
+        emi_schedule
+        (amount_paid, due_date, installment_no, interest_component, loan_id, paid_date, principal_component, remaining_balance, status, total_emi, emi_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    insert 
+    into
+        emi_schedule
+        (amount_paid, due_date, installment_no, interest_component, loan_id, paid_date, principal_component, remaining_balance, status, total_emi, emi_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    insert 
+    into
+        emi_schedule
+        (amount_paid, due_date, installment_no, interest_component, loan_id, paid_date, principal_component, remaining_balance, status, total_emi, emi_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:46:38 DEBUG [http-nio-8080-exec-9] org.hibernate.SQL - 
+    update
+        loans 
+    set
+        application_id=?,
+        user_id=?,
+        emi_amount=?,
+        end_date=?,
+        interest_rate=?,
+        loan_status=?,
+        principal_amount=?,
+        start_date=?,
+        strategy=?,
+        tenure_months=? 
+    where
+        loan_id=?
+2026-04-06 10:46:42 DEBUG [EmailSender-2] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 10:47:01 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:47:01 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:47:01 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        l1_0.loan_id,
+        l1_0.application_id,
+        l1_0.user_id,
+        l1_0.created_at,
+        l1_0.emi_amount,
+        l1_0.end_date,
+        l1_0.interest_rate,
+        l1_0.loan_code,
+        l1_0.loan_status,
+        l1_0.principal_amount,
+        l1_0.start_date,
+        l1_0.strategy,
+        l1_0.tenure_months 
+    from
+        loans l1_0 
+    join
+        users b1_0 
+            on b1_0.user_id=l1_0.user_id 
+            and (b1_0.is_deleted = false) 
+    where
+        b1_0.email=? 
+    order by
+        l1_0.created_at desc 
+    fetch
+        first ? rows only
+2026-04-06 10:47:01 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        la1_0.application_id,
+        la1_0.application_code,
+        la1_0.applied_at,
+        la1_0.user_id,
+        la1_0.deleted_at,
+        la1_0.deleted_by,
+        la1_0.dti_ratio,
+        la1_0.existing_emi,
+        la1_0.interest_rate,
+        la1_0.is_deleted,
+        la1_0.officer_strategy,
+        la1_0.requested_amount,
+        la1_0.reviewed_at,
+        la1_0.reviewed_by,
+        la1_0.status,
+        la1_0.suggested_strategy,
+        la1_0.tenure_months 
+    from
+        loan_applications la1_0 
+    where
+        la1_0.application_id=? 
+        and (
+            la1_0.is_deleted = false
+        )
+2026-04-06 10:47:01 DEBUG [http-nio-8080-exec-7] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 10:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 10:50:33 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:50:33 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:51:03 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:51:03 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:51:03 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        la1_0.application_id,
+        la1_0.application_code,
+        la1_0.applied_at,
+        la1_0.user_id,
+        la1_0.deleted_at,
+        la1_0.deleted_by,
+        la1_0.dti_ratio,
+        la1_0.existing_emi,
+        la1_0.interest_rate,
+        la1_0.is_deleted,
+        la1_0.officer_strategy,
+        la1_0.requested_amount,
+        la1_0.reviewed_at,
+        la1_0.reviewed_by,
+        la1_0.status,
+        la1_0.suggested_strategy,
+        la1_0.tenure_months 
+    from
+        loan_applications la1_0 
+    where
+        (
+            la1_0.is_deleted = false
+        ) 
+        and la1_0.application_code=?
+2026-04-06 10:51:16 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:51:16 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:51:16 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:51:16 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:51:17 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        la1_0.application_id,
+        la1_0.application_code,
+        la1_0.applied_at,
+        la1_0.user_id,
+        la1_0.deleted_at,
+        la1_0.deleted_by,
+        la1_0.dti_ratio,
+        la1_0.existing_emi,
+        la1_0.interest_rate,
+        la1_0.is_deleted,
+        la1_0.officer_strategy,
+        la1_0.requested_amount,
+        la1_0.reviewed_at,
+        la1_0.reviewed_by,
+        la1_0.status,
+        la1_0.suggested_strategy,
+        la1_0.tenure_months 
+    from
+        loan_applications la1_0 
+    where
+        (
+            la1_0.is_deleted = false
+        ) 
+    order by
+        la1_0.applied_at desc 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+2026-04-06 10:51:17 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:51:17 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:51:32 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:51:32 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:51:32 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        la1_0.application_id,
+        la1_0.application_code,
+        la1_0.applied_at,
+        la1_0.user_id,
+        la1_0.deleted_at,
+        la1_0.deleted_by,
+        la1_0.dti_ratio,
+        la1_0.existing_emi,
+        la1_0.interest_rate,
+        la1_0.is_deleted,
+        la1_0.officer_strategy,
+        la1_0.requested_amount,
+        la1_0.reviewed_at,
+        la1_0.reviewed_by,
+        la1_0.status,
+        la1_0.suggested_strategy,
+        la1_0.tenure_months 
+    from
+        loan_applications la1_0 
+    where
+        (
+            la1_0.is_deleted = false
+        ) 
+        and la1_0.application_code=?
+2026-04-06 10:51:33 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        bp1_0.borrower_id,
+        bp1_0.borrower_code,
+        bp1_0.created_at,
+        bp1_0.existing_loan_count,
+        bp1_0.monthly_income,
+        bp1_0.updated_at,
+        bp1_0.user_id 
+    from
+        borrower_profile bp1_0 
+    where
+        bp1_0.user_id=?
+2026-04-06 10:51:33 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:51:33 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:51:33 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-06 10:52:04 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:52:04 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:52:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 10:52:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 10:52:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        la1_0.application_id,
+        la1_0.application_code,
+        la1_0.applied_at,
+        la1_0.user_id,
+        la1_0.deleted_at,
+        la1_0.deleted_by,
+        la1_0.dti_ratio,
+        la1_0.existing_emi,
+        la1_0.interest_rate,
+        la1_0.is_deleted,
+        la1_0.officer_strategy,
+        la1_0.requested_amount,
+        la1_0.reviewed_at,
+        la1_0.reviewed_by,
+        la1_0.status,
+        la1_0.suggested_strategy,
+        la1_0.tenure_months 
+    from
+        loan_applications la1_0 
+    left join
+        users b1_0 
+            on b1_0.user_id=la1_0.user_id 
+            and (b1_0.is_deleted = false) 
+    where
+        (
+            la1_0.is_deleted = false
+        ) 
+        and b1_0.email=? 
+        and la1_0.application_code=?
+2026-04-06 10:52:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:52:14 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 10:55:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 10:55:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:05:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:05:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:30:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:30:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:35:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:35:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:45:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:45:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 11:55:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 11:55:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:05:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:05:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:30:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:30:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:34:18 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 12:34:37 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 12:34:38 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 12:34:40 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 12:34:40 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 12:34:40 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 12:34:45 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 12:34:50 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:34:50 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:34:50 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:34:50 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:35:27 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:35:27 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 12:35:27 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:35:27 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:35:29 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:35:31 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 12:37:39 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 12:38:11 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 12:38:19 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 12:38:19 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 12:38:24 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 12:38:24 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 12:38:25 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 12:38:33 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 12:38:44 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:38:44 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:38:44 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:38:44 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:39:21 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:39:21 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 12:39:22 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:39:24 DEBUG [http-nio-8080-exec-3] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 12:39:32 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 12:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:40:17 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:40:17 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 12:40:40 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:40:55 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 12:43:43 DEBUG [EmailSender-2] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 12:44:30 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 12:44:40 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 12:44:40 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 12:44:42 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 12:44:42 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 12:44:42 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 12:44:45 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 12:44:52 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:44:52 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:44:52 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:44:52 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:45:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:45:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:45:36 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:45:36 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 12:45:49 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:45:59 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 12:50:23 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:50:24 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:50:31 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 12:50:52 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 12:50:59 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 12:50:59 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 12:51:01 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 12:51:01 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 12:51:01 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 12:51:04 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 12:51:25 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:51:25 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:51:25 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:51:25 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:51:40 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:51:40 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 12:51:47 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 12:52:52 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 12:53:52 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 12:55:31 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 12:55:31 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 12:56:43 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-06 12:56:53 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-06 12:56:56 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-06 12:56:56 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-06 12:56:56 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-06 12:56:59 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 12:57:46 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 12:57:48 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 12:59:22 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-06 12:59:50 DEBUG [EmailSender-2] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 12:59:50 WARN  [EmailSender-2] org.hibernate.orm.jdbc.error - HHH000247: ErrorCode: 0, SQLState: 23503
+2026-04-06 12:59:50 WARN  [EmailSender-2] org.hibernate.orm.jdbc.error - ERROR: insert or update on table "notifications" violates foreign key constraint "fk_notif_user"
+  Detail: Key (user_id)=(a65cda0f-cc02-4350-8b50-7d6281d7cdb8) is not present in table "users".
+2026-04-06 13:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 13:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 13:00:19 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=? 
+    fetch
+        first ? rows only
+2026-04-06 13:00:24 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    left join
+        person_identity p1_0 
+            on p1_0.person_id=u1_0.person_id 
+    left join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and p1_0.pan_hash=? 
+        and r1_0.role_name=? 
+    fetch
+        first ? rows only
+2026-04-06 13:00:26 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.pan_hash=?
+2026-04-06 13:00:26 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    insert 
+    into
+        person_identity
+        (created_at, pan_first3, pan_hash, pan_last2, updated_at, person_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-06 13:00:26 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-06 13:00:27 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:00:35 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (created_at, deleted_at, deleted_by, email, first_name, is_active, is_deleted, last_name, password, person_id, phone, role_id, updated_at, user_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 13:00:36 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    join
+        roles r1_0 
+            on r1_0.role_id=u1_0.role_id 
+    where
+        u1_0.user_id=? 
+        and (
+            u1_0.is_deleted = false
+        )
+2026-04-06 13:01:21 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    insert 
+    into
+        borrower_profile
+        (created_at, existing_loan_count, monthly_income, updated_at, user_id, borrower_id) 
+    values
+        (?, ?, ?, ?, ?, ?)
+2026-04-06 13:01:21 DEBUG [EmailSender-4] org.hibernate.SQL - 
+    insert 
+    into
+        audit_logs
+        (action, action_time, actor_id, description, entity_id, entity_type, new_value, old_value, audit_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 13:01:21 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 13:01:46 DEBUG [EmailSender-3] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 13:05:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 13:05:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 13:07:18 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 13:07:43 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 13:07:45 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 13:07:51 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 13:07:52 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 13:07:52 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 13:08:03 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 13:08:18 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:08:18 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:08:18 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:08:18 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:09:05 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:09:05 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 13:09:14 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:09:56 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 13:10:45 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 13:10:46 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 13:11:33 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 13:13:27 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        ot1_0.id,
+        ot1_0.email,
+        ot1_0.expiry_time,
+        ot1_0.otp_code,
+        ot1_0.purpose 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.email=? 
+        and ot1_0.purpose=? 
+    order by
+        ot1_0.expiry_time desc 
+    fetch
+        first ? rows only
+2026-04-06 13:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 13:15:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 13:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 13:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 13:23:17 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 13:23:30 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 13:23:30 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 13:23:34 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 13:23:34 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 13:23:34 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 13:23:38 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 13:33:06 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 13:33:25 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 13:33:25 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 13:33:28 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 13:33:29 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 13:33:29 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 13:33:37 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 13:34:23 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:34:24 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:34:24 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:34:24 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:34:42 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:34:42 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 13:34:43 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:34:45 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 13:36:09 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 13:36:10 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 13:36:26 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 13:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 13:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 13:40:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:40:15 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 13:40:30 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:40:30 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 13:40:32 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        pi1_0.person_id,
+        pi1_0.created_at,
+        pi1_0.pan_first3,
+        pi1_0.pan_hash,
+        pi1_0.pan_last2,
+        pi1_0.person_code,
+        pi1_0.updated_at 
+    from
+        person_identity pi1_0 
+    where
+        pi1_0.person_id=?
+2026-04-06 13:54:35 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 13:54:35 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 13:55:16 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 13:55:52 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 13:55:54 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 13:56:00 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 13:56:00 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 13:56:01 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 13:56:09 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 13:56:41 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 13:56:51 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 13:56:52 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 13:56:56 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 13:56:56 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 13:56:56 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 13:57:02 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 13:57:33 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:57:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:57:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 13:57:34 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:58:05 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:58:05 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 13:58:12 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 13:58:16 DEBUG [http-nio-8080-exec-1] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 13:59:14 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 14:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:05:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:05:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:15:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:25:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:30:04 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:30:05 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:30:26 DEBUG [scheduling-1] org.hibernate.SQL - 
+    select
+        es1_0.emi_id,
+        es1_0.amount_paid,
+        es1_0.due_date,
+        es1_0.installment_no,
+        es1_0.interest_component,
+        es1_0.loan_id,
+        es1_0.paid_date,
+        es1_0.principal_component,
+        es1_0.remaining_balance,
+        es1_0.status,
+        es1_0.total_emi 
+    from
+        emi_schedule es1_0 
+    where
+        es1_0.status=? 
+        and es1_0.due_date between ? and ?
+2026-04-06 14:35:03 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:35:04 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:40:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:40:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:45:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:45:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 14:55:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 14:55:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:05:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:05:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:30:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:30:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:35:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:35:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:45:39 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:45:39 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 15:55:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 15:55:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:00:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:00:02 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:05:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:05:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:10:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:10:02 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:15:54 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:15:54 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:20:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:20:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:25:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:25:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:30:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:30:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:35:03 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:35:04 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:40:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:45:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:45:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:50:08 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:50:09 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 16:55:02 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 16:55:02 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:00:18 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:00:21 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:05:03 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:05:04 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:10:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:15:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:20:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:25:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:30:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:30:01 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:35:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:35:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:42:09 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:42:09 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:44:08 INFO  [background-preinit] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-04-06 17:44:17 INFO  [main] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-04-06 17:44:17 INFO  [main] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-04-06 17:44:19 WARN  [main] org.hibernate.orm.deprecation - HHH90000021: Encountered deprecated setting [hibernate.temp.use_jdbc_metadata_defaults], use [hibernate.boot.allow_jdbc_metadata_access] instead
+2026-04-06 17:44:19 WARN  [main] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-04-06 17:44:19 INFO  [main] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-06 17:44:23 INFO  [main] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-06 17:44:32 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 17:44:32 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 17:44:32 DEBUG [main] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_name=?
+2026-04-06 17:44:32 DEBUG [main] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 17:45:03 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 17:45:03 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        r1_0.role_id,
+        r1_0.created_at,
+        r1_0.description,
+        r1_0.role_name 
+    from
+        roles r1_0 
+    where
+        r1_0.role_id=?
+2026-04-06 17:45:08 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:45:08 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:45:09 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.created_at,
+        u1_0.deleted_at,
+        u1_0.deleted_by,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.is_deleted,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.person_id,
+        u1_0.phone,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.user_code 
+    from
+        users u1_0 
+    where
+        (
+            u1_0.is_deleted = false
+        ) 
+        and u1_0.email=?
+2026-04-06 17:45:13 DEBUG [http-nio-8080-exec-2] org.hibernate.SQL - 
+    insert 
+    into
+        otp_tokens
+        (email, expiry_time, otp_code, purpose, id) 
+    values
+        (?, ?, ?, ?, ?)
+2026-04-06 17:45:52 DEBUG [EmailSender-1] org.hibernate.SQL - 
+    insert 
+    into
+        notifications
+        (deleted_at, deleted_by, email, emi_id, is_deleted, loan_id, message, sent_at, status, subject, user_id, notification_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-04-06 17:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:50:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 17:55:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 17:55:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?
+2026-04-06 18:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    delete 
+    from
+        otp_tokens ot1_0 
+    where
+        ot1_0.expiry_time<?
+2026-04-06 18:00:00 DEBUG [scheduling-1] org.hibernate.SQL - 
+    DELETE 
+    FROM
+        users 
+    WHERE
+        is_active = false 
+        AND is_deleted = false 
+        AND created_at < ?

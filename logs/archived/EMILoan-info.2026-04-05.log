@@ -1,0 +1,344 @@
+2026-04-05 00:00:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T23:55:00.533526700
+2026-04-05 00:00:02 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:01:50 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-04-05 00:01:50 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-04-05 00:01:51 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:01:51 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-04-05 00:01:51 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-04-05 00:02:15 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 26576 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
+2026-04-05 00:02:15 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 00:02:18 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 00:02:18 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 170 ms. Found 13 JPA repository interfaces.
+2026-04-05 00:02:19 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-04-05 00:02:19 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:02:19 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-04-05 00:02:19 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-04-05 00:02:19 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 4624 ms
+2026-04-05 00:02:20 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-04-05 00:02:20 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@f76872f
+2026-04-05 00:02:20 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-04-05 00:02:20 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
+2026-04-05 00:02:20 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-04-05 00:02:20 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.034s)
+2026-04-05 00:02:20 INFO  [main] org.flywaydb.core.Flyway - All configured schemas are empty; baseline operation skipped. A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended.
+2026-04-05 00:02:20 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - initial schema"
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - Add Partial Payment Support"
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - Add New LoanApplication Status"
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - Update Audit Log Structure"
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "5 - Change Auditlog Columns Type"
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "6 - Create OTP Tokens Table.sql"
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "7 - Support HardDelete ForUnverified Users"
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "8 - Remove Cascade Constraints"
+2026-04-05 00:02:21 INFO  [main] o.f.c.i.s.DefaultSqlScriptExecutor - DB: constraint "fk_audit_actor" of relation "audit_logs" does not exist, skipping
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "9 - Remove Notification Delete Cascade"
+2026-04-05 00:02:21 INFO  [main] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "public", now at version v9 (execution time 00:00.583s)
+2026-04-05 00:02:23 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 00:02:27 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:02:27 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-05 00:02:28 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-05 00:02:30 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:02:30 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-04-05 00:02:30 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 17.055 seconds (process running for 19.922)
+2026-04-05 00:02:31 INFO  [main] c.e.EMILoan.config.DataInitializer - Initialized first admin user: admin@loan.com with code: USR000001
+2026-04-05 00:02:51 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-05 00:02:51 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-04-05 00:02:51 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Completed initialization in 32 ms
+2026-04-05 00:02:53 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:02:54 INFO  [http-nio-8080-exec-2] c.e.E.service.impl.AuthServiceImpl - User USR000002 has been created but is inactive pending OTP
+2026-04-05 00:02:54 INFO  [task-2] c.e.E.service.impl.AuditServiceImpl - Audit Logged: [ok780759@gmail.com] - Borrower self-registered (Pending OTP Verification) performed CREATE on USER (ID: 4c511508-81c8-4bd4-9b46-6d4afaf8a612)
+2026-04-05 00:03:06 INFO  [task-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to ok780759@gmail.com
+2026-04-05 00:05:06 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-05T00:00:06.717425700
+2026-04-05 00:05:07 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:08:15 INFO  [http-nio-8080-exec-4] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:08:32 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:10:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-05T00:05:00.583948700
+2026-04-05 00:10:01 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:10:13 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:10:14 INFO  [http-nio-8080-exec-8] c.e.E.service.impl.AuthServiceImpl - User USR000003 has been created but is inactive pending OTP
+2026-04-05 00:10:14 INFO  [task-4] c.e.E.service.impl.AuditServiceImpl - Audit Logged: [ok780759@gmail.com] - Borrower self-registered (Pending OTP Verification) performed CREATE on USER (ID: 6c5c6be5-07e5-4480-bf1c-5d663abaacf5)
+2026-04-05 00:11:15 INFO  [http-nio-8080-exec-1] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:11:29 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:11:31 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:12:07 INFO  [http-nio-8080-exec-4] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:12:13 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:12:22 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:12:30 INFO  [http-nio-8080-exec-9] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:12:35 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:13:36 INFO  [http-nio-8080-exec-10] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:14:09 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:14:48 INFO  [http-nio-8080-exec-1] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-05T00:10:00.062161900
+2026-04-05 00:15:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:15:02 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:17 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:20 INFO  [http-nio-8080-exec-4] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:22 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:23 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:24 INFO  [http-nio-8080-exec-9] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:25 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:26 INFO  [http-nio-8080-exec-10] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:28 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:29 INFO  [http-nio-8080-exec-1] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:30 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:31 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:32 INFO  [http-nio-8080-exec-4] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:33 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:34 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:36 INFO  [http-nio-8080-exec-9] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:37 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:41 INFO  [http-nio-8080-exec-10] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:43 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:45 INFO  [http-nio-8080-exec-1] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:47 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:49 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:50 INFO  [http-nio-8080-exec-4] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:51 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:52 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:53 INFO  [http-nio-8080-exec-9] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:54 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:55 INFO  [http-nio-8080-exec-10] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:56 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:57 INFO  [http-nio-8080-exec-1] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:15:59 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:00 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:01 INFO  [http-nio-8080-exec-4] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:03 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:06 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:09 INFO  [http-nio-8080-exec-9] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:10 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:12 INFO  [http-nio-8080-exec-10] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:13 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:14 INFO  [http-nio-8080-exec-1] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:15 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:16 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:18 INFO  [http-nio-8080-exec-4] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:19 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:21 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:22 INFO  [http-nio-8080-exec-9] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:22 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:24 INFO  [http-nio-8080-exec-10] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:16:25 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:17:33 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:19:52 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:20:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-05T00:15:00.210503200
+2026-04-05 00:20:02 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:22:38 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-04-05 00:22:40 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-04-05 00:22:41 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:22:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-04-05 00:22:41 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-04-05 00:23:20 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 24396 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
+2026-04-05 00:23:20 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 00:23:26 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 00:23:26 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 438 ms. Found 13 JPA repository interfaces.
+2026-04-05 00:23:28 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-04-05 00:23:28 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:23:28 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-04-05 00:23:28 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-04-05 00:23:28 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 7756 ms
+2026-04-05 00:23:29 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-04-05 00:23:29 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3e9fb485
+2026-04-05 00:23:29 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-04-05 00:23:29 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
+2026-04-05 00:23:30 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-04-05 00:23:30 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.089s)
+2026-04-05 00:23:30 INFO  [main] org.flywaydb.core.Flyway - All configured schemas are empty; baseline operation skipped. A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended.
+2026-04-05 00:23:30 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-04-05 00:23:30 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-04-05 00:23:30 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - initial schema"
+2026-04-05 00:23:31 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - Add Partial Payment Support"
+2026-04-05 00:23:31 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - Add New LoanApplication Status"
+2026-04-05 00:23:31 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - Update Audit Log Structure"
+2026-04-05 00:23:31 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "5 - Change Auditlog Columns Type"
+2026-04-05 00:23:31 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "6 - Create OTP Tokens Table.sql"
+2026-04-05 00:23:31 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "7 - Support HardDelete ForUnverified Users"
+2026-04-05 00:23:31 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "8 - Remove Cascade Constraints"
+2026-04-05 00:23:31 INFO  [main] o.f.c.i.s.DefaultSqlScriptExecutor - DB: constraint "fk_audit_actor" of relation "audit_logs" does not exist, skipping
+2026-04-05 00:23:31 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "9 - Remove Notification Delete Cascade"
+2026-04-05 00:23:31 INFO  [main] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "public", now at version v9 (execution time 00:00.919s)
+2026-04-05 00:23:34 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 00:23:39 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:23:39 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-05 00:23:42 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-05 00:23:47 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:23:47 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-04-05 00:23:47 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 27.985 seconds (process running for 30.494)
+2026-04-05 00:23:48 INFO  [main] c.e.EMILoan.config.DataInitializer - Initialized first admin user: admin@loan.com with code: USR000001
+2026-04-05 00:25:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-05T00:20:00.395476500
+2026-04-05 00:25:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:25:07 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-04-05 00:25:07 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-04-05 00:25:07 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:25:07 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-04-05 00:25:07 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-04-05 00:25:21 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 4532 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
+2026-04-05 00:25:21 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 00:25:23 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 00:25:23 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 186 ms. Found 13 JPA repository interfaces.
+2026-04-05 00:25:24 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-04-05 00:25:24 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:25:24 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-04-05 00:25:24 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-04-05 00:25:25 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 3696 ms
+2026-04-05 00:25:25 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-04-05 00:25:25 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@22e813fc
+2026-04-05 00:25:25 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-04-05 00:25:25 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
+2026-04-05 00:25:26 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.057s)
+2026-04-05 00:25:26 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 9
+2026-04-05 00:25:26 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2026-04-05 00:25:27 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 00:25:31 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:25:31 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-05 00:25:33 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-05 00:25:37 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:25:37 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-04-05 00:25:38 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 18.012 seconds (process running for 19.93)
+2026-04-05 00:26:03 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-05 00:26:03 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-04-05 00:26:03 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Completed initialization in 71 ms
+2026-04-05 00:26:07 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:26:09 INFO  [http-nio-8080-exec-2] c.e.E.service.impl.AuthServiceImpl - User USR000002 has been created but is inactive pending OTP
+2026-04-05 00:26:09 INFO  [task-2] c.e.E.service.impl.AuditServiceImpl - Audit Logged: [ok780759@gmail.com] - Borrower self-registered (Pending OTP Verification) performed CREATE on USER (ID: 7f1855e1-7a46-45ca-ab47-0e95d4d70e7c)
+2026-04-05 00:26:19 INFO  [task-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to ok780759@gmail.com
+2026-04-05 00:27:46 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:28:03 INFO  [http-nio-8080-exec-7] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:28:08 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:28:11 INFO  [http-nio-8080-exec-8] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:30:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-05T00:29:00.540269800
+2026-04-05 00:30:01 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:32:29 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-04-05 00:32:29 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-04-05 00:32:29 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:32:30 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-04-05 00:32:30 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-04-05 00:33:17 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 10656 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
+2026-04-05 00:33:17 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 00:33:20 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 00:33:21 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 480 ms. Found 13 JPA repository interfaces.
+2026-04-05 00:33:22 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-04-05 00:33:22 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:33:22 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-04-05 00:33:22 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-04-05 00:33:22 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 4949 ms
+2026-04-05 00:33:22 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-04-05 00:33:23 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@175ac243
+2026-04-05 00:33:23 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-04-05 00:33:23 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
+2026-04-05 00:33:23 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-04-05 00:33:23 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.061s)
+2026-04-05 00:33:23 INFO  [main] org.flywaydb.core.Flyway - All configured schemas are empty; baseline operation skipped. A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended.
+2026-04-05 00:33:23 INFO  [main] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-04-05 00:33:23 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-04-05 00:33:23 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - initial schema"
+2026-04-05 00:33:24 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - Add Partial Payment Support"
+2026-04-05 00:33:24 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - Add New LoanApplication Status"
+2026-04-05 00:33:24 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - Update Audit Log Structure"
+2026-04-05 00:33:24 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "5 - Change Auditlog Columns Type"
+2026-04-05 00:33:25 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "6 - Create OTP Tokens Table.sql"
+2026-04-05 00:33:25 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "7 - Support HardDelete ForUnverified Users"
+2026-04-05 00:33:25 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "8 - Remove Cascade Constraints"
+2026-04-05 00:33:25 INFO  [main] o.f.c.i.s.DefaultSqlScriptExecutor - DB: constraint "fk_audit_actor" of relation "audit_logs" does not exist, skipping
+2026-04-05 00:33:25 INFO  [main] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "9 - Remove Notification Delete Cascade"
+2026-04-05 00:33:25 INFO  [main] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "public", now at version v9 (execution time 00:01.162s)
+2026-04-05 00:33:28 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 00:33:30 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:33:30 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-05 00:33:32 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-05 00:33:34 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:33:34 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-04-05 00:33:34 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 19.467 seconds (process running for 28.959)
+2026-04-05 00:33:34 INFO  [main] c.e.EMILoan.config.DataInitializer - Initialized first admin user: admin@loan.com with code: USR000001
+2026-04-05 00:33:44 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-05 00:33:44 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-04-05 00:33:44 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Completed initialization in 7 ms
+2026-04-05 00:33:46 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:33:46 INFO  [http-nio-8080-exec-2] c.e.E.service.impl.AuthServiceImpl - User USR000002 has been created but is inactive pending OTP
+2026-04-05 00:33:46 INFO  [task-2] c.e.E.service.impl.AuditServiceImpl - Audit Logged: [ok780759@gmail.com] - Borrower self-registered (Pending OTP Verification) performed CREATE on USER (ID: e36c8110-b961-44a9-9b2a-8361f1908595)
+2026-04-05 00:33:59 INFO  [task-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to ok780759@gmail.com
+2026-04-05 00:34:55 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:35:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:04:00.877951
+2026-04-05 00:35:02 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:35:14 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:35:14 INFO  [http-nio-8080-exec-6] c.e.E.service.impl.AuthServiceImpl - User USR000003 has been created but is inactive pending OTP
+2026-04-05 00:35:14 INFO  [task-4] c.e.E.service.impl.AuditServiceImpl - Audit Logged: [ok780759@gmail.com] - Borrower self-registered (Pending OTP Verification) performed CREATE on USER (ID: 36d03c56-93d9-48e6-8d65-39d4aaefaf7a)
+2026-04-05 00:35:29 INFO  [task-3] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to ok780759@gmail.com
+2026-04-05 00:40:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:09:00.135334600
+2026-04-05 00:40:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:45:01 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:14:01.171346
+2026-04-05 00:45:03 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 00:45:11 INFO  [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-04-05 00:45:11 INFO  [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-04-05 00:45:11 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:45:11 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-04-05 00:45:12 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-04-05 00:55:45 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Starting EmiLoanApplication using Java 21.0.10 with PID 21228 (C:\Users\om.kariya\Documents\EMILoan\EMILoan\target\classes started by Om.Kariya in C:\Users\om.kariya\Documents\EMILoan)
+2026-04-05 00:55:45 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - No active profile set, falling back to 1 default profile: "default"
+2026-04-05 00:55:48 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-05 00:55:48 INFO  [main] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 175 ms. Found 13 JPA repository interfaces.
+2026-04-05 00:55:49 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-04-05 00:55:49 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:55:49 INFO  [main] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-04-05 00:55:49 INFO  [main] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-04-05 00:55:49 INFO  [main] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 4093 ms
+2026-04-05 00:55:50 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-04-05 00:55:50 INFO  [main] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5ee6fdc4
+2026-04-05 00:55:50 INFO  [main] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-04-05 00:55:50 INFO  [main] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:5432/emi_scheduler (PostgreSQL 18.3)
+2026-04-05 00:55:51 INFO  [main] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.065s)
+2026-04-05 00:55:51 INFO  [main] o.f.core.internal.command.DbMigrate - Current version of schema "public": 9
+2026-04-05 00:55:51 INFO  [main] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2026-04-05 00:55:55 INFO  [main] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-05 00:56:01 INFO  [main] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-05 00:56:01 INFO  [main] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-04-05 00:56:05 INFO  [main] o.s.s.c.a.a.c.InitializeAuthenticationProviderBeanManagerConfigurer$InitializeAuthenticationProviderManagerConfigurer - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-04-05 00:56:10 INFO  [main] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-04-05 00:56:10 INFO  [main] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-04-05 00:56:10 INFO  [main] c.emiLoan.EMILoan.EmiLoanApplication - Started EmiLoanApplication in 26.188 seconds (process running for 27.928)
+2026-04-05 00:56:34 INFO  [http-nio-8080-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-05 00:56:34 INFO  [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-04-05 00:56:34 INFO  [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet - Completed initialization in 5 ms
+2026-04-05 00:56:34 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - New borrower registration request for email: ok780759@gmail.com
+2026-04-05 00:57:27 INFO  [http-nio-8080-exec-2] c.e.E.controller.auth.AuthController - New borrower registration request for email: odk1572@gmail.com
+2026-04-05 00:58:25 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - New borrower registration request for email: odk1572@gmail.com
+2026-04-05 00:58:26 INFO  [http-nio-8080-exec-5] c.e.E.service.impl.AuthServiceImpl - User USR000005 has been created but is inactive pending OTP
+2026-04-05 00:58:26 INFO  [EmailSender-2] c.e.E.service.impl.AuditServiceImpl - Audit Logged: [odk1572@gmail.com] - Borrower self-registered (Pending OTP Verification) performed CREATE on USER (ID: 3208017e-3b01-4291-bb8e-c7ce2c9bf176)
+2026-04-05 00:59:26 INFO  [http-nio-8080-exec-4] c.e.E.controller.auth.AuthController - New borrower registration request for email: odk157@gmail.com
+2026-04-05 01:00:01 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:25:01.452128200
+2026-04-05 01:00:04 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:01:13 INFO  [http-nio-8080-exec-10] c.e.E.controller.auth.AuthController - New borrower registration request for email: odk157@gmail.com
+2026-04-05 01:01:14 INFO  [http-nio-8080-exec-10] c.e.E.service.impl.AuthServiceImpl - User USR000006 has been created but is inactive pending OTP
+2026-04-05 01:01:14 INFO  [EmailSender-4] c.e.E.service.impl.AuditServiceImpl - Audit Logged: [odk157@gmail.com] - Borrower self-registered (Pending OTP Verification) performed CREATE on USER (ID: 7487b75e-6c24-4508-8d46-4027c13e66f3)
+2026-04-05 01:01:29 INFO  [EmailSender-3] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk157@gmail.com
+2026-04-05 01:02:37 INFO  [http-nio-8080-exec-3] c.e.E.controller.auth.AuthController - Verifying registration OTP for: odk157@gmail.com
+2026-04-05 01:02:39 INFO  [http-nio-8080-exec-3] c.e.E.service.impl.AuthServiceImpl - User odk157@gmail.com account successfully activated via OTP
+2026-04-05 01:02:39 INFO  [EmailSender-2] c.e.E.service.impl.AuditServiceImpl - Audit Logged: [odk157@gmail.com] - Email verified via OTP. Account activated. performed UPDATE on USER (ID: 7487b75e-6c24-4508-8d46-4027c13e66f3)
+2026-04-05 01:02:45 INFO  [EmailSender-5] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk157@gmail.com
+2026-04-05 01:03:19 INFO  [http-nio-8080-exec-5] c.e.E.controller.auth.AuthController - Login attempt for email: odk157@gmail.com
+2026-04-05 01:03:24 INFO  [http-nio-8080-exec-5] c.e.E.service.impl.AuthServiceImpl - 2FA Challenge initiated for user: odk157@gmail.com
+2026-04-05 01:03:32 INFO  [EmailSender-1] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk157@gmail.com
+2026-04-05 01:04:24 INFO  [http-nio-8080-exec-6] c.e.E.controller.auth.AuthController - Verifying login OTP for: odk157@gmail.com
+2026-04-05 01:04:27 INFO  [EmailSender-3] c.e.E.service.impl.AuditServiceImpl - Audit Logged: [odk157@gmail.com] - User successfully completed 2FA login performed LOGIN on USER (ID: 7487b75e-6c24-4508-8d46-4027c13e66f3)
+2026-04-05 01:04:35 INFO  [EmailSender-4] c.e.E.s.impl.NotificationServiceImpl - Email successfully sent to odk157@gmail.com
+2026-04-05 01:05:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:30:00.099277400
+2026-04-05 01:05:01 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:10:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:35:00.212366200
+2026-04-05 01:10:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:15:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:40:00.086068800
+2026-04-05 01:15:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:20:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:45:00.015758400
+2026-04-05 01:20:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:25:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:50:00.005126900
+2026-04-05 01:25:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:30:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T19:55:00.125763500
+2026-04-05 01:30:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:35:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T20:00:00.325800900
+2026-04-05 01:35:01 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:40:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T20:05:00.052511100
+2026-04-05 01:40:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:45:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T20:10:00.029000200
+2026-04-05 01:45:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
+2026-04-05 01:50:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Starting maintenance: Cleaning unverified data older than 2026-04-04T20:15:00.075142600
+2026-04-05 01:50:00 INFO  [scheduling-1] c.e.E.scheduler.OtpCleanupScheduler - Cleanup completed: Expired OTPs and unverified accounts successfully removed.
